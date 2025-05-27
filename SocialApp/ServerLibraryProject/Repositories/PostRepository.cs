@@ -19,7 +19,14 @@ namespace ServerLibraryProject.Repositories
 
         public Post GetPostById(long postId)
         {
-            return dbContext.Posts.FirstOrDefault(p => p.Id == postId);
+            try
+            {
+                return dbContext.Posts.FirstOrDefault(p => p.Id == postId);
+            }
+            catch
+            {
+                throw new Exception("Error retrieving the post by ID");
+            }
         }
 
         public List<Post> GetAllPosts()
@@ -29,36 +36,43 @@ namespace ServerLibraryProject.Repositories
 
         public void SavePost(Post entity)
         {
-            dbContext.Posts.Add(entity);
-            dbContext.SaveChanges();
+            try
+            {
+                dbContext.Posts.Add(entity);
+                dbContext.SaveChanges();
+            }catch
+            {
+                throw new Exception("Error saving the post");
+            }
+
         }
 
-        public bool UpdatePostById(long postId, string title, string content, PostVisibility visibility, PostTag tag)
-        {
-            var post = dbContext.Posts.Find(postId);
-            if (post != null)
-            {
-                post.Title = title;
-                post.Content = content;
-                post.Visibility = visibility;
-                post.Tag = tag;
-                dbContext.SaveChanges();
-                return true;
-            }
-            return false;
-        }
+        //public bool UpdatePostById(long postId, string title, string content, PostVisibility visibility, PostTag tag)
+        //{
+        //    var post = dbContext.Posts.Find(postId);
+        //    if (post != null)
+        //    {
+        //        post.Title = title;
+        //        post.Content = content;
+        //        post.Visibility = visibility;
+        //        post.Tag = tag;
+        //        dbContext.SaveChanges();
+        //        return true;
+        //    }
+        //    return false;
+        //}
 
-        public bool DeletePostById(long postId)
-        {
-            var post = dbContext.Posts.Find(postId);
-            if (post != null)
-            {
-                dbContext.Posts.Remove(post);
-                dbContext.SaveChanges();
-                return true;
-            }
-            return false;
-        }
+        //public bool DeletePostById(long postId)
+        //{
+        //    var post = dbContext.Posts.Find(postId);
+        //    if (post != null)
+        //    {
+        //        dbContext.Posts.Remove(post);
+        //        dbContext.SaveChanges();
+        //        return true;
+        //    }
+        //    return false;
+        //}
 
         public List<Post> GetPostsHomeFeed(long userId)
         {

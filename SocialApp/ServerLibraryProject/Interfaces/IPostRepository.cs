@@ -6,7 +6,7 @@ namespace ServerLibraryProject.Interfaces
 {
     public interface IPostRepository
     {
-        bool DeletePostById(long postId);
+        //bool DeletePostById(long postId);
         List<Post> GetAllPosts();
         List<Post> GetPostsByGroupId(long groupId);
         Post GetPostById(long postId);
@@ -14,6 +14,6 @@ namespace ServerLibraryProject.Interfaces
         List<Post> GetPostsGroupsFeed(long userId);
         List<Post> GetPostsHomeFeed(long userId);
         void SavePost(Post entity);
-        bool UpdatePostById(long postId, string title, string content, PostVisibility visibility, PostTag tag);
+        //bool UpdatePostById(long postId, string title, string content, PostVisibility visibility, PostTag tag);
     }
 }

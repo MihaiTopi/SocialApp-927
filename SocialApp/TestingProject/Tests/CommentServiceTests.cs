@@ -130,129 +130,129 @@ namespace TestingProject.Tests
         /// <summary>
         /// Validates that the ValidateDelete method successfully deletes a comment when provided with a valid comment ID.
         /// </summary>
-        [Test]
-        public void DeleteComment_WithValidCommentId()
-        {
-            // Arrange
-            var commentRepository = Substitute.For<ICommentRepository>();
-            var postRepository = Substitute.For<IPostRepository>();
-            var userRepository = Substitute.For<IUserRepository>();
+        //[Test]
+        //public void DeleteComment_WithValidCommentId()
+        //{
+        //    // Arrange
+        //    var commentRepository = Substitute.For<ICommentRepository>();
+        //    var postRepository = Substitute.For<IPostRepository>();
+        //    var userRepository = Substitute.For<IUserRepository>();
 
-            var commentService = new CommentService(commentRepository, postRepository, userRepository);
+        //    var commentService = new CommentService(commentRepository, postRepository, userRepository);
 
-            long commentId = 1;
-            var comment = new Comment { Id = commentId, Content = "Test Content", CreatedDate = DateTime.Now, UserId = 1, PostId = 2 };
+        //    long commentId = 1;
+        //    var comment = new Comment { Id = commentId, Content = "Test Content", CreatedDate = DateTime.Now, UserId = 1, PostId = 2 };
 
-            commentRepository.GetCommentById(commentId).Returns(comment);
+        //    commentRepository.GetCommentById(commentId).Returns(comment);
 
-            // Act
-            commentService.DeleteComment(commentId);
+        //    // Act
+        //    commentService.DeleteComment(commentId);
 
-            // Assert
-            commentRepository.Received(1).DeleteCommentById(commentId);
-        }
+        //    // Assert
+        //    commentRepository.Received(1).DeleteCommentById(commentId);
+        //}
 
         /// <summary>
         /// Validates that the ValidateDelete method throws an exception when the comment does not exist.
         /// </summary>
-        [Test]
-        public void DeleteComment_WithInvalidCommentId_ThrowsException()
-        {
-            // Arrange
-            var commentRepository = Substitute.For<ICommentRepository>();
-            var postRepository = Substitute.For<IPostRepository>();
-            var userRepository = Substitute.For<IUserRepository>();
+        //[Test]
+        //public void DeleteComment_WithInvalidCommentId_ThrowsException()
+        //{
+        //    // Arrange
+        //    var commentRepository = Substitute.For<ICommentRepository>();
+        //    var postRepository = Substitute.For<IPostRepository>();
+        //    var userRepository = Substitute.For<IUserRepository>();
 
-            var commentService = new CommentService(commentRepository, postRepository, userRepository);
+        //    var commentService = new CommentService(commentRepository, postRepository, userRepository);
 
-            long invalidCommentId = 999;
+        //    long invalidCommentId = 999;
 
-            commentRepository.GetCommentById(invalidCommentId).Returns((Comment)null);
+        //    commentRepository.GetCommentById(invalidCommentId).Returns((Comment)null);
 
-            // Act & Assert
-            var ex = Assert.Throws<InvalidOperationException>(() => commentService.DeleteComment(invalidCommentId));
-            Assert.That(ex.Message, Is.EqualTo($"Comment with ID {invalidCommentId} does not exist."));
-            commentRepository.Received(1).GetCommentById(invalidCommentId);
-        }
+        //    // Act & Assert
+        //    var ex = Assert.Throws<InvalidOperationException>(() => commentService.DeleteComment(invalidCommentId));
+        //    Assert.That(ex.Message, Is.EqualTo($"Comment with ID {invalidCommentId} does not exist."));
+        //    commentRepository.Received(1).GetCommentById(invalidCommentId);
+        //}
  
         /// Validates that the UpdateComment method functions correctly when provided with valid arguments.
         /// </summary>
-        [Test]
-        public void UpdateComment_WithValidArguments()
-        {
-            // Arange
-            var commentsRepository = Substitute.For<ICommentRepository>();
-            var postRepository = Substitute.For<IPostRepository>();
-            var userRepository = Substitute.For<IUserRepository>();
+        //[Test]
+        //public void UpdateComment_WithValidArguments()
+        //{
+        //    // Arange
+        //    var commentsRepository = Substitute.For<ICommentRepository>();
+        //    var postRepository = Substitute.For<IPostRepository>();
+        //    var userRepository = Substitute.For<IUserRepository>();
 
-            CommentService commentService = new CommentService(commentsRepository,postRepository,userRepository);
+        //    CommentService commentService = new CommentService(commentsRepository,postRepository,userRepository);
 
-            long commentId = 1;
-            long userId = 1;
-            long postId = 1;
-            string? content = "Test Content";
+        //    long commentId = 1;
+        //    long userId = 1;
+        //    long postId = 1;
+        //    string? content = "Test Content";
 
-            Comment testComment = new Comment { Id = commentId, UserId=userId, PostId = postId, Content = content, CreatedDate = DateTime.Now };
+        //    Comment testComment = new Comment { Id = commentId, UserId=userId, PostId = postId, Content = content, CreatedDate = DateTime.Now };
 
-            commentsRepository.GetCommentById(commentId).Returns(testComment);
+        //    commentsRepository.GetCommentById(commentId).Returns(testComment);
 
-            // Act
-            commentService.UpdateComment(commentId, content);
+        //    // Act
+        //    commentService.UpdateComment(commentId, content);
 
-            // Assert
-            commentsRepository.Received(1).GetCommentById(commentId);
-            commentsRepository.Received(1).UpdateCommentContentById(commentId, content);
-        }
+        //    // Assert
+        //    commentsRepository.Received(1).GetCommentById(commentId);
+        //    commentsRepository.Received(1).UpdateCommentContentById(commentId, content);
+        //}
 
         /// <summary>
         /// Validates that the UpdateComment function throws an exception when provided with an invalid comment Id.
         /// </summary>
-        [Test]
-        public void UpdateComment_WithInvalidCommentId_ThrowsException()
-        {
-            // Arange
-            var commentsRepository = Substitute.For<ICommentRepository>();
-            var postRepository = Substitute.For<IPostRepository>();
-            var userRepository = Substitute.For<IUserRepository>();
+        //[Test]
+        //public void UpdateComment_WithInvalidCommentId_ThrowsException()
+        //{
+        //    // Arange
+        //    var commentsRepository = Substitute.For<ICommentRepository>();
+        //    var postRepository = Substitute.For<IPostRepository>();
+        //    var userRepository = Substitute.For<IUserRepository>();
 
-            CommentService commentService = new CommentService(commentsRepository, postRepository, userRepository);
+        //    CommentService commentService = new CommentService(commentsRepository, postRepository, userRepository);
 
-            long commentId = 1;
-            string? content = "Test Content";
+        //    long commentId = 1;
+        //    string? content = "Test Content";
 
-            commentsRepository.GetCommentById(commentId).Returns((Comment)null);
+        //    commentsRepository.GetCommentById(commentId).Returns((Comment)null);
 
-            // Act & Assert
-            Assert.Throws<Exception>(() => commentService.UpdateComment(commentId,content), "Comment does not exist");
-            commentsRepository.Received(1).GetCommentById(commentId);
-        }
+        //    // Act & Assert
+        //    Assert.Throws<Exception>(() => commentService.UpdateComment(commentId,content), "Comment does not exist");
+        //    commentsRepository.Received(1).GetCommentById(commentId);
+        //}
 
         /// <summary>
         /// Validates that the UpdateComment function throws an exception when the provided content is empty.
         /// </summary>
-        [Test]
-        public void UpdateComment_WithInvalidContent_ThrowsException()
-        {
-            // Arange
-            var commentsRepository = Substitute.For<ICommentRepository>();
-            var postRepository = Substitute.For<IPostRepository>();
-            var userRepository = Substitute.For<IUserRepository>();
+        //[Test]
+        //public void UpdateComment_WithInvalidContent_ThrowsException()
+        //{
+        //    // Arange
+        //    var commentsRepository = Substitute.For<ICommentRepository>();
+        //    var postRepository = Substitute.For<IPostRepository>();
+        //    var userRepository = Substitute.For<IUserRepository>();
 
-            CommentService commentService = new CommentService(commentsRepository, postRepository, userRepository);
+        //    CommentService commentService = new CommentService(commentsRepository, postRepository, userRepository);
 
-            long commentId = 1;
-            long userId = 1;
-            long postId = 1;
-            string? content = "Test Content";
-            string? emptycontent = string.Empty;
+        //    long commentId = 1;
+        //    long userId = 1;
+        //    long postId = 1;
+        //    string? content = "Test Content";
+        //    string? emptycontent = string.Empty;
 
-            Comment testComment = new Comment { Id = commentId, UserId = userId, PostId = postId, Content = content, CreatedDate = DateTime.Now };
+        //    Comment testComment = new Comment { Id = commentId, UserId = userId, PostId = postId, Content = content, CreatedDate = DateTime.Now };
 
-            commentsRepository.GetCommentById(commentId).Returns(testComment);
+        //    commentsRepository.GetCommentById(commentId).Returns(testComment);
 
-            // Act & Assert
-            Assert.Throws<Exception>(() => commentService.UpdateComment(commentId, emptycontent), "Comment content cannot be empty");
-            commentsRepository.Received(1).GetCommentById(commentId);
-        }
+        //    // Act & Assert
+        //    Assert.Throws<Exception>(() => commentService.UpdateComment(commentId, emptycontent), "Comment content cannot be empty");
+        //    commentsRepository.Received(1).GetCommentById(commentId);
+        //}
     }
 }

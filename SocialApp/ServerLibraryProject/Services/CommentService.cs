@@ -74,15 +74,15 @@ namespace ServerLibraryProject.Services
         /// </summary>
         /// <param name="commentId">The ID of the comment to be deleted.</param>
         /// <exception cref="InvalidOperationException">Thrown when the comment does not exist.</exception>
-        public void DeleteComment(long commentId)
-        {
-            if (commentRepository.GetCommentById(commentId) == null)
-            {
-                throw new InvalidOperationException($"Comment with ID {commentId} does not exist.");
-            }
+        //public void DeleteComment(long commentId)
+        //{
+        //    if (commentRepository.GetCommentById(commentId) == null)
+        //    {
+        //        throw new InvalidOperationException($"Comment with ID {commentId} does not exist.");
+        //    }
 
-            commentRepository.DeleteCommentById(commentId);
-        }
+        //    commentRepository.DeleteCommentById(commentId);
+        //}
 
         /// <summary>
         /// Validates if an update is possible.
@@ -91,21 +91,21 @@ namespace ServerLibraryProject.Services
         /// <param name="content">The content which we want to update the comment with.</param>
         /// <exception cref="Exception">Throw when comment with given Id is not found.</exception>
         /// <exception cref="Exception">Throw when the given content is empty.</exception>
-        public void UpdateComment(long commentId, string content)
-        {
-            if (this.commentRepository.GetCommentById(commentId) == null)
+        //public void UpdateComment(long commentId, string content)
+        //{
+        //    if (this.commentRepository.GetCommentById(commentId) == null)
 
-            {
-                throw new Exception("Comment does not exist");
-            }
-            if (content == null || content.Length == 0)
-            {
-                throw new Exception("Comment content cannot be empty");
-            }
+        //    {
+        //        throw new Exception("Comment does not exist");
+        //    }
+        //    if (content == null || content.Length == 0)
+        //    {
+        //        throw new Exception("Comment content cannot be empty");
+        //    }
 
-            this.commentRepository.UpdateCommentContentById(commentId, content);
+        //    this.commentRepository.UpdateCommentContentById(commentId, content);
 
-        }
+        //}
 
         /// <summary>
         /// Gets all comments.
@@ -122,11 +122,11 @@ namespace ServerLibraryProject.Services
         /// </summary>
         /// <param name="commentId">The ID of the comment to retrieve.</param>
         /// <returns>The comment with the specified ID.</returns>
-        public Comment GetCommentById(int commentId)
-        {
-            return this.commentRepository.GetCommentById(commentId);
+        //public Comment GetCommentById(int commentId)
+        //{
+        //    return this.commentRepository.GetCommentById(commentId);
 
-        }
+        //}
 
         /// <summary>
         /// Gets comments by post ID.

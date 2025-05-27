@@ -20,8 +20,16 @@ namespace Server.Controllers
         [HttpPost("{userId}/followers")]
         public IActionResult FollowUser(long userId, [FromBody] long followerId)
         {
-            this.userService.FollowUserById(userId, followerId);
-            return this.Ok();
+            try
+            {
+                this.userService.FollowUserById(userId, followerId);
+                return this.Ok();
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
         }
 
         [HttpGet]
@@ -37,22 +45,22 @@ namespace Server.Controllers
             {
                 return this.userService.GetById(id);
             }
-            catch
+            catch(Exception e)
             {
-                return this.BadRequest();
+                return this.BadRequest(e.Message);
             }
         }
 
-        [HttpGet]
+        [HttpGet("user")]
         public ActionResult<User> GetUserByUsername([FromQuery] string username)
         {
             try
             {
                 return this.userService.GetUserByUsername(username);
             }
-            catch
+            catch(Exception e)
             {
-                return this.BadRequest();
+                return this.BadRequest(e.Message);
             }
         }
 
@@ -71,16 +79,31 @@ namespace Server.Controllers
         [HttpPost]
         public IActionResult SaveUser(User user)
         {
-            var savedUser = this.userService.Save(user);
-            return this.Ok(savedUser);
+            try
+            {
+                var savedUser = this.userService.Save(user);
+                return this.Ok(savedUser);
+            }
+            catch (Exception e)
+            {
+                return this.BadRequest(e.Message);
+
+            }
         }
 
         [HttpDelete("{userId}/followers/{unfollowUserId}")]
         public IActionResult UnfollowUser(long userId, long unfollowUserId)
         {
-            this.userService.UnfollowUserById(userId, unfollowUserId);
-            return this.Ok();
-        }
+            try
+            {
+                this.userService.UnfollowUserById(userId, unfollowUserId);
+                return this.Ok();
+            }
+            catch (Exception e)
+            {
+                return this.BadRequest(e.Message);
 
+            }
+        }
     }
 }

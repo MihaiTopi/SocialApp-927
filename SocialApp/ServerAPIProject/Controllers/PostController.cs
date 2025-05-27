@@ -137,15 +137,31 @@ namespace Server.Controllers
         [HttpGet("{postId}/user/{userId}/reaction")]
         public ActionResult<Reaction> GetUserPostReaction(long userId, long postId)
         {
-            return this.reactionService.GetReaction(userId, postId);
+            try
+            {
+                return this.reactionService.GetReaction(userId, postId);
+
+            }
+            catch (Exception ex)
+            {
+                return NotFound($"Reaction not found for user {userId} on post {postId}. Error: {ex.Message}");
+            }
         }
 
 
         [HttpDelete("{postId}/user/{userId}/reaction")]
         public IActionResult DeleteReaction(long postId, long userId)
         {
-            this.reactionService.DeleteReaction(postId, userId);
-            return Ok();
+            try
+            {
+                this.reactionService.DeleteReaction(postId, userId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return NotFound($"Reaction not found for user {userId} on post {postId}. Error: {ex.Message}");
+
+            }
         }
 
 

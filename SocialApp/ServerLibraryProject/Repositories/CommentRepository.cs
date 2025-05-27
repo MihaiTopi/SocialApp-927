@@ -36,25 +36,36 @@ namespace ServerLibraryProject.Repositories
         /// Deletes a comment from the database by its ID.
         /// </summary>
         /// <param name="id">The ID of the comment to delete.</param>
-        public void DeleteCommentById(long id)
-        {
-            var comment = dbContext.Comments.Find(id);
-            if (comment != null)
-            {
-                dbContext.Comments.Remove(comment);
-                dbContext.SaveChanges();
-            }
-        }
+        //public void DeleteCommentById(long id)
+        //{
+        //    try
+        //    {
+        //        var comment = dbContext.Comments.Find(id);
+        //        if (comment != null)
+        //        {
+        //            dbContext.Comments.Remove(comment);
+        //            dbContext.SaveChanges();
+        //        }
+        //    }
+        //    catch
+        //    {
+        //        throw new Exception("Comment not found or could not be deleted.");
+        //    }
+
+        // }
 
         /// <summary>
         /// Retrieves a single comment by its ID.
         /// </summary>
         /// <param name="id">The ID of the comment to retrieve.</param>
         /// <returns>The Comment entity with the specified ID, or null if not found.</returns>
-        public Comment? GetCommentById(long id)
-        {
-            return dbContext.Comments.Find(id);
-        }
+        //public Comment GetCommentById(long id)
+        //{
+        //    var comment = dbContext.Comments.Find(id);
+        //    if(comment == null)
+        //        throw new Exception("Comment not found.");
+        //    return comment;
+        //}
 
         /// <summary>
         /// Saves a new comment to the database.
@@ -62,8 +73,16 @@ namespace ServerLibraryProject.Repositories
         /// <param name="entity">The Comment entity to be saved.</param>
         public void SaveComment(Comment entity)
         {
-            dbContext.Comments.Add(entity);
-            dbContext.SaveChanges();
+            try
+            {
+                dbContext.Comments.Add(entity);
+                dbContext.SaveChanges();
+            }
+            catch
+            {
+                throw new Exception("Error saving comment. Please try again later.");
+            }
+            
         }
 
         /// <summary>
@@ -71,14 +90,22 @@ namespace ServerLibraryProject.Repositories
         /// </summary>
         /// <param name="id">The ID of the comment to update.</param>
         /// <param name="content">The new content for the comment.</param>
-        public void UpdateCommentContentById(long id, string content)
-        {
-            var comment = dbContext.Comments.Find(id);
-            if (comment != null)
-            {
-                comment.Content = content;
-                dbContext.SaveChanges();
-            }
-        }
+        //public void UpdateCommentContentById(long id, string content)
+        //{
+        //    try
+        //    {
+        //        var comment = dbContext.Comments.Find(id);
+        //        if (comment != null)
+        //        {
+        //            comment.Content = content;
+        //            dbContext.SaveChanges();
+        //        }
+        //    }
+        //    catch
+        //    {
+        //        throw new Exception("Comment not found or could not be updated.");
+
+        //    }
+        //}
     }
 }

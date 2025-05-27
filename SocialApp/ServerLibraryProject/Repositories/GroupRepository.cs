@@ -26,7 +26,15 @@ namespace ServerLibraryProject.Repositories
         /// <returns>The group with the specified ID.</returns>
         public Group GetGroupById(long id)
         {
-            return dbContext.Groups.First(g => g.Id == id);
+            try
+            {
+                return dbContext.Groups.First(g => g.Id == id);
+
+            }
+            catch
+            {
+                throw new System.Exception("Group not found.");
+            }
         }
 
         /// <summary>
@@ -45,13 +53,21 @@ namespace ServerLibraryProject.Repositories
         /// <returns>A list of groups the user belongs to.</returns>
         public List<Group> GetGroupsForUser(long userId)
         {
-            var groupsQuery = from groups in dbContext.Groups
-                              join gud in dbContext.GroupUsers
-                              on groups.Id equals gud.GroupId
-                              where gud.UserId == userId
-                              select groups;
+            try
+            {
+                var groupsQuery = from groups in dbContext.Groups
+                                  join gud in dbContext.GroupUsers
+                                  on groups.Id equals gud.GroupId
+                                  where gud.UserId == userId
+                                  select groups;
 
-            return groupsQuery.ToList();
+                return groupsQuery.ToList();
+            }
+            catch
+            {
+                throw new System.Exception("User not found or has no groups.");
+            }
+
         }
 
 
@@ -62,13 +78,21 @@ namespace ServerLibraryProject.Repositories
         /// <returns>A list of users in the group.</returns>
         public List<User> GetUsersFromGroup(long groupId)
         {
-            var usersQuery = from user in dbContext.Users
-                             join groupUser in dbContext.GroupUsers
-                             on user.Id equals groupUser.UserId
-                             where groupUser.GroupId == groupId
-                             select user;
+            try
+            {
+                var usersQuery = from user in dbContext.Users
+                                 join groupUser in dbContext.GroupUsers
+                                 on user.Id equals groupUser.UserId
+                                 where groupUser.GroupId == groupId
+                                 select user;
 
-            return usersQuery.ToList();
+                return usersQuery.ToList();
+            }
+            catch
+            {
+                throw new System.Exception("Group not found or has no users.");
+            }
+
         }
 
         /// <summary>
@@ -77,16 +101,16 @@ namespace ServerLibraryProject.Repositories
         /// <param name="entity">The group that needs to be added.</param>
         public void SaveGroup(Group entity)
         {
-            dbContext.Groups.Add(entity);
-            dbContext.SaveChanges();
-
-            dbContext.GroupUsers.Add(new GroupUser
+            try
             {
-                GroupId = entity.Id,
-                UserId = entity.AdminId
-            });
+                dbContext.Groups.Add(entity);
+                dbContext.SaveChanges();
+            }catch
+            {
+                throw new System.Exception("Group could not be saved.");
+            }
 
-            dbContext.SaveChanges();
+
         }
 
         /// <summary>
@@ -97,37 +121,37 @@ namespace ServerLibraryProject.Repositories
         /// <param name="image">The new image of the group.</param>
         /// <param name="description">The new description of the group.</param>
         /// <param name="adminId">The new admin ID of the group.</param>
-        public void UpdateGroup(long id, string name, string image, string description, long adminId)
-        {
-            var group = dbContext.Groups.Find(id);
-            if (group != null)
-            {
-                group.Name = name;
-                group.Image = image;
-                group.Description = description;
-                group.AdminId = adminId;
-                dbContext.SaveChanges();
-            }
-        }
+        //public void UpdateGroup(long id, string name, string image, string description, long adminId)
+        //{
+        //    var group = dbContext.Groups.Find(id);
+        //    if (group != null)
+        //    {
+        //        group.Name = name;
+        //        group.Image = image;
+        //        group.Description = description;
+        //        group.AdminId = adminId;
+        //        dbContext.SaveChanges();
+        //    }
+        //}
 
         /// <summary>
         /// Deletes a group by ID from the Database.
         /// </summary>
         /// <param name="id">The ID of the group to delete.</param>
-        public void DeleteGroupById(long id)
-        {
-            var group = dbContext.Groups.Find(id);
-            if (group != null)
-            {
-                // First delete related records in GroupUsers
-                var groupUsers = dbContext.GroupUsers.Where(gu => gu.GroupId == id);
-                dbContext.GroupUsers.RemoveRange(groupUsers);
-                dbContext.SaveChanges();
+        //public void DeleteGroupById(long id)
+        //{
+        //    var group = dbContext.Groups.Find(id);
+        //    if (group != null)
+        //    {
+        //        // First delete related records in GroupUsers
+        //        var groupUsers = dbContext.GroupUsers.Where(gu => gu.GroupId == id);
+        //        dbContext.GroupUsers.RemoveRange(groupUsers);
+        //        dbContext.SaveChanges();
 
-                // Then delete the group
-                dbContext.Groups.Remove(group);
-                dbContext.SaveChanges();
-            }
-        }
+        //        // Then delete the group
+        //        dbContext.Groups.Remove(group);
+        //        dbContext.SaveChanges();
+        //    }
+        //}
     }
 }

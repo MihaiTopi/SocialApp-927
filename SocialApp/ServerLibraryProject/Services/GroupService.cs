@@ -53,43 +53,43 @@ namespace ServerLibraryProject.Services
             return group;
         }
 
-        public void DeleteGroup(long groupId)
-        {
-            if (groupRepository.GetGroupById(groupId) == null)
-            {
-                throw new ArgumentException("Group does not exist");
-            }
+        //public void DeleteGroup(long groupId)
+        //{
+        //    if (groupRepository.GetGroupById(groupId) == null)
+        //    {
+        //        throw new ArgumentException("Group does not exist");
+        //    }
 
-            groupRepository.DeleteGroupById(groupId);
-        }
+        //    groupRepository.DeleteGroupById(groupId);
+        //}
 
-        public void UpdateGroup(long id, string name, string desc, string image, long adminId)
-        {
-            if (string.IsNullOrEmpty(name))
-            {
-                throw new ArgumentException("Group name cannot be empty");
-            }
+        //public void UpdateGroup(long id, string name, string desc, string image, long adminId)
+        //{
+        //    if (string.IsNullOrEmpty(name))
+        //    {
+        //        throw new ArgumentException("Group name cannot be empty");
+        //    }
 
-            var group = groupRepository.GetGroupById(id);
-            if (group == null)
-            {
-                throw new ArgumentException($"Group with ID {id} does not exist");
-            }
+        //    var group = groupRepository.GetGroupById(id);
+        //    if (group == null)
+        //    {
+        //        throw new ArgumentException($"Group with ID {id} does not exist");
+        //    }
 
-            if (userRepository.GetById(adminId) == null)
-            {
-                throw new ArgumentException($"User with ID {adminId} does not exist");
-            }
+        //    if (userRepository.GetById(adminId) == null)
+        //    {
+        //        throw new ArgumentException($"User with ID {adminId} does not exist");
+        //    }
 
-            try
-            {
-                groupRepository.UpdateGroup(id, name, image, desc, adminId);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Failed to update group: {ex.Message}");
-            }
-        }
+        //    try
+        //    {
+        //        groupRepository.UpdateGroup(id, name, image, desc, adminId);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception($"Failed to update group: {ex.Message}");
+        //    }
+        //}
 
         public List<Group> GetAllGroups()
         {

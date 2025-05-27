@@ -22,19 +22,5 @@ namespace ServerLibraryProject.Models
         [Column("image")]
         public string? Image { get; set; }
 
-        [Required]
-        [Column("height")]
-        [Range(1, double.MaxValue, ErrorMessage = "Height must be a positive number.")]
-        public double Height { get; set; }
-
-        [Required]
-        [Column("weight")]
-        [Range(1, double.MaxValue, ErrorMessage = "Weight must be a positive number.")]
-        public double Weight { get; set; }
-
-        [Required]
-        [Column("goal")]
-        public string Goal { get; set; }
-
     }
 }

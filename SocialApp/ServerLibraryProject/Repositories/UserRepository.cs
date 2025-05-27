@@ -27,24 +27,29 @@ namespace ServerLibraryProject.Repositories
         /// Deletes a user by ID from the database.
         /// </summary>
         /// <param name="id">The id of the user that has to be deleted</param>
-        public void DeleteById(long id)
-        {
-            User? user = dbContext.Users.FirstOrDefault(u => u.Id == id);
-            if (user != null)
-            {
-                dbContext.Users.Remove(user);
-                dbContext.SaveChanges();
-            }
-        }
+        //public void DeleteById(long id)
+        //{
+        //    User? user = dbContext.Users.FirstOrDefault(u => u.Id == id);
+        //    if (user != null)
+        //    {
+        //        dbContext.Users.Remove(user);
+        //        dbContext.SaveChanges();
+        //    }
+        //}
 
         public void Follow(long userId, long whoToFollowId)
         {
-            dbContext.UserFollowers.Add(new UserFollower
+            try
             {
-                UserId = userId,
-                FollowerId = whoToFollowId,
-            });
-            dbContext.SaveChanges();
+                dbContext.UserFollowers.Add(new UserFollower
+                {
+                    UserId = userId,
+                    FollowerId = whoToFollowId,
+                });
+                dbContext.SaveChanges();
+            }
+            catch { throw new Exception("Error following user"); }
+
         }
 
         public List<User> GetAll()
@@ -55,12 +60,24 @@ namespace ServerLibraryProject.Repositories
 
         public User GetById(long id)
         {
-            return dbContext.Users.First(u => u.Id == id);
+            try
+            {
+                return dbContext.Users.First(u => u.Id == id);
+
+            }
+            catch { throw new Exception("User not found"); }
         }
 
-        public User? GetByUsername(string username)
+        public User GetByUsername(string username)
         {
-            return dbContext.Users.FirstOrDefault(u => u.Username == username);
+            try
+            {
+                return dbContext.Users.FirstOrDefault(u => u.Username == username);
+
+            }catch
+            {
+                throw new Exception("Error retrieving user by username");
+            }
         }
 
         public List<User> GetUserFollowers(long id)
@@ -101,36 +118,51 @@ namespace ServerLibraryProject.Repositories
 
         public User Save(User entity)
         {
-            if (dbContext.Users.FirstOrDefault(u => u.Username.Equals(entity.Username)) != null)
+            try
             {
-                throw new Exception("User already exists");
+                if (dbContext.Users.FirstOrDefault(u => u.Username.Equals(entity.Username)) != null)
+                {
+                    throw new Exception("User already exists");
+                }
+
+                dbContext.Users.Add(entity);
+                dbContext.SaveChanges();
+                return entity;
+            }
+            catch
+            {
+                throw new Exception("Error saving the user");
             }
 
-            dbContext.Users.Add(entity);
-            dbContext.SaveChanges();
-            return entity;
         }
 
         public void Unfollow(long userId, long whoToUnfollowId)
         {
-            UserFollower? userFollower = dbContext.UserFollowers
-                .FirstOrDefault(uf => uf.UserId == userId && uf.FollowerId == whoToUnfollowId);
-            if (userFollower != null)
+            try
             {
-                dbContext.UserFollowers.Remove(userFollower);
-                dbContext.SaveChanges();
+                UserFollower? userFollower = dbContext.UserFollowers.FirstOrDefault(uf => uf.UserId == userId && uf.FollowerId == whoToUnfollowId);
+                if (userFollower != null)
+                {
+                    dbContext.UserFollowers.Remove(userFollower);
+                    dbContext.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error unfollowing user: " + ex.Message);
+
             }
         }
 
-        public void UpdateById(long id, string username, string email, string hashPassword, string image)
-        {
-            User? user = dbContext.Users.FirstOrDefault(u => u.Id == id);
-            if (user != null)
-            {
-                user.Username = username;
-                user.Password = hashPassword;
-                dbContext.SaveChanges();
-            }
-        }
+        //public void UpdateById(long id, string username, string email, string hashPassword, string image)
+        //{
+        //    User? user = dbContext.Users.FirstOrDefault(u => u.Id == id);
+        //    if (user != null)
+        //    {
+        //        user.Username = username;
+        //        user.Password = hashPassword;
+        //        dbContext.SaveChanges();
+        //    }
+        //}
     }
 }

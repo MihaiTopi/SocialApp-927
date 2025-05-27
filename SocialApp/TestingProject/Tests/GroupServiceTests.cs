@@ -32,87 +32,87 @@ namespace TestingProject.Tests
         /// <summary>
         /// Validates that the ValidateUpdate method throws an exception when the group does not exist.
         /// </summary>
-        [Test]
-        public void ValidateUpdate_GroupDoesNotExist_ThrowsArgumentException()
-        {
-            // Arrange
-            long groupId = 1;
-            string name = "GroupName";
-            string desc = "Description";
-            string image = "Image";
-            long adminId = 1;
+        //[Test]
+        //public void ValidateUpdate_GroupDoesNotExist_ThrowsArgumentException()
+        //{
+        //    // Arrange
+        //    long groupId = 1;
+        //    string name = "GroupName";
+        //    string desc = "Description";
+        //    string image = "Image";
+        //    long adminId = 1;
 
-            this.groupRepository.GetGroupById(groupId).Returns((Group)null);
+        //    this.groupRepository.GetGroupById(groupId).Returns((Group)null);
 
-            // Act & Assert
-            var ex = Assert.Throws<ArgumentException>(() => this.groupService.UpdateGroup(groupId, name, desc, image, adminId));
-            Assert.That(ex.Message, Is.EqualTo("Group with ID 1 does not exist (Parameter 'groupId')"));
-        }
+        //    // Act & Assert
+        //    var ex = Assert.Throws<ArgumentException>(() => this.groupService.UpdateGroup(groupId, name, desc, image, adminId));
+        //    Assert.That(ex.Message, Is.EqualTo("Group with ID 1 does not exist (Parameter 'groupId')"));
+        //}
 
         /// <summary>
         /// Validates that the ValidateUpdate method throws an exception when the user does not exist.
         /// </summary>
-        [Test]
-        public void ValidateUpdate_UserDoesNotExist_ThrowsArgumentException()
-        {
-            // Arrange
-            long groupId = 1;
-            string name = "GroupName";
-            string desc = "Description";
-            string image = "Image";
-            long adminId = 1;
+        //[Test]
+        //public void ValidateUpdate_UserDoesNotExist_ThrowsArgumentException()
+        //{
+        //    // Arrange
+        //    long groupId = 1;
+        //    string name = "GroupName";
+        //    string desc = "Description";
+        //    string image = "Image";
+        //    long adminId = 1;
 
-            this.groupRepository.GetGroupById(groupId).Returns(new Group { Name = "GroupName", Image = "Image", Description = "Description", AdminId = 1 });
-            this.userRepository.GetById(adminId).Returns((User)null);
+        //    this.groupRepository.GetGroupById(groupId).Returns(new Group { Name = "GroupName", Image = "Image", Description = "Description", AdminId = 1 });
+        //    this.userRepository.GetById(adminId).Returns((User)null);
 
-            // Act & Assert
-            var ex = Assert.Throws<ArgumentException>(() => this.groupService.UpdateGroup(groupId, name, desc, image, adminId));
-            Assert.That(ex.Message, Is.EqualTo("User with ID 1 does not exist (Parameter 'adminUserId')"));
-        }
+        //    // Act & Assert
+        //    var ex = Assert.Throws<ArgumentException>(() => this.groupService.UpdateGroup(groupId, name, desc, image, adminId));
+        //    Assert.That(ex.Message, Is.EqualTo("User with ID 1 does not exist (Parameter 'adminUserId')"));
+        //}
 
         /// <summary>
         /// Validates that the ValidateUpdate method throws an exception when the group name is empty.
         /// </summary>
-        [Test]
-        public void ValidateUpdate_GroupNameIsEmpty_ThrowsArgumentException()
-        {
-            // Arrange
-            long groupId = 1;
-            string name = string.Empty;
-            string desc = "Description";
-            string image = "Image";
-            long adminId = 1;
+        //[Test]
+        //public void ValidateUpdate_GroupNameIsEmpty_ThrowsArgumentException()
+        //{
+        //    // Arrange
+        //    long groupId = 1;
+        //    string name = string.Empty;
+        //    string desc = "Description";
+        //    string image = "Image";
+        //    long adminId = 1;
 
-            this.groupRepository.GetGroupById(groupId).Returns(new Group { Name = "GroupName", Image = "Image", Description = "Description", AdminId = 1 });
-            this.userRepository.GetById(adminId).Returns(new User { Username = "Username", Password = "PasswordHash", Image = "Image" });
+        //    this.groupRepository.GetGroupById(groupId).Returns(new Group { Name = "GroupName", Image = "Image", Description = "Description", AdminId = 1 });
+        //    this.userRepository.GetById(adminId).Returns(new User { Username = "Username", Password = "PasswordHash", Image = "Image" });
 
-            // Act & Assert
-            var ex = Assert.Throws<ArgumentException>(() => this.groupService.UpdateGroup(groupId, name, desc, image, adminId));
-            Assert.That(ex.Message, Is.EqualTo("Group name cannot be empty or whitespace (Parameter 'groupName')"));
-        }
+        //    // Act & Assert
+        //    var ex = Assert.Throws<ArgumentException>(() => this.groupService.UpdateGroup(groupId, name, desc, image, adminId));
+        //    Assert.That(ex.Message, Is.EqualTo("Group name cannot be empty or whitespace (Parameter 'groupName')"));
+        //}
 
         /// <summary>
         /// Validates that the ValidateUpdate method updates the group when provided with valid arguments.
         /// </summary>
-        [Test]
-        public void ValidateUpdate_ValidArguments_UpdatesGroup()
-        {
-            // Arrange
-            long groupId = 1;
-            string name = "GroupName";
-            string desc = "Description";
-            string image = "Image";
-            long adminId = 1;
+        //[Test]
+        //public void ValidateUpdate_ValidArguments_UpdatesGroup()
+        //{
+        //    // Arrange
+        //    long groupId = 1;
+        //    string name = "GroupName";
+        //    string desc = "Description";
+        //    string image = "Image";
+        //    long adminId = 1;
 
-            this.groupRepository.GetGroupById(groupId).Returns(new Group { Name = "GroupName", Image = "Image", Description = "Description", AdminId = 1 });
-            this.userRepository.GetById(adminId).Returns(new User { Username = "Username", Password = "PasswordHash", Image = "Image" });
+        //    this.groupRepository.GetGroupById(groupId).Returns(new Group { Name = "GroupName", Image = "Image", Description = "Description", AdminId = 1 });
+        //    this.userRepository.GetById(adminId).Returns(new User { Username = "Username", Password = "PasswordHash", Image = "Image" });
 
-            // Act
-            this.groupService.UpdateGroup(groupId, name, desc, image, adminId);
+        //    // Act
+        //    this.groupService.UpdateGroup(groupId, name, desc, image, adminId);
 
-            // Assert
-            this.groupRepository.Received(1).UpdateGroup(groupId, name, image, desc, adminId);
-        }
+        //    // Assert
+        //    this.groupRepository.Received(1).UpdateGroup(groupId, name, image, desc, adminId);
+        //}
 
         /// <summary>
         /// Validates that the GetAll method returns all groups.

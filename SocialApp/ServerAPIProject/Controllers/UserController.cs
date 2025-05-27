@@ -1,16 +1,12 @@
 namespace Server.Controllers
 {
     using System.Collections.Generic;
-    using System.Diagnostics;
     using ServerLibraryProject.Interfaces;
     using ServerLibraryProject.Models;
     using Microsoft.AspNetCore.Mvc;
-    using ServerAPIProject.DTOs;
-    /// <summary>
-    /// Controller for managing user-related operations.
-    /// </summary>
+
     [ApiController]
-    [Route("users")]
+    [Route("api/users")]
     public class UserController : ControllerBase
     {
         private readonly IUserService userService;
@@ -20,27 +16,20 @@ namespace Server.Controllers
             this.userService = userService;
         }
 
-        [HttpDelete("{userId}")]
-        public IActionResult DeleteUser(long userId)
+
+        [HttpPost("{userId}/followers")]
+        public IActionResult FollowUser(long userId, [FromBody] long followerId)
         {
             try
             {
-                this.userService.DeleteUser(userId);
+                this.userService.FollowUserById(userId, followerId);
                 return this.Ok();
             }
-            catch
+            catch(Exception e)
             {
-                Debug.WriteLine("Error deleting user");
-                return this.BadRequest();
-
+                return BadRequest(e.Message);
             }
-        }
 
-        [HttpPost("users/{userId}/followers")]
-        public IActionResult FollowUser(long userId, long followUserId)
-        {
-            this.userService.FollowUserById(userId, followUserId);
-            return this.Ok();
         }
 
         [HttpGet]
@@ -56,32 +45,32 @@ namespace Server.Controllers
             {
                 return this.userService.GetById(id);
             }
-            catch
+            catch(Exception e)
             {
-                return this.BadRequest();
+                return this.BadRequest(e.Message);
             }
         }
 
-        [HttpGet("users/{username}")]
-        public ActionResult<User> GetUserByUsername(string username)
+        [HttpGet("user")]
+        public ActionResult<User> GetUserByUsername([FromQuery] string username)
         {
             try
             {
                 return this.userService.GetUserByUsername(username);
             }
-            catch
+            catch(Exception e)
             {
-                return this.BadRequest();
+                return this.BadRequest(e.Message);
             }
         }
 
-        [HttpGet("users/{userId}/followers")]
+        [HttpGet("{userId}/followers")]
         public ActionResult<List<User>> GetUserFollowers(long userId)
         {
             return this.userService.GetUserFollowers(userId);
         }
 
-        [HttpGet("users/{userId}/following")]
+        [HttpGet("{userId}/following")]
         public ActionResult<List<User>> GetUserFollowing(long userId)
         {
             return this.userService.GetUserFollowing(userId);
@@ -90,40 +79,31 @@ namespace Server.Controllers
         [HttpPost]
         public IActionResult SaveUser(User user)
         {
-            var savedUser = this.userService.Save(user);
-            return this.Ok(savedUser);
-        }
-
-        [HttpDelete("users/{userId}/followers/{unfollowUserId}")]
-        public IActionResult UnfollowUser(long userId, long unfollowUserId)
-        {
-            this.userService.UnfollowUserById(userId, unfollowUserId);
-            return this.Ok();
-        }
-
-        [HttpPut("{userId}")]
-        public IActionResult UpdateUser(long userId, [FromBody] UserDTO user)
-        {
-            var existingUser = this.userService.GetById(userId);
-            if (existingUser == null)
-            {
-                return this.NotFound();
-            }
-            string name = user.Name;
-            string email = user.Email;
-            string password = user.HashPassword;
-            string image = user.Image;
             try
             {
-                this.userService.UpdateUser(userId, name, email, password, image);
-                return this.Ok(existingUser);
+                var savedUser = this.userService.Save(user);
+                return this.Ok(savedUser);
             }
-            catch
+            catch (Exception e)
             {
-                Debug.WriteLine("Error updating user");
-                return this.BadRequest();
-            }
+                return this.BadRequest(e.Message);
 
+            }
+        }
+
+        [HttpDelete("{userId}/followers/{unfollowUserId}")]
+        public IActionResult UnfollowUser(long userId, long unfollowUserId)
+        {
+            try
+            {
+                this.userService.UnfollowUserById(userId, unfollowUserId);
+                return this.Ok();
+            }
+            catch (Exception e)
+            {
+                return this.BadRequest(e.Message);
+
+            }
         }
     }
 }

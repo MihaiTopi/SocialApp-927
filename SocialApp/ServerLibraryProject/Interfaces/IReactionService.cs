@@ -8,10 +8,14 @@ namespace ServerLibraryProject.Interfaces
     {
         List<Reaction> GetAllReactions();
 
-        List<Reaction> GetReactionsForPost(long postId);
+        List<Reaction> GetReactionsByPostId(long postId);
 
-        Reaction AddReaction(long userId, long postId, ReactionType type);
+        void AddReaction(Reaction reaction);
+
+        void UpdateReaction(Reaction reaction);
 
         void DeleteReaction(long userId, long postId);
+
+        Reaction GetReaction(long userId, long postId);
     }
 }

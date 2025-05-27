@@ -4,7 +4,6 @@ namespace ServerLibraryProject.Interfaces
 {
     public interface IUserRepository
     {
-        void DeleteById(long id);
         void Follow(long userId, long whoToFollowId);
         List<User> GetAll();
         User GetById(long id);
@@ -13,6 +12,5 @@ namespace ServerLibraryProject.Interfaces
         List<User> GetUserFollowing(long id);
         User Save(User entity);
         void Unfollow(long userId, long whoToUnfollowId);
-        void UpdateById(long id, string username, string email, string hashPassword, string image);
     }
 }

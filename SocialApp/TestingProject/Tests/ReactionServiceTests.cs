@@ -37,17 +37,18 @@ namespace TestingProject.Tests
             long userId = 1;
             long postId = 10;
             ReactionType newType = ReactionType.Like;
+            var reaction = new Reaction { UserId = userId, PostId = postId, Type = newType };
+
 
             var existingReaction = new Reaction { UserId = userId, PostId = postId, Type = ReactionType.Like };
-            this.reactionRepository.GetReactionByUserAndPost(userId, postId).Returns(existingReaction);
+            this.reactionRepository.GetReaction(userId, postId).Returns(existingReaction);
 
             // Act
-            var result = this.reactionService.AddReaction(userId, postId, newType);
+            this.reactionService.AddReaction(reaction);
 
             // Assert
-            this.reactionRepository.Received(1).UpdateByUserAndPost(userId, postId, newType);
-            this.reactionRepository.Received(2).GetReactionByUserAndPost(userId, postId); // once before, once after update
-            Assert.That(result, Is.EqualTo(existingReaction));
+            this.reactionRepository.Received(1).Update(userId, postId, newType);
+            this.reactionRepository.Received(2).GetReaction(userId, postId); // once before, once after update
         }
 
         /// <summary>
@@ -60,19 +61,17 @@ namespace TestingProject.Tests
             long userId = 1;
             long postId = 10;
             ReactionType type = ReactionType.Love;
+            var reaction = new Reaction { UserId = userId, PostId = postId, Type = type };
 
-            this.reactionRepository.GetReactionByUserAndPost(userId, postId).Returns(null as Reaction);
+            this.reactionRepository.GetReaction(userId, postId).Returns(null as Reaction);
 
             // Act
-            var result = this.reactionService.AddReaction(userId, postId, type);
+            this.reactionService.AddReaction(reaction);
 
             // Assert
-            this.reactionRepository.Received(1).Save(Arg.Is<Reaction>(r =>
+            this.reactionRepository.Received(1).Add(Arg.Is<Reaction>(r =>
                 r.UserId == userId && r.PostId == postId && r.Type == type));
 
-            Assert.That(result.UserId, Is.EqualTo(userId));
-            Assert.That(result.PostId, Is.EqualTo(postId));
-            Assert.That(result.Type, Is.EqualTo(type));
         }
 
         /// <summary>
@@ -85,7 +84,7 @@ namespace TestingProject.Tests
             long userId = 1;
             long postId = 10;
 
-            this.reactionRepository.GetReactionByUserAndPost(userId, postId).Returns(null as Reaction);
+            this.reactionRepository.GetReaction(userId, postId).Returns(null as Reaction);
 
             // Act & Assert
             var ex = Assert.Throws<Exception>(() => this.reactionService.DeleteReaction(userId, postId));
@@ -102,13 +101,13 @@ namespace TestingProject.Tests
             long userId = 1;
             long postId = 10;
 
-            this.reactionRepository.GetReactionByUserAndPost(userId, postId).Returns(new Reaction { UserId = userId, PostId = postId });
+            this.reactionRepository.GetReaction(userId, postId).Returns(new Reaction { UserId = userId, PostId = postId });
 
             // Act
             this.reactionService.DeleteReaction(userId, postId);
 
             // Assert
-            this.reactionRepository.Received(1).DeleteByUserAndPost(userId, postId);
+            this.reactionRepository.Received(1).Delete(userId, postId);
         }
 
         /// <summary>
@@ -145,10 +144,10 @@ namespace TestingProject.Tests
                 new Reaction { UserId = 1, PostId = postId, Type = ReactionType.Like },
                 new Reaction { UserId = 2, PostId = postId, Type = ReactionType.Love },
             };
-            this.reactionRepository.GetReactionsByPost(postId).Returns(reactions);
+            this.reactionRepository.GetReactionsByPostId(postId).Returns(reactions);
 
             // Act
-            var result = this.reactionService.GetReactionsForPost(postId);
+            var result = this.reactionService.GetReactionsByPostId(postId);
 
             // Assert
             Assert.That(result, Is.EqualTo(reactions));

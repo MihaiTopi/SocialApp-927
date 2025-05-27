@@ -64,14 +64,14 @@
         /// Deletes a post by ID.
         /// </summary>
         /// <param name="id">The ID of the post to delete.</param>
-        public void DeletePost(long id)
-        {
-            if (this.postRepository.GetPostById(id) == null)
-            {
-                throw new Exception("Post does not exist");
-            }
-            this.postRepository.DeletePostById(id);
-        }
+        //public void DeletePost(long id)
+        //{
+        //    if (this.postRepository.GetPostById(id) == null)
+        //    {
+        //        throw new Exception("Post does not exist");
+        //    }
+        //    this.postRepository.DeletePostById(id);
+        //}
 
         /// <summary>
         /// Updates a post by ID.
@@ -81,14 +81,14 @@
         /// <param name="description">The new description of the post.</param>
         /// <param name="visibility">The new visibility of the post.</param>
         /// <param name="tag">The new tag of the post.</param>
-        public void UpdatePost(long id, string title, string description, PostVisibility visibility, PostTag tag)
-        {
-            if (this.postRepository.GetPostById(id) == null)
-            {
-                throw new Exception("Post does not exist");
-            }
-            this.postRepository.UpdatePostById(id, title, description, visibility, tag);
-        }
+        //public void UpdatePost(long id, string title, string description, PostVisibility visibility, PostTag tag)
+        //{
+        //    if (this.postRepository.GetPostById(id) == null)
+        //    {
+        //        throw new Exception("Post does not exist");
+        //    }
+        //    this.postRepository.UpdatePostById(id, title, description, visibility, tag);
+        //}
 
         /// <summary>
         /// Gets all posts.

@@ -51,39 +51,8 @@ namespace ServerLibraryProject.Services
             return this.userRepository.Save(new User() { Username = username, Password = password }).Id;
         }
 
-        /// <summary>
-        /// Validates and deletes a user by ID.
-        /// </summary>
-        /// <param name="id">The user ID.</param>
-        /// <exception cref="Exception">Thrown when the user does not exist.</exception>
-        public void DeleteUser(long id)
-        {
-            if (this.userRepository.GetById(id) == null)
-            {
-                throw new Exception("User does not exist");
-            }
 
-            this.userRepository.DeleteById(id);
-        }
 
-        /// <summary>
-        /// Validates and updates a user by ID.
-        /// </summary>
-        /// <param name="id">The user ID.</param>
-        /// <param name="username">The username.</param>
-        /// <param name="email">The email.</param>
-        /// <param name="password">The password.</param>
-        /// <param name="image">The image.</param>
-        /// <exception cref="Exception">Thrown when the user does not exist.</exception>
-        public void UpdateUser(long id, string username, string email, string password, string? image)
-        {
-            if (this.userRepository.GetById(id) == null)
-            {
-                throw new Exception("User does not exist");
-            }
-
-            this.userRepository.UpdateById(id, username, email, password, image);
-        }
 
         /// <summary>
         /// Gets all users.
@@ -178,9 +147,9 @@ namespace ServerLibraryProject.Services
         /// <param name="userId">The user ID.</param>
         /// <param name="query">The search query.</param>
         /// <returns>A list of users matching the query.</returns>
-        public List<User> SearchUsersById(long userId, string query)
+        public List<User> SearchUsersByUsername(long userId, string query)
         {
-            var followingUsers = this.GetUserFollowing(userId);
+            var followingUsers = this.GetUserFollowing(userId); // should be GetAllUsers or this GetUserFollowing ????
             return followingUsers.Where(u => u.Username.Contains(query, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
@@ -198,5 +167,6 @@ namespace ServerLibraryProject.Services
 
             return user.Password.Equals(password) ? user.Id : -1;
         }
+
     }
 }

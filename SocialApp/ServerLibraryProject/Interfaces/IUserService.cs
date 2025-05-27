@@ -18,15 +18,11 @@ namespace ServerLibraryProject.Interfaces
 
         User Save(User entity);
 
-        List<User> SearchUsersById(long userId, string query);
+        List<User> SearchUsersByUsername(long userId, string query);
 
         void UnfollowUserById(long userId, long whoToUnfollowId);
 
         long AddUser(string username, string email, string password, string image);
-
-        void DeleteUser(long id);
-
-        void UpdateUser(long id, string username, string email, string password, string? image);
 
         long Login(string username, string password);
     }

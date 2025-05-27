@@ -25,7 +25,7 @@ namespace ServerLibraryProject.Repositories
         /// </summary>
         /// <param name="userId">The ID of the user.</param>
         /// <param name="postId">The ID of the post.</param>
-        public void DeleteByUserAndPost(long userId, long postId)
+        public void Delete(long userId, long postId)
         {
             var reactionDeleted = (from reaction in dbContext.Reactions
                             where reaction.PostId == postId && reaction.UserId == userId
@@ -43,7 +43,7 @@ namespace ServerLibraryProject.Repositories
         /// <returns>A list of all reactions.</returns>
         public List<Reaction> GetAllReactions()
         {
-            return dbContext.Reactions.ToList();
+            return this.dbContext.Reactions.ToList();
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace ServerLibraryProject.Repositories
         /// </summary>
         /// <param name="postId">The ID of the post.</param>
         /// <returns>A list of reactions for the specified post.</returns>
-        public List<Reaction> GetReactionsByPost(long postId)
+        public List<Reaction> GetReactionsByPostId(long postId)
         {
             var reactionsQuery = from reaction in dbContext.Reactions
                                  where reaction.PostId == postId
@@ -66,7 +66,7 @@ namespace ServerLibraryProject.Repositories
         /// <param name="userId">The ID of the user.</param>
         /// <param name="postId">The ID of the post.</param>
         /// <returns>The reaction for the specified user and post.</returns>
-        public Reaction GetReactionByUserAndPost(long userId, long postId)
+        public Reaction GetReaction(long userId, long postId)
         {
             var reactionReturned = (from reaction in dbContext.Reactions
                                     where reaction.PostId == postId && reaction.UserId == userId
@@ -78,7 +78,7 @@ namespace ServerLibraryProject.Repositories
         /// Saves a new reaction to the repository.
         /// </summary>
         /// <param name="entity">The reaction entity to save.</param>
-        public void Save(Reaction entity)
+        public void Add(Reaction entity)
         {
             dbContext.Reactions.Add(entity);
             dbContext.SaveChanges();
@@ -90,7 +90,7 @@ namespace ServerLibraryProject.Repositories
         /// <param name="userId">The ID of the user.</param>
         /// <param name="postId">The ID of the post.</param>
         /// <param name="type">The new reaction type.</param>
-        public void UpdateByUserAndPost(long userId, long postId, ReactionType type)
+        public void Update(long userId, long postId, ReactionType type)
         {
             var reaction = dbContext.Reactions
                 .FirstOrDefault(r => r.PostId == postId && r.UserId == userId);

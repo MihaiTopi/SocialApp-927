@@ -5,7 +5,7 @@ using ServerLibraryProject.Interfaces;
 namespace ServerAPIProject.Controllers
 {
     [ApiController]
-    [Route("groups")]
+    [Route("api/groups")]
     public class GroupController : ControllerBase
     {
         private readonly IGroupService groupService;
@@ -33,11 +33,6 @@ namespace ServerAPIProject.Controllers
             return Ok(groupService.GetUsersFromGroup(id));
         }
 
-        [HttpGet("user/{userId}")]
-        public ActionResult<List<Group>> GetGroupsForUser(long userId)
-        {
-            return Ok(groupService.GetUserGroups(userId));
-        }
 
         [HttpPost]
         public IActionResult SaveGroup([FromBody] Group group)
@@ -46,18 +41,12 @@ namespace ServerAPIProject.Controllers
             return Ok(newGroup);
         }
 
-        [HttpPut("{id}")]
-        public IActionResult UpdateGroup(long id, [FromBody] Group group)
+        [HttpGet("{userId}/groups")]
+        public ActionResult<List<Group>> GetGroupsForUser(long userId)
         {
-            groupService.UpdateGroup(id, group.Name, group.Description, group.Image, group.AdminId);
-            return Ok();
+            return Ok(groupService.GetUserGroups(userId));
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult DeleteGroup(long id)
-        {
-            groupService.DeleteGroup(id);
-            return Ok();
-        }
+
     }
 }

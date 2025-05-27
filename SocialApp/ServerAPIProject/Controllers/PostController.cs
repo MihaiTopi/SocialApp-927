@@ -1,32 +1,26 @@
 ﻿using ServerLibraryProject.Interfaces;
 using ServerLibraryProject.Models;
 using Microsoft.AspNetCore.Mvc;
-using ServerAPIProject.DTOs;
-using System;
-using System.Collections.Generic;
 
 namespace Server.Controllers
 {
-    /// <summary>
-    /// Controller for managing post-related API endpoints.
-    /// </summary>
+    
     [ApiController]
-    [Route("posts")]
+    [Route("api/posts")]
     public class PostController : ControllerBase
     {
         private readonly IPostService postService;
+        private readonly IReactionService reactionService;
+        private readonly ICommentService commentService;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PostController"/> class.
-        /// </summary>
-        public PostController(IPostService postService)
+        public PostController(IPostService postService, IReactionService reactionService, ICommentService commentService)
         {
             this.postService = postService;
+            this.reactionService = reactionService;
+            this.commentService = commentService;
         }
 
-        /// <summary>
-        /// Gets all posts.
-        /// </summary>
+     
         [HttpGet]
         public ActionResult<List<Post>> GetAllPosts()
         {
@@ -40,9 +34,6 @@ namespace Server.Controllers
             }
         }
 
-        /// <summary>
-        /// Gets a post by its ID.
-        /// </summary>
         [HttpGet("{id}")]
         public ActionResult<Post> GetPostById(long id)
         {
@@ -60,9 +51,7 @@ namespace Server.Controllers
             }
         }
 
-        /// <summary>
-        /// Gets posts created by a specific user.
-        /// </summary>
+       
         [HttpGet("user/{userId}")]
         public ActionResult<List<Post>> GetPostsByUserId(long userId)
         {
@@ -76,9 +65,6 @@ namespace Server.Controllers
             }
         }
 
-        /// <summary>
-        /// Gets posts from a specific group.
-        /// </summary>
         [HttpGet("group/{groupId}")]
         public ActionResult<List<Post>> GetPostsByGroupId(long groupId)
         {
@@ -92,10 +78,8 @@ namespace Server.Controllers
             }
         }
 
-        /// <summary>
-        /// Gets a user's home feed.
-        /// </summary>
-        [HttpGet("homefeed/{userId}")]
+   
+        [HttpGet("user/{userId}/homefeed")]
         public ActionResult<List<Post>> FetHomeFeed(long userId)
         {
             try
@@ -108,10 +92,8 @@ namespace Server.Controllers
             }
         }
 
-        /// <summary>
-        /// Gets posts from groups that a user is part of.
-        /// </summary>
-        [HttpGet("groupfeed/{userId}")]
+   
+        [HttpGet("user/{userId}/groupfeed")]
         public ActionResult<List<Post>> GetGroupFeed(long userId)
         {
             try
@@ -124,9 +106,7 @@ namespace Server.Controllers
             }
         }
 
-        /// <summary>
-        /// Saves a new post.
-        /// </summary>
+
         [HttpPost]
         public IActionResult SavePost(Post post)
         {
@@ -144,41 +124,36 @@ namespace Server.Controllers
             }
         }
 
-        /// <summary>
-        /// Updates a post by its ID.
-        /// </summary>
-        [HttpPut("{postId}")]
-        public IActionResult UpdatePost(long postId, [FromBody] PostDTO post)
-        {
-            try
-            {
-                if (post == null)
-                    return BadRequest("Post update data cannot be null.");
 
-                this.postService.UpdatePost(postId, post.Title, post.Content, post.Visibility, post.Tag);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error updating post: {ex.Message}");
-            }
+
+        [HttpGet("{postId}/reactions")]
+        public ActionResult<List<Reaction>> GetReactionsByPost(long postId)
+        {
+            return this.reactionService.GetReactionsByPostId(postId);
         }
 
-        /// <summary>
-        /// Deletes a post by its ID.
-        /// </summary>
-        [HttpDelete("{postId}")]
-        public IActionResult DeletePost(long postId)
+
+
+        [HttpGet("{postId}/user/{userId}/reaction")]
+        public ActionResult<Reaction> GetUserPostReaction(long userId, long postId)
         {
-            try
-            {
-                this.postService.DeletePost(postId);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(404, $"Error deleting post: {ex.Message}");
-            }
+            return this.reactionService.GetReaction(userId, postId);
+        }
+
+
+        [HttpDelete("{postId}/user/{userId}/reaction")]
+        public IActionResult DeleteReaction(long postId, long userId)
+        {
+            this.reactionService.DeleteReaction(postId, userId);
+            return Ok();
+        }
+
+
+        [HttpGet("{postId}/comments")]
+        public ActionResult<List<Comment>> GetCommentsByPostId(long postId)
+        {
+            var comments = commentService.GetCommentsByPostId(postId);
+            return Ok(comments);
         }
     }
 }

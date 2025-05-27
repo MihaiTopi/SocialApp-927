@@ -6,33 +6,44 @@
     using ServerLibraryProject.Enums;
     using ServerLibraryProject.Interfaces;
 
-    public class ReactionService(IReactionRepository reactionRepository) : IReactionService
+    public class ReactionService : IReactionService
     {
+        private readonly IReactionRepository reactionRepository;
 
-        public Reaction AddReaction(long userId, long postId, ReactionType type)
+        public ReactionService(IReactionRepository reactionRepository)
         {
-            if (reactionRepository.GetReactionByUserAndPost(userId, postId) != null)
-            {
-                if (reactionRepository.GetReactionByUserAndPost(userId, postId).Type == type)
-                    reactionRepository.DeleteByUserAndPost(userId, postId);
-                reactionRepository.UpdateByUserAndPost(userId, postId, type);
-                return reactionRepository.GetReactionByUserAndPost(userId, postId);
-            }
-
-            Reaction reaction = new Reaction() { UserId = userId, PostId = postId, Type = type };
-            reactionRepository.Save(reaction);
-            return reaction;
+            this.reactionRepository = reactionRepository;
         }
 
-        public void DeleteReaction(long userId, long postId)
+        public void AddReaction(Reaction reaction)
         {
-            Reaction reaction = reactionRepository.GetReactionByUserAndPost(userId, postId);
+            if (reactionRepository.GetReaction(reaction.UserId, reaction.PostId) != null)
+            {
+                if (reactionRepository.GetReaction(reaction.UserId, reaction.PostId).Type == reaction.Type)
+                {
+                    reactionRepository.Delete(reaction.UserId, reaction.PostId);
+                }
+                else
+                {
+                    reactionRepository.Update(reaction.UserId, reaction.PostId, reaction.Type);
+                }
+            }
+            else
+            {
+                reactionRepository.Add(reaction);
+            }
+        }
+
+
+        public void DeleteReaction(long postId, long userId)
+        {
+            Reaction reaction = reactionRepository.GetReaction(userId, postId);
             if (reaction == null)
             {
                 throw new Exception("Reaction does not exist");
             }
 
-            reactionRepository.DeleteByUserAndPost(userId, postId);
+            reactionRepository.Delete(userId, postId);
         }
 
         public List<Reaction> GetAllReactions()
@@ -40,9 +51,19 @@
             return reactionRepository.GetAllReactions();
         }
 
-        public List<Reaction> GetReactionsForPost(long postId)
+        public List<Reaction> GetReactionsByPostId(long postId)
         {
-            return reactionRepository.GetReactionsByPost(postId);
+            return reactionRepository.GetReactionsByPostId(postId);
+        }
+
+        public Reaction GetReaction(long userId, long postId)
+        {
+            return this.reactionRepository.GetReaction(userId, postId);
+        }
+
+        public void UpdateReaction(Reaction reaction)
+        {
+            this.reactionRepository.Update(reaction.UserId, reaction.PostId, reaction.Type);
         }
     }
 }

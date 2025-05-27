@@ -6,7 +6,7 @@ namespace ServerLibraryProject.Interfaces
 {
     public interface IGroupRepository
     {
-        void DeleteGroupById(long id);
+        //void DeleteGroupById(long id);
 
         List<Group> GetAllGroups();
 
@@ -18,6 +18,6 @@ namespace ServerLibraryProject.Interfaces
 
         void SaveGroup(Group entity);
 
-        void UpdateGroup(long id, string name, string image, string description, long adminId);
+        //void UpdateGroup(long id, string name, string image, string description, long adminId);
     }
 }

@@ -28,15 +28,30 @@ namespace Server.Controllers
         [HttpPost("reactions")]
         public IActionResult SaveReaction([FromBody] Reaction entity)
         {
-            this.reactionService.AddReaction(entity);
-            return Ok();
+            try
+            {
+                this.reactionService.AddReaction(entity);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
 
         [HttpPut("reactions")]
         public IActionResult UpdateReaction([FromBody] Reaction entity)
         {
-            this.reactionService.UpdateReaction(entity);
-            return Ok();
+            try
+            {
+                this.reactionService.UpdateReaction(entity);
+                return Ok();
+            }catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
         }
     }
 }

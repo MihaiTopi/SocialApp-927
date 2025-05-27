@@ -27,14 +27,22 @@ namespace ServerLibraryProject.Repositories
         /// <param name="postId">The ID of the post.</param>
         public void Delete(long userId, long postId)
         {
-            var reactionDeleted = (from reaction in dbContext.Reactions
-                            where reaction.PostId == postId && reaction.UserId == userId
-                            select reaction).FirstOrDefault();
-            if (reactionDeleted != null)
+            try
             {
-                dbContext.Remove(reactionDeleted);
-                dbContext.SaveChanges();
+                var reactionDeleted = (from reaction in dbContext.Reactions
+                                       where reaction.PostId == postId && reaction.UserId == userId
+                                       select reaction).FirstOrDefault();
+                if (reactionDeleted != null)
+                {
+                    dbContext.Remove(reactionDeleted);
+                    dbContext.SaveChanges();
+                }
             }
+            catch
+            {
+                throw new Exception("Error deleting the reaction");
+            }
+
         }
 
         /// <summary>
@@ -68,10 +76,18 @@ namespace ServerLibraryProject.Repositories
         /// <returns>The reaction for the specified user and post.</returns>
         public Reaction GetReaction(long userId, long postId)
         {
-            var reactionReturned = (from reaction in dbContext.Reactions
-                                    where reaction.PostId == postId && reaction.UserId == userId
-                                    select reaction).FirstOrDefault();
-            return reactionReturned;
+            try
+            {
+                var reactionReturned = (from reaction in dbContext.Reactions
+                                        where reaction.PostId == postId && reaction.UserId == userId
+                                        select reaction).FirstOrDefault();
+                return reactionReturned;
+            }
+            catch
+            {
+                throw new Exception("Error retrieving the reaction by user and post");
+            }
+
         }
 
         /// <summary>
@@ -80,8 +96,14 @@ namespace ServerLibraryProject.Repositories
         /// <param name="entity">The reaction entity to save.</param>
         public void Add(Reaction entity)
         {
-            dbContext.Reactions.Add(entity);
-            dbContext.SaveChanges();
+            try
+            {
+                dbContext.Reactions.Add(entity);
+                dbContext.SaveChanges();
+            }catch
+            {
+                throw new Exception("Error saving the reaction");
+            }
         }
 
         /// <summary>
@@ -92,14 +114,21 @@ namespace ServerLibraryProject.Repositories
         /// <param name="type">The new reaction type.</param>
         public void Update(long userId, long postId, ReactionType type)
         {
-            var reaction = dbContext.Reactions
-                .FirstOrDefault(r => r.PostId == postId && r.UserId == userId);
-
-            if (reaction != null)
+            try
             {
-                reaction.Type = type;
-                dbContext.SaveChanges();
+                var reaction = dbContext.Reactions.FirstOrDefault(r => r.PostId == postId && r.UserId == userId);
+
+                if (reaction != null)
+                {
+                    reaction.Type = type;
+                    dbContext.SaveChanges();
+                }
             }
+            catch
+            {
+                throw new Exception("Error updating the reaction type");
+            }
+
         }
     }
 }

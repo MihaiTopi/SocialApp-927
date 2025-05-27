@@ -19,21 +19,22 @@ namespace Server.Controllers
         [HttpGet]
         public ActionResult<List<Comment>> GetAllComments()
         {
+
             var comments = commentService.GetAllComments();
             return Ok(comments);
         }
 
    
-        [HttpGet("{id}")]
-        public ActionResult<Comment> GetCommentById(long id)
-        {
-            var comment = commentService.GetCommentById((int)id);
-            if (comment == null)
-            {
-                return NotFound($"Comment with ID {id} not found.");
-            }
-            return Ok(comment);
-        }
+        //[HttpGet("{id}")]
+        //public ActionResult<Comment> GetCommentById(long id)
+        //{
+        //    var comment = commentService.GetCommentById((int)id);
+        //    if (comment == null)
+        //    {
+        //        return NotFound($"Comment with ID {id} not found.");
+        //    }
+        //    return Ok(comment);
+        //}
 
 
 
@@ -44,9 +45,7 @@ namespace Server.Controllers
             {
                 return BadRequest("Comment cannot be null.");
             }
-
-            var savedComment = commentService.AddComment(comment.Content, comment.UserId, comment.PostId);
-            return CreatedAtAction(nameof(GetCommentById), new { id = savedComment.Id }, savedComment);
+            return Ok(commentService.AddComment(comment.Content, comment.UserId, comment.PostId));
         }
 
 

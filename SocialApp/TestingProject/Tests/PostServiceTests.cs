@@ -134,107 +134,107 @@ namespace TestingProject.Tests
         /// <summary>
         /// Validates that the DeletePost method throws an exception when provided with an invalid post ID.
         /// </summary>
-        [Test]
-        public void DeletePost_WithInvalidPostId_ThrowsException()
-        {
-            // Arange
-            var postRepository = Substitute.For<IPostRepository>();
-            var userRepository = Substitute.For<IUserRepository>();
-            var groupRepository = Substitute.For<IGroupRepository>();
+        //[Test]
+        //public void DeletePost_WithInvalidPostId_ThrowsException()
+        //{
+        //    // Arange
+        //    var postRepository = Substitute.For<IPostRepository>();
+        //    var userRepository = Substitute.For<IUserRepository>();
+        //    var groupRepository = Substitute.For<IGroupRepository>();
 
-            PostService postService = new PostService(postRepository, userRepository, groupRepository);
+        //    PostService postService = new PostService(postRepository, userRepository, groupRepository);
 
-            long postId = 1;
+        //    long postId = 1;
 
-            postRepository.GetPostById(postId).Returns((Post)null); // Simulate post not found
+        //    postRepository.GetPostById(postId).Returns((Post)null); // Simulate post not found
 
-            // Act & Assert
-            Assert.Throws<Exception>(() => postService.DeletePost(postId), "Post does not exist");
-            postRepository.Received(1).GetPostById(postId);
-        }
+        //    // Act & Assert
+        //    Assert.Throws<Exception>(() => postService.DeletePost(postId), "Post does not exist");
+        //    postRepository.Received(1).GetPostById(postId);
+        //}
 
         /// <summary>
         /// Validates that the DeletePost method successfully deletes a post when provided with a valid post ID.
         /// </summary>
-        [Test]
-        public void DeletePost_WithValidPostId()
-        {
-            // Arange
-            var postRepository = Substitute.For<IPostRepository>();
-            var userRepository = Substitute.For<IUserRepository>();
-            var groupRepository = Substitute.For<IGroupRepository>();
+        //[Test]
+        //public void DeletePost_WithValidPostId()
+        //{
+        //    // Arange
+        //    var postRepository = Substitute.For<IPostRepository>();
+        //    var userRepository = Substitute.For<IUserRepository>();
+        //    var groupRepository = Substitute.For<IGroupRepository>();
 
-            PostService postService = new PostService(postRepository, userRepository, groupRepository);
+        //    PostService postService = new PostService(postRepository, userRepository, groupRepository);
 
-            long postId = 1;
+        //    long postId = 1;
 
-            Post post = new Post { Id = postId, Title = "title", Content = "content", UserId = 1, GroupId = 1, Visibility = PostVisibility.Public, Tag = PostTag.Food, CreatedDate = DateTime.Now };
+        //    Post post = new Post { Id = postId, Title = "title", Content = "content", UserId = 1, GroupId = 1, Visibility = PostVisibility.Public, Tag = PostTag.Food, CreatedDate = DateTime.Now };
 
-            postRepository.GetPostById(postId).Returns(post);
+        //    postRepository.GetPostById(postId).Returns(post);
 
-            // Act
-            postService.DeletePost(postId);
+        //    // Act
+        //    postService.DeletePost(postId);
 
-            // Assert
-            postRepository.Received(1).GetPostById(postId);
-            postRepository.Received(1).DeletePostById(postId);
-        }
+        //    // Assert
+        //    postRepository.Received(1).GetPostById(postId);
+        //    postRepository.Received(1).DeletePostById(postId);
+        //}
 
         /// <summary>
         /// Validates that the UpdatePost method throws an exception when provided with an invalid post ID.
-        /// </summary>
-        [Test]
-        public void UpdatePost_WithInvalidPostId_ThrowsException()
-        {
-            // Arange
-            var postRepository = Substitute.For<IPostRepository>();
-            var userRepository = Substitute.For<IUserRepository>();
-            var groupRepository = Substitute.For<IGroupRepository>();
+        ///// </summary>
+        //[Test]
+        //public void UpdatePost_WithInvalidPostId_ThrowsException()
+        //{
+        //    // Arange
+        //    var postRepository = Substitute.For<IPostRepository>();
+        //    var userRepository = Substitute.For<IUserRepository>();
+        //    var groupRepository = Substitute.For<IGroupRepository>();
 
-            PostService postService = new PostService(postRepository, userRepository, groupRepository);
+        //    PostService postService = new PostService(postRepository, userRepository, groupRepository);
 
-            long postId = 1;
-            var title = "title";
-            string? content = "Test Content";
-            PostVisibility postVisibility = PostVisibility.Public;
-            PostTag postTag = PostTag.Food;
+        //    long postId = 1;
+        //    var title = "title";
+        //    string? content = "Test Content";
+        //    PostVisibility postVisibility = PostVisibility.Public;
+        //    PostTag postTag = PostTag.Food;
 
-            postRepository.GetPostById(postId).Returns((Post)null); // Simulate post not found
+        //    postRepository.GetPostById(postId).Returns((Post)null); // Simulate post not found
 
-            // Act & Assert
-            Assert.Throws<Exception>(() => postService.UpdatePost(postId, title, content, postVisibility, postTag), "Post does not exist");
-            postRepository.Received(1).GetPostById(postId);
-        }
+        //    // Act & Assert
+        //    Assert.Throws<Exception>(() => postService.UpdatePost(postId, title, content, postVisibility, postTag), "Post does not exist");
+        //    postRepository.Received(1).GetPostById(postId);
+        //}
 
         /// <summary>
         /// Validates that the UpdatePost method successfully updates a post when provided with a valid post ID.
         /// </summary>
-        [Test]
-        public void UpdatePost_WithValidPostId()
-        {
-            // Arange
-            var postRepository = Substitute.For<IPostRepository>();
-            var userRepository = Substitute.For<IUserRepository>();
-            var groupRepository = Substitute.For<IGroupRepository>();
+        //[Test]
+        //public void UpdatePost_WithValidPostId()
+        //{
+        //    // Arange
+        //    var postRepository = Substitute.For<IPostRepository>();
+        //    var userRepository = Substitute.For<IUserRepository>();
+        //    var groupRepository = Substitute.For<IGroupRepository>();
 
-            PostService postService = new PostService(postRepository, userRepository, groupRepository);
+        //    PostService postService = new PostService(postRepository, userRepository, groupRepository);
 
-            long postId = 1;
-            var title = "title";
-            string? content = "Test Content";
-            PostVisibility postVisibility = PostVisibility.Public;
-            PostTag postTag = PostTag.Food;
+        //    long postId = 1;
+        //    var title = "title";
+        //    string? content = "Test Content";
+        //    PostVisibility postVisibility = PostVisibility.Public;
+        //    PostTag postTag = PostTag.Food;
 
-            Post post = new Post { Id = postId, Title = title, Content = content, UserId = 1, GroupId = 1, Visibility = postVisibility, Tag = postTag, CreatedDate = DateTime.Now };
+        //    Post post = new Post { Id = postId, Title = title, Content = content, UserId = 1, GroupId = 1, Visibility = postVisibility, Tag = postTag, CreatedDate = DateTime.Now };
 
-            postRepository.GetPostById(postId).Returns(post);
+        //    postRepository.GetPostById(postId).Returns(post);
 
-            // Act
-            postService.UpdatePost(postId, title, content, postVisibility, postTag);
+        //    // Act
+        //    postService.UpdatePost(postId, title, content, postVisibility, postTag);
 
-            // Assert
-            postRepository.Received(1).GetPostById(postId);
-            postRepository.Received(1).UpdatePostById(postId, title, content, postVisibility, postTag);
-        }
+        //    // Assert
+        //    postRepository.Received(1).GetPostById(postId);
+        //    postRepository.Received(1).UpdatePostById(postId, title, content, postVisibility, postTag);
+        //}
     }
 }

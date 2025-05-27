@@ -45,18 +45,41 @@
         {
             modelBuilder.Entity<GroupUser>()
                 .HasKey(groupUser => new { groupUser.UserId, groupUser.GroupId });
+            modelBuilder.Entity<GroupUser>(entity =>
+            {
+                entity.HasOne<User>()
+                    .WithMany()
+                    .HasForeignKey(groupUser => groupUser.UserId)
+                    .OnDelete(DeleteBehavior.NoAction);
+                entity.HasOne<Group>()
+                    .WithMany()
+                    .HasForeignKey(groupUser => groupUser.GroupId)
+                    .OnDelete(DeleteBehavior.NoAction);
+            });
 
             modelBuilder.Entity<UserFollower>()
                 .HasKey(userFollower => new { userFollower.UserId, userFollower.FollowerId });
+            modelBuilder.Entity<UserFollower>(entity =>
+            {
+                entity.HasOne<User>()
+                    .WithMany()
+                    .HasForeignKey(userFollower => userFollower.UserId)
+                    .OnDelete(DeleteBehavior.NoAction);
+                entity.HasOne<User>()
+                    .WithMany()
+                    .HasForeignKey(userFollower => userFollower.FollowerId)
+                    .OnDelete(DeleteBehavior.NoAction);
+            });
+
 
             modelBuilder.Entity<User>(entity =>
             {
-                entity.ToTable("Users", tableBuilder =>
-                {
-                    tableBuilder.HasCheckConstraint("CK_User_Height_Positive", "[height] > 0");
-                    tableBuilder.HasCheckConstraint("CK_User_Weight_Positive", "[weight] > 0");
-                    tableBuilder.HasCheckConstraint("CK_User_Goal_Valid", "[goal] IN ('lose weight', 'mentain', 'gain muscles')");
-                });
+                //entity.ToTable("Users", tableBuilder =>
+                //{ 
+                //    tableBuilder.HasCheckConstraint("CK_User_Height_Positive", "[height] > 0");
+                //    tableBuilder.HasCheckConstraint("CK_User_Weight_Positive", "[weight] > 0");
+                //    tableBuilder.HasCheckConstraint("CK_User_Goal_Valid", "[goal] IN ('lose weight', 'mentain', 'gain muscles')");
+                //});
 
                 entity.HasIndex(user => user.Username).IsUnique();
             });
@@ -80,10 +103,65 @@
 
             modelBuilder.Entity<Reaction>()
                 .HasKey(reaction => new { reaction.UserId, reaction.PostId });
-
             modelBuilder.Entity<Reaction>()
                 .Property(reaction => reaction.Type)
-                .HasColumnName("ReactionType");
+                .HasConversion<string>();
+            modelBuilder.Entity<Reaction>(entity =>
+            {
+                entity.HasOne<User>()
+                    .WithMany()
+                    .HasForeignKey(reaction => reaction.UserId)
+                    .OnDelete(DeleteBehavior.NoAction);
+                entity.HasOne<Post>()
+                    .WithMany()
+                    .HasForeignKey(reaction => reaction.PostId)
+                    .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            modelBuilder.Entity<Post>()
+                .Property(post => post.Visibility)
+                .HasConversion<string>();
+            modelBuilder.Entity<Post>()
+                .Property(post => post.Tag)
+                .HasConversion<string>();
+            modelBuilder.Entity<Post>()
+                .Property(post => post.CreatedDate)
+                .HasDefaultValueSql("GETDATE()");
+            modelBuilder.Entity<Post>(entity =>
+            {
+                entity.HasOne<User>()
+                    .WithMany()
+                    .HasForeignKey(post => post.UserId)
+                    .OnDelete(DeleteBehavior.NoAction);
+
+                entity.HasOne<Group>()
+                    .WithMany()
+                    .HasForeignKey(post => post.GroupId)
+                    .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            modelBuilder.Entity<Group>(entity =>
+            {
+                entity.HasOne<User>()
+                .WithMany()
+                .HasForeignKey(group => group.AdminId)
+                .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            modelBuilder.Entity<Comment>(entity =>
+            {
+                entity.HasOne<Post>()
+                    .WithMany()
+                    .HasForeignKey(comment => comment.PostId)
+                    .OnDelete(DeleteBehavior.NoAction);
+                entity.HasOne<User>()
+                    .WithMany()
+                    .HasForeignKey(comment => comment.UserId)
+                    .OnDelete(DeleteBehavior.NoAction);
+            });
+            modelBuilder.Entity<Comment>()
+                .Property(comment => comment.CreatedDate)
+                .HasDefaultValueSql("GETDATE()");
         }
     }
 }

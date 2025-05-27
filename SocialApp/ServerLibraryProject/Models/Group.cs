@@ -1,20 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ServerLibraryProject.Models
+﻿namespace ServerLibraryProject.Models
 {
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
+    [Table("Groups")]
     public class Group
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column("id")]
         public long Id { get; set; }
+
+        [Column("name")]
         public string Name { get; set; }
+
+        [Column("image")]
         public string? Image { get; set; }
+
+        [Column("description")]
         public string Description { get; set; }
+
+        [Column("admin_id")]
         public long AdminId { get; set; }
     }
 }

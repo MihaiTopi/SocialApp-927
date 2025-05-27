@@ -12,7 +12,7 @@ namespace Server.Controllers
 
         public CommentController(ICommentService commentService)
         {
-            commentService = commentService;
+            this.commentService = commentService;
         }
 
      

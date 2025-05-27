@@ -186,7 +186,7 @@ INSERT INTO Reactions (user_id, post_id, reaction_type) VALUES
 -- GroupUsers: Assign users to groups
 INSERT INTO GroupUsers (user_id, group_id) VALUES
 (1, 1), (1, 2), (1, 4),
-(2, 1),
+(2, 1), (2, 2),
 (3, 3), (3, 4), 
 (4, 1), (4, 4),
 (5, 2), (5, 4), (5, 5),

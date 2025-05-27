@@ -1,5 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using ServerLibraryProject.Data;
+using ServerLibraryProject.Interfaces;
+using ServerLibraryProject.Repositories;
+using ServerLibraryProject.Services;
 using ServerMVCProject.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,10 +12,40 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<SocialAppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = false;
+    options.SignIn.RequireConfirmedEmail = false;
+})
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddScoped<IPostRepository, PostRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IGroupRepository, GroupRepository>();
+builder.Services.AddScoped<IMealRepository, MealRepository>();
+builder.Services.AddScoped<IIngredientRepository, IngredientRepository>();
+builder.Services.AddScoped<IBodyMetricRepository, BodyMetricRepository>();
+builder.Services.AddScoped<ICalorieRepository, CalorieRepository>();
+builder.Services.AddScoped<IMacrosRepository, MacrosRepository>();
+builder.Services.AddScoped<IWaterIntakeRepository, WaterIntakeRepository>();
+builder.Services.AddScoped<IDataLink, DataLink>();
+
+// Add services that controllers depend on
+builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IMealService, MealService>();
+builder.Services.AddScoped<IBodyMetricService, BodyMetricService>();
+builder.Services.AddScoped<ICalorieService, CalorieService>();
+builder.Services.AddSession();
+builder.Services.AddScoped<IWaterIntakeService, WaterService>();
+builder.Services.AddScoped<IGroupService, GroupService>();
+builder.Services.AddScoped<IMacrosService, MacrosService>();
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();

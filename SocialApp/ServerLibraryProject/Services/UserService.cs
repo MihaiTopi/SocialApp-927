@@ -30,6 +30,7 @@ namespace ServerLibraryProject.Services
         /// <param name="email">The email.</param>
         /// <param name="password">The password.</param>
         /// <param name="image">The image.</param>
+        /// <returns>id of user.</returns>
         /// <exception cref="Exception">Thrown when validation fails.</exception>
         public long AddUser(string username, string email, string password, string image)
         {

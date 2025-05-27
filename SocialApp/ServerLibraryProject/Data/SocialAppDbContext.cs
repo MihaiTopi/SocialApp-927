@@ -1,8 +1,8 @@
 ﻿namespace ServerLibraryProject.Data
 {
+    using Microsoft.EntityFrameworkCore;
     using ServerLibraryProject.DbRelationshipEntities;
     using ServerLibraryProject.Models;
-    using Microsoft.EntityFrameworkCore;
 
     public class SocialAppDbContext : DbContext
     {
@@ -10,7 +10,7 @@
             : base(options)
         {
         }
-
+        public DbSet<Water> WaterTrackers { get; set; } = default!;
 
         public DbSet<Post> Posts { get; set; } = default!;
 
@@ -22,11 +22,24 @@
 
         public DbSet<Group> Groups { get; set; } = default!;
 
+        public DbSet<GroceryIngredient> GroceryIngredients { get; set; } = default!;
+
+        public DbSet<Ingredient> Ingredient { get; set; } = default!;
+
         public DbSet<Reaction> Reactions { get; set; } = default!;
 
         public DbSet<User> Users { get; set; } = default!;
 
+        public DbSet<Calorie> Calories { get; set; } = default!;
 
+        public DbSet<Meal> Meals { get; set; } = default!;
+
+        public DbSet<MealIngredient> MealIngredients { get; set; } = default!;
+
+
+        public DbSet<Ingredient> Ingredients { get; set; } = default!;
+
+        public DbSet<Macros> Macros { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -47,6 +60,23 @@
 
                 entity.HasIndex(user => user.Username).IsUnique();
             });
+
+
+            modelBuilder.Entity<GroceryIngredient>()
+            .HasKey(groceryIngredient => new { groceryIngredient.Id, groceryIngredient.IngredientId });
+
+            modelBuilder.Entity<Macros>()
+                .HasKey(m => new { m.DailyMealId });
+            modelBuilder.Entity<Ingredient>().HasKey(ingredient => new { ingredient.Id });
+
+            modelBuilder.Entity<Post>()
+                .Property(post => post.Visibility)
+                .HasConversion<int>();
+
+            modelBuilder.Entity<Calorie>()
+                .HasOne(c => c.User)
+                .WithMany() // Assuming a one-to-many relationship from User to Calorie
+                .HasForeignKey(c => c.U_Id);
 
             modelBuilder.Entity<Reaction>()
                 .HasKey(reaction => new { reaction.UserId, reaction.PostId });

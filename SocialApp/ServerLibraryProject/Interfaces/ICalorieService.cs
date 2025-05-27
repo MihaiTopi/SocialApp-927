@@ -1,0 +1,11 @@
+﻿namespace ServerLibraryProject.Interfaces
+{
+    public interface ICalorieService
+    {
+        double GetGoal(long userId);
+
+        double GetFood(long userId);
+
+        double GetExercise(long userId);
+    }
+}

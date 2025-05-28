@@ -10,7 +10,7 @@
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("id")]
         public long Id { get; set; }
-
+      
         [Column("user_id")]
         required public long UserId { get; set; }
 

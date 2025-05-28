@@ -1,8 +1,8 @@
 ﻿namespace ServerLibraryProject.Data
 {
+    using Microsoft.EntityFrameworkCore;
     using ServerLibraryProject.DbRelationshipEntities;
     using ServerLibraryProject.Models;
-    using Microsoft.EntityFrameworkCore;
 
     public class SocialAppDbContext : DbContext
     {
@@ -10,7 +10,6 @@
             : base(options)
         {
         }
-
 
         public DbSet<Post> Posts { get; set; } = default!;
 
@@ -25,7 +24,6 @@
         public DbSet<Reaction> Reactions { get; set; } = default!;
 
         public DbSet<User> Users { get; set; } = default!;
-
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -70,6 +68,7 @@
 
                 entity.HasIndex(user => user.Username).IsUnique();
             });
+
 
             modelBuilder.Entity<Reaction>()
                 .HasKey(reaction => new { reaction.UserId, reaction.PostId });

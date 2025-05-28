@@ -41,7 +41,7 @@
 
                     // at this point, the register is successful
                     // here you redirect to Body Metrics page (for registering new user)
-                    return this.RedirectToAction("Update", "UpdateBodyMetric");
+                    return this.RedirectToAction("Index", "ViewPosts");
                 }
                 else
                 {
@@ -80,7 +80,7 @@
 
                     // at this point, the register is successful
                     // here you redirect to Main page (Dashboard)
-                    return this.RedirectToAction("Dashboard", "Dashboard");
+                    return this.RedirectToAction("Index", "ViewPosts");
                 }
                 else
                 {

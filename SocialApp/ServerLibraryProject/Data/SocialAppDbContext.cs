@@ -70,11 +70,6 @@
             });
 
 
-            modelBuilder.Entity<Post>()
-                .Property(post => post.Visibility)
-                .HasConversion<int>();
-
-
             modelBuilder.Entity<Reaction>()
                 .HasKey(reaction => new { reaction.UserId, reaction.PostId });
             modelBuilder.Entity<Reaction>()

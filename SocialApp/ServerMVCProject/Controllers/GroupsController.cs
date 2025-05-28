@@ -47,17 +47,17 @@
             return View(group);
         }
 
-        [HttpPost("edit/{id}")]
-        [ValidateAntiForgeryToken]
-        public IActionResult Edit(CommonGroup group)
-        {
-            if (ModelState.IsValid)
-            {
-                _groupService.UpdateGroup(group.Id, group.Name, group.Description, group.Image, group.AdminId);
-                return RedirectToAction(nameof(Index));
-            }
-            return View(group);
-        }
+        //[HttpPost("edit/{id}")]
+        //[ValidateAntiForgeryToken]
+        //public IActionResult Edit(CommonGroup group)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _groupService.UpdateGroup(group.Id, group.Name, group.Description, group.Image, group.AdminId);
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    return View(group);
+        //}
 
         [HttpGet("delete/{id}")]
         public IActionResult Delete(int id)
@@ -67,12 +67,12 @@
             return View(group);
         }
 
-        [HttpPost("delete/{id}")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
-        {
-            _groupService.DeleteGroup(id);
-            return RedirectToAction(nameof(Index));
-        }
+        //[HttpPost("delete/{id}")]
+        //[ValidateAntiForgeryToken]
+        //public IActionResult DeleteConfirmed(int id)
+        //{
+        //    _groupService.DeleteGroup(id);
+        //    return RedirectToAction(nameof(Index));
+        //}
     }
 }

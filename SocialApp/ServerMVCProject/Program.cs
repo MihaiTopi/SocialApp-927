@@ -4,15 +4,16 @@ using ServerLibraryProject.Data;
 using ServerLibraryProject.Interfaces;
 using ServerLibraryProject.Repositories;
 using ServerLibraryProject.Services;
-using ServerLibraryProject.Data;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
-
+// Add services to the container.
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<SocialAppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+    options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<SocialAppDbContext>(options =>
+    options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>
@@ -59,4 +60,5 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
+app.UseSession();
 app.Run();

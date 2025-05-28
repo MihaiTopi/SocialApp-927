@@ -6,7 +6,7 @@
     using ServerMVCProject.Models;
 
     [ApiController]
-    [Route("UserController")]
+    [Route("User")]
     public class UserController : Controller
     {
         private readonly IUserService _userService;
@@ -29,7 +29,7 @@
         }
 
         [HttpPost("Register")]
-        public IActionResult Register(AuthenticationModel user)
+        public IActionResult Register([FromForm] AuthenticationModel user)
         {
             try
             {
@@ -60,7 +60,7 @@
         }
 
         [HttpPost("Login")]
-        public IActionResult Login(AuthenticationModel user)
+        public IActionResult Login([FromForm] AuthenticationModel user)
         {
             try
             {

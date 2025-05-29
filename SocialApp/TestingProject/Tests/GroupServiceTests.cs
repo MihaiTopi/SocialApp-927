@@ -194,5 +194,65 @@ namespace TestingProject.Tests
             // Assert
             Assert.That(result, Is.EqualTo(groups));
         }
+
+        /// <summary>
+        /// Validates that AddGroup creates a group when provided with valid arguments.
+        /// </summary>
+        [Test]
+        public void AddGroup_ValidArguments_CreatesGroup()
+        {
+            // Arrange
+            string name = "NewGroup";
+            string desc = "NewDescription";
+            string image = "NewImage";
+            long adminId = 1;
+            var adminUser = new User { Id = adminId, Username = "Admin", Password = "PasswordHash", Image = "AdminImage" };
+            this.userRepository.GetById(adminId).Returns(adminUser);
+
+            // Act
+            var result = this.groupService.AddGroup(name, desc, image, adminId);
+
+            // Assert
+            Assert.That(result.Name, Is.EqualTo(name));
+            Assert.That(result.Description, Is.EqualTo(desc));
+            Assert.That(result.Image, Is.EqualTo(image));
+            Assert.That(result.AdminId, Is.EqualTo(adminId));
+            this.groupRepository.Received(1).SaveGroup(Arg.Is<Group>(g => g.Name == name && g.Description == desc && g.Image == image && g.AdminId == adminId));
+        }
+
+        /// <summary>
+        /// Validates that AddGroup throws an exception when the group name is empty.
+        /// </summary>
+        [Test]
+        public void AddGroup_EmptyName_ThrowsArgumentException()
+        {
+            // Arrange
+            string name = string.Empty;
+            string desc = "Description";
+            string image = "Image";
+            long adminId = 1;
+
+            // Act & Assert
+            var ex = Assert.Throws<ArgumentException>(() => this.groupService.AddGroup(name, desc, image, adminId));
+            Assert.That(ex.Message, Is.EqualTo("Group name cannot be empty"));
+        }
+
+        /// <summary>
+        /// Validates that AddGroup throws an exception when the admin user does not exist.
+        /// </summary>
+        [Test]
+        public void AddGroup_AdminDoesNotExist_ThrowsArgumentException()
+        {
+            // Arrange
+            string name = "NewGroup";
+            string desc = "Description";
+            string image = "Image";
+            long adminId = 1;
+            this.userRepository.GetById(adminId).Returns((User)null);
+
+            // Act & Assert
+            var ex = Assert.Throws<ArgumentException>(() => this.groupService.AddGroup(name, desc, image, adminId));
+            Assert.That(ex.Message, Is.EqualTo("User does not exist"));
+        }
     }
 }

@@ -36,7 +36,7 @@ namespace ServerMVCProject.Controllers
                 Visibility = model.Visibility,
                 Tag = model.Tag,
                 UserId = 46,      // hardcoded
-                GroupId = 1,    // hardcoded
+                GroupId = 18,    // hardcoded
                 CreatedDate = DateTime.UtcNow
             };
             try

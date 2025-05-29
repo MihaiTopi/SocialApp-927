@@ -1,4 +1,7 @@
 ﻿@model List<ServerLibraryProject.Models.Post>
+@using ServerLibraryProject.Interfaces
+@inject ICommentService CommentService
+@inject IUserRepository UserRepository
 @{
     ViewData["Title"] = "All Posts";
 
@@ -38,9 +41,15 @@
                 _ => "#393e46" // Default dark gray
             };
 
+            // Get comments for this post
+            var comments = CommentService.GetCommentsByPostId(post.Id);
+
+            // Get post author username
+            var postAuthor = UserRepository.GetById(post.UserId);
+
             <div style="background-color: @tagColor; padding: 15px 20px; border-radius: 10px; margin-bottom: 20px; color: black; position: relative;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h4 style="margin: 0;">Post #@post.Id</h4>
+                    <h4 style="margin: 0;">@postAuthor.Username</h4>
                     <span style="background-color: white; padding: 2px 10px; border-radius: 12px; margin-right: 25px; font-size: 0.8em;">@post.Visibility</span>
                 </div>
 
@@ -60,17 +69,81 @@
                     <button type="button" title="Angry" style="background: none; border: none; cursor: pointer;">
                         😡 <span>0</span>
                     </button>
+
+                    <!-- Comment Button with Emoji -->
+                    <button type="button"
+                            onclick="toggleComments('comments-@post.Id')"
+                            title="Comments"
+                            style="background: none; border: none; cursor: pointer; margin-left: auto;">
+                        💬 <span>@comments.Count</span>
+                    </button>
                 </div>
 
-                <!-- Created Date + Comments Button -->
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 0.8em;">
+                <!-- Created Date -->
+                <div style="display: flex; align-items: center; margin-top: 10px; font-size: 0.8em;">
                     <span style="color: #333;">
                         @($"{(DateTime.UtcNow - post.CreatedDate).Days} days ago")
                     </span>
+                </div>
 
-                    <!-- Comments Button -->
+                <!-- Comments Dropdown Section - Hidden by Default -->
+                <div id="comments-@post.Id" class="comments-dropdown" style="display: none; margin-top: 15px;">
+                    <div style="background-color: white; border-radius: 8px; padding: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                        <!-- Comments List -->
+                        <div style="max-height: 200px; overflow-y: auto; margin-bottom: 10px;">
+                            @if (comments.Any())
+                            {
+                                @foreach (var comment in comments)
+                                {
+                                    // Get comment author username
+                                    var commentAuthor = UserRepository.GetById(comment.UserId);
 
-                    <a href="/comments/create?postId=@post.Id" class="btn btn-outline-secondary mx-2">Leave a Comment</a>
+                                    <div style="padding: 8px; border-bottom: 1px solid #eee; font-size: 0.9em;">
+                                        <div style="font-weight: bold;">@commentAuthor.Username</div>
+                                        <div>@comment.Content</div>
+                                        <div style="font-size: 0.8em; color: #777;">
+                                            @comment.CreatedDate.ToString("MMM dd, yyyy hh:mm tt")
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div style="padding: 10px; text-align: center; color: #777;">No comments yet</div>
+                            }
+                        </div>
+
+                        <!-- Comment Input Form -->
+                        <form action="/comments/create" method="post" class="comment-form">
+                            <input type="hidden" name="PostId" value="@post.Id" />
+                            @{
+                                // Get the current user ID from session
+                                var currentUserIdString = Context.Session.GetString("UserId");
+                                var currentUsername = "You";
+                                if (!string.IsNullOrEmpty(currentUserIdString) && long.TryParse(currentUserIdString, out long currentUserId))
+                                {
+                                    try
+                                    {
+                                        var currentUser = UserRepository.GetById(currentUserId);
+                                        currentUsername = currentUser.Username;
+                                    }
+                                    catch { }
+                                }
+                            }
+                            <input type="hidden" name="CurrentUsername" value="@currentUsername" />
+                            <div style="display: flex;">
+                                <input type="text"
+                                       name="Content"
+                                       placeholder="Add a comment..."
+                                       required
+                                       style="flex-grow: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px; margin-right: 5px;" />
+                                <button type="submit"
+                                        style="background-color: #00ADB5; border: none; color: white; padding: 8px 15px; border-radius: 4px; cursor: pointer;">
+                                    Post
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
 
                 <!-- Profile Icon -->
@@ -95,3 +168,93 @@
         </div>
     </div>
 </div>
+
+<script>
+    function toggleComments(commentsId) {
+        var commentsSection = document.getElementById(commentsId);
+        if (commentsSection.style.display === "none") {
+            commentsSection.style.display = "block";
+        } else {
+            commentsSection.style.display = "none";
+        }
+    }
+
+    // Handle comment form submission with AJAX to prevent page refresh
+    document.addEventListener('DOMContentLoaded', function() {
+        const commentForms = document.querySelectorAll('.comment-form');
+
+        commentForms.forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const postId = form.querySelector('input[name="PostId"]').value;
+                const content = form.querySelector('input[name="Content"]').value;
+                const commentsContainer = form.closest('.comments-dropdown').querySelector('div[style*="overflow-y: auto"]');
+
+                if (!content.trim()) {
+                    return; // Don't submit empty comments
+                }
+
+                fetch('/comments/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `PostId=${postId}&Content=${encodeURIComponent(content)}`
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Clear the input field
+                        form.querySelector('input[name="Content"]').value = '';
+
+                        const username = form.querySelector('input[name="CurrentUsername"]').value;
+
+                        const now = new Date();
+                        const formattedDate = now.toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+
+                        // Create new comment element
+                        const newComment = document.createElement('div');
+                        newComment.style.padding = '8px';
+                        newComment.style.borderBottom = '1px solid #eee';
+                        newComment.style.fontSize = '0.9em';
+
+                        newComment.innerHTML = `
+                            <div style="font-weight: bold;">${username}</div>
+                            <div>${content}</div>
+                            <div style="font-size: 0.8em; color: #777;">${formattedDate}</div>
+                        `;
+
+                        // If "No comments yet" message exists, remove it
+                        const noCommentsMsg = commentsContainer.querySelector('div[style*="text-align: center"]');
+                        if (noCommentsMsg) {
+                            noCommentsMsg.remove();
+                        }
+
+                        // Add the new comment to the list
+                        commentsContainer.appendChild(newComment);
+
+                        // Update the comment count in the button
+                        const commentButton = document.querySelector(`button[onclick="toggleComments('comments-${postId}')"] span`);
+                        const currentCount = parseInt(commentButton.textContent);
+                        commentButton.textContent = currentCount + 1;
+
+                        // Scroll to the bottom of the comments list to see the new comment
+                        commentsContainer.scrollTop = commentsContainer.scrollHeight;
+                    } else {
+                        alert('Error posting comment. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error posting comment. Please try again.');
+                });
+            });
+        });
+    });
+</script>

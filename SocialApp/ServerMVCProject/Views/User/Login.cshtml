@@ -1,12 +1,11 @@
-﻿@page
-@model ServerMVCProject.Models.AuthenticationModel
+﻿@model ServerMVCProject.Models.AuthenticationModel
 @{
     ViewData["Title"] = "Login";
 }
 
 <h2>Login</h2>
 
-<form method="post" class="mt-4" asp-controller="UserController" asp-action="Login">
+<form method="post" class="mt-4" asp-controller="User" asp-action="Login">
     <div class="form-group mb-3">
         <input asp-for="Username" class="form-control" placeholder="username" />
     </div>

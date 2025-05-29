@@ -6,7 +6,7 @@
     using ServerMVCProject.Models;
 
     [ApiController]
-    [Route("UserController")]
+    [Route("User")]
     public class UserController : Controller
     {
         private readonly IUserService _userService;
@@ -29,7 +29,7 @@
         }
 
         [HttpPost("Register")]
-        public IActionResult Register(AuthenticationModel user)
+        public IActionResult Register([FromForm] AuthenticationModel user)
         {
             try
             {
@@ -41,7 +41,7 @@
 
                     // at this point, the register is successful
                     // here you redirect to Body Metrics page (for registering new user)
-                    return this.RedirectToAction("Update", "UpdateBodyMetric");
+                    return this.RedirectToAction("Index", "ViewPosts");
                 }
                 else
                 {
@@ -60,7 +60,7 @@
         }
 
         [HttpPost("Login")]
-        public IActionResult Login(AuthenticationModel user)
+        public IActionResult Login([FromForm] AuthenticationModel user)
         {
             try
             {
@@ -80,7 +80,7 @@
 
                     // at this point, the register is successful
                     // here you redirect to Main page (Dashboard)
-                    return this.RedirectToAction("Dashboard", "Dashboard");
+                    return this.RedirectToAction("Index", "ViewPosts");
                 }
                 else
                 {

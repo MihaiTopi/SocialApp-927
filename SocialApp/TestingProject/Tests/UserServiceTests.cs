@@ -96,8 +96,53 @@
 
             userRepository.DidNotReceive().Save(Arg.Any<User>());
         }
-      
-      [Test]
+
+        [Test]
+        public void AddUser_WithNullUsername_ThrowsException()
+        {
+            // Arrange
+            var userRepository = Substitute.For<IUserRepository>();
+            var userService = new UserService(userRepository);
+
+            // Act & Assert
+            var ex = Assert.Throws<Exception>(() =>
+                userService.AddUser(null, "valid@email.com", "password", "image"));
+            Assert.That(ex.Message, Is.EqualTo("Username cannot be empty"));
+
+            userRepository.DidNotReceive().Save(Arg.Any<User>());
+        }
+
+        [Test]
+        public void AddUser_WithNullEmail_ThrowsException()
+        {
+            // Arrange
+            var userRepository = Substitute.For<IUserRepository>();
+            var userService = new UserService(userRepository);
+
+            // Act & Assert
+            var ex = Assert.Throws<Exception>(() =>
+                userService.AddUser("validuser", null, "password", "image"));
+            Assert.That(ex.Message, Is.EqualTo("Email cannot be empty"));
+
+            userRepository.DidNotReceive().Save(Arg.Any<User>());
+        }
+
+        [Test]
+        public void AddUser_WithNullPassword_ThrowsException()
+        {
+            // Arrange
+            var userRepository = Substitute.For<IUserRepository>();
+            var userService = new UserService(userRepository);
+
+            // Act & Assert
+            var ex = Assert.Throws<Exception>(() =>
+                userService.AddUser("validuser", "valid@email.com", null, "image"));
+            Assert.That(ex.Message, Is.EqualTo("Password cannot be empty"));
+
+            userRepository.DidNotReceive().Save(Arg.Any<User>());
+        }
+
+        [Test]
         public void FollowUser_ValidUsers_Success()
         {
             // Arrange
@@ -113,10 +158,8 @@
             Assert.DoesNotThrow(() => userService.FollowUserById(followerId, followedId));
             userRepository.Received(1).Follow(followerId, followedId);
         }
-      
-      
-      
-      [Test]
+
+        [Test]
         public void FollowUser_FollowerDoesNotExist_ThrowsException()
         {
             // Arrange

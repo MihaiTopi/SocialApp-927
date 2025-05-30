@@ -30,15 +30,17 @@
             string password = "password123";
             string image = "testimage.png";
 
+            var expectedUser = new User { Username = username, Password = password };
+            userRepository.Save(Arg.Any<User>()).Returns(expectedUser);
+
             // Act
-            userService.AddUser(username, email, password, image);
+            var result = userService.AddUser(username, email, password, image);
 
             // Assert
-            //userRepository.Received(1).Save(Arg.Is<User>(u =>
-            //    u.Username == username &&
-            //    u.Email == email &&
-            //    u.PasswordHash == password &&
-            //    u.Image == image));
+            userRepository.Received(1).Save(Arg.Is<User>(u =>
+                u.Username == username &&
+                u.Password == password));
+            Assert.That(result, Is.EqualTo(expectedUser.Id));
         }
 
         /// <summary>
@@ -56,7 +58,7 @@
                 userService.AddUser(string.Empty, "valid@email.com", "password", "image"));
             Assert.That(ex.Message, Is.EqualTo("Username cannot be empty"));
 
-            //userRepository.DidNotReceive().Save(Arg.Any<User>());
+            userRepository.DidNotReceive().Save(Arg.Any<User>());
         }
 
         /// <summary>
@@ -74,7 +76,7 @@
                 userService.AddUser("validuser", string.Empty, "password", "image"));
             Assert.That(ex.Message, Is.EqualTo("Email cannot be empty"));
 
-            //userRepository.DidNotReceive().Save(Arg.Any<User>());
+            userRepository.DidNotReceive().Save(Arg.Any<User>());
         }
 
         /// <summary>
@@ -92,110 +94,55 @@
                 userService.AddUser("validuser", "valid@email.com", string.Empty, "image"));
             Assert.That(ex.Message, Is.EqualTo("Password cannot be empty"));
 
-            //userRepository.DidNotReceive().Save(Arg.Any<User>());
+            userRepository.DidNotReceive().Save(Arg.Any<User>());
         }
 
-        ///// <summary>
-        ///// Validates that the DeleteUser method successfully deletes a user when provided with a valid ID.
-        ///// </summary>
-        //[Test]
-        //public void DeleteUser_WithValidId_DeletesUser()
-        //{
-        //    // Arrange
-        //    var userRepository = Substitute.For<IUserRepository>();
-        //    var userService = new UserService(userRepository);
-        //    long userId = 1;
+        [Test]
+        public void AddUser_WithNullUsername_ThrowsException()
+        {
+            // Arrange
+            var userRepository = Substitute.For<IUserRepository>();
+            var userService = new UserService(userRepository);
 
-        //    User user = new User { Id = userId, Image = "lalal", Password = "asdasd", Username = "George" };
-            
-        //    //userRepository.GetById(userId).Returns(user);
+            // Act & Assert
+            var ex = Assert.Throws<Exception>(() =>
+                userService.AddUser(null, "valid@email.com", "password", "image"));
+            Assert.That(ex.Message, Is.EqualTo("Username cannot be empty"));
 
-        //    // Act
-        //    userService.DeleteUser(userId);
+            userRepository.DidNotReceive().Save(Arg.Any<User>());
+        }
 
-        //    // Assert
-        //    userRepository.Received(1).DeleteById(userId);
-        //}
+        [Test]
+        public void AddUser_WithNullEmail_ThrowsException()
+        {
+            // Arrange
+            var userRepository = Substitute.For<IUserRepository>();
+            var userService = new UserService(userRepository);
 
-        ///// <summary>
-        ///// Validates that the DeleteUser method throws an exception when provided with an invalid user ID.
-        ///// </summary>
-        //[Test]
-        //public void DeleteUser_WithInvalidId_ThrowsException()
-        //{
-        //    // Arrange
-        //    var userRepository = Substitute.For<IUserRepository>();
-        //    var userService = new UserService(userRepository);
-        //    long userId = 1;
+            // Act & Assert
+            var ex = Assert.Throws<Exception>(() =>
+                userService.AddUser("validuser", null, "password", "image"));
+            Assert.That(ex.Message, Is.EqualTo("Email cannot be empty"));
 
-        //    // Act
-        //    //userRepository.GetById(userId).Returns((User)null);
+            userRepository.DidNotReceive().Save(Arg.Any<User>());
+        }
 
-        //    // Assert
-        //    var ex = Assert.Throws<Exception>(() => userService.DeleteUser(userId));
-        //    userRepository.Received(1).GetById(userId);
-        //}
+        [Test]
+        public void AddUser_WithNullPassword_ThrowsException()
+        {
+            // Arrange
+            var userRepository = Substitute.For<IUserRepository>();
+            var userService = new UserService(userRepository);
 
-        ///// <summary>
-        ///// Validates that the UpdateUser method successfully updates a user when provided with a valid user ID.
-        ///// </summary>
-        //[Test]
-        //public void UpdateUser_WithValidId()
-        //{
-        //    // Arrange
-        //    var userRepository = Substitute.For<IUserRepository>();
-        //    var userService = new UserService(userRepository);
+            // Act & Assert
+            var ex = Assert.Throws<Exception>(() =>
+                userService.AddUser("validuser", "valid@email.com", null, "image"));
+            Assert.That(ex.Message, Is.EqualTo("Password cannot be empty"));
 
-        //    string username = "testuser";
-        //    string email = "testuser@gmail.com";
-        //    string password = "password123";
-        //    string image = "testimage.png";
+            userRepository.DidNotReceive().Save(Arg.Any<User>());
+        }
 
-        //    long userId = 1;
-
-        //    User user = new User
-        //    {
-        //        Id = userId,
-        //        Username = username,
-        //        Password = password,
-        //        Image = image
-        //    };
-
-        //    //userRepository.GetById(userId).Returns(user);
-
-        //    // Act
-        //    userService.UpdateUser(userId, username, email, password, image);
-
-        //    // Assert
-        //    userRepository.Received(1).GetById(userId);
-        //    //userRepository.Received(1).UpdateById(userId, username, email, password, image);
-        //}
-
-        ///// <summary>
-        ///// Validates that the UpdateUser method throws an exception when provided with an invalid user ID.
-        ///// </summary>
-        //[Test]
-        //public void UpdateUser_WithInvalidID_ThrowsException()
-        //{
-        //    // Arrange
-        //    var userRepository = Substitute.For<IUserRepository>();
-        //    var userService = new UserService(userRepository);
-        //    long userId = 1;
-        //    string username = "testuser";
-        //    string email = "testuser@gmail.com";
-        //    string password = "password123";
-        //    string image = "testimage.png";
-
-        //    //userRepository.GetById(userId).Returns((User)null);
-
-        //    // Act & Assert
-        //    var ex = Assert.Throws<Exception>(() =>
-        //        userService.UpdateUser(userId, username, email, password, image));
-        //    Assert.That(ex.Message, Is.EqualTo("User does not exist"));
-        //    userRepository.Received(1).GetById(userId);
-        //}
-      
-      [Test]
+        [Test]
         public void FollowUser_ValidUsers_Success()
         {
             // Arrange
@@ -204,17 +151,15 @@
             var followerId = 1;
             var followedId = 2;
 
-            //userRepository.GetById(followerId).Returns(new User { Id = followerId, Username = "follower", Email = "follower@example.com", PasswordHash = "hash1", Image = "img1.png" });
-            //userRepository.GetById(followedId).Returns(new User { Id = followedId, Username = "followed", Email = "followed@example.com", PasswordHash = "hash2", Image = "img2.png" });
+            userRepository.GetById(followerId).Returns(new User { Id = followerId });
+            userRepository.GetById(followedId).Returns(new User { Id = followedId });
 
             // Act & Assert
             Assert.DoesNotThrow(() => userService.FollowUserById(followerId, followedId));
             userRepository.Received(1).Follow(followerId, followedId);
         }
-      
-      
-      
-      [Test]
+
+        [Test]
         public void FollowUser_FollowerDoesNotExist_ThrowsException()
         {
             // Arrange
@@ -223,8 +168,8 @@
             var nonExistentFollowerId = 1;
             var followedId = 2;
 
-            //userRepository.GetById(nonExistentFollowerId).Returns((User)null);
-            //userRepository.GetById(followedId).Returns(new User { Id = followedId, Username = "followed", Email = "followed@example.com", PasswordHash = "hash2", Image = "img2.png" });
+            userRepository.GetById(nonExistentFollowerId).Returns((User)null);
+            userRepository.GetById(followedId).Returns(new User { Id = followedId });
 
             // Act & Assert
             var ex = Assert.Throws<Exception>(() => userService.FollowUserById(nonExistentFollowerId, followedId));
@@ -242,8 +187,8 @@
             var followerId = 1;
             var nonExistentFollowedId = 2;
 
-            //userRepository.GetById(followerId).Returns(new User { Id = followerId, Username = "follower", Email = "follower@example.com", PasswordHash = "hash1", Image = "img1.png" });
-            //userRepository.GetById(nonExistentFollowedId).Returns((User)null);
+            userRepository.GetById(followerId).Returns(new User { Id = followerId });
+            userRepository.GetById(nonExistentFollowedId).Returns((User)null);
 
             // Act & Assert
             var ex = Assert.Throws<Exception>(() => userService.FollowUserById(followerId, nonExistentFollowedId));
@@ -260,8 +205,8 @@
             var followerId = 1;
             var followedId = 2;
 
-            //userRepository.GetById(followerId).Returns(new User { Id = followerId, Username = "follower", Email = "follower@example.com", PasswordHash = "hash1", Image = "img1.png" });
-            //userRepository.GetById(followedId).Returns(new User { Id = followedId, Username = "followed", Email = "followed@example.com", PasswordHash = "hash2", Image = "img2.png" });
+            userRepository.GetById(followerId).Returns(new User { Id = followerId });
+            userRepository.GetById(followedId).Returns(new User { Id = followedId });
 
             // Act & Assert
             Assert.DoesNotThrow(() => userService.UnfollowUserById(followerId, followedId));
@@ -279,8 +224,8 @@
             var nonExistentFollowerId = 1;
             var followedId = 2;
 
-            //userRepository.GetById(nonExistentFollowerId).Returns((User)null);
-            //userRepository.GetById(followedId).Returns(new User { Id = followedId, Username = "followed", Email = "followed@example.com", PasswordHash = "hash2", Image = "img2.png" });
+            userRepository.GetById(nonExistentFollowerId).Returns((User)null);
+            userRepository.GetById(followedId).Returns(new User { Id = followedId });
 
             // Act & Assert
             var ex = Assert.Throws<Exception>(() => userService.UnfollowUserById(nonExistentFollowerId, followedId));
@@ -297,8 +242,8 @@
             var followerId = 1;
             var nonExistentFollowedId = 2;
 
-            //userRepository.GetById(followerId).Returns(new User { Id = followerId, Username = "follower", Email = "follower@example.com", PasswordHash = "hash1", Image = "img1.png" });
-            //userRepository.GetById(nonExistentFollowedId).Returns((User)null);
+            userRepository.GetById(followerId).Returns(new User { Id = followerId });
+            userRepository.GetById(nonExistentFollowedId).Returns((User)null);
 
             // Act & Assert
             var ex = Assert.Throws<Exception>(() => userService.UnfollowUserById(followerId, nonExistentFollowedId));
@@ -306,5 +251,85 @@
             userRepository.DidNotReceive().Unfollow(Arg.Any<long>(), Arg.Any<long>());
         }
 
+        [Test]
+        public void SearchUsersByUsername_ReturnsMatchingUsers()
+        {
+            // Arrange
+            var userRepository = Substitute.For<IUserRepository>();
+            var userService = new UserService(userRepository);
+            var userId = 1;
+            var query = "test";
+
+            var followingUsers = new List<User>
+            {
+                new User { Id = 2, Username = "testuser1" },
+                new User { Id = 3, Username = "testuser2" },
+                new User { Id = 4, Username = "otheruser" }
+            };
+
+            userRepository.GetUserFollowing(userId).Returns(followingUsers);
+
+            // Act
+            var result = userService.SearchUsersByUsername(userId, query);
+
+            // Assert
+            Assert.That(result.Count, Is.EqualTo(2));
+            Assert.That(result.All(u => u.Username.Contains(query, StringComparison.OrdinalIgnoreCase)));
+        }
+
+        [Test]
+        public void Login_ValidCredentials_ReturnsUserId()
+        {
+            // Arrange
+            var userRepository = Substitute.For<IUserRepository>();
+            var userService = new UserService(userRepository);
+            var username = "testuser";
+            var password = "password123";
+            var userId = 1;
+
+            userRepository.GetByUsername(username).Returns(new User { Id = userId, Username = username, Password = password });
+
+            // Act
+            var result = userService.Login(username, password);
+
+            // Assert
+            Assert.That(result, Is.EqualTo(userId));
+        }
+
+        [Test]
+        public void Login_InvalidPassword_ReturnsMinusOne()
+        {
+            // Arrange
+            var userRepository = Substitute.For<IUserRepository>();
+            var userService = new UserService(userRepository);
+            var username = "testuser";
+            var password = "password123";
+
+            userRepository.GetByUsername(username).Returns(new User { Id = 1, Username = username, Password = "wrongpassword" });
+
+            // Act
+            var result = userService.Login(username, password);
+
+            // Assert
+            Assert.That(result, Is.EqualTo(-1));
+        }
+
+        [Test]
+        public void Login_UserNotFound_ReturnsMinusTwo()
+        {
+            // Arrange
+            var userRepository = Substitute.For<IUserRepository>();
+            var userService = new UserService(userRepository);
+            var username = "nonexistentuser";
+            var password = "password123";
+
+            userRepository.GetByUsername(username).Returns((User)null);
+
+            // Act
+            var result = userService.Login(username, password);
+
+            // Assert
+            Assert.That(result, Is.EqualTo(-2));
+        }
     }
 }

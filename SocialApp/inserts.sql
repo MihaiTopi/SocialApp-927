@@ -1,6 +1,11 @@
 -- used to fill the database with initial mock data
 
 -- Users
+SET IDENTITY_INSERT Users ON
+INSERT INTO Users (id,username,password, image) VALUES
+(0,'default','default',NULL)
+SET IDENTITY_INSERT Users OFF
+
 INSERT INTO Users (username, password, image) VALUES
 ('fit_alice', 'alice1234', NULL),
 ('diet_bob', 'bob_password', NULL),
@@ -14,6 +19,11 @@ INSERT INTO Users (username, password, image) VALUES
 ('lbj_fan_23', 'lakersin5', NULL);
 
 -- Groups
+SET IDENTITY_INSERT GROUPS ON
+INSERT INTO Groups (id,name, image, description, admin_id) VALUES
+(0,'default',NULL,'default',0)
+SET IDENTITY_INSERT GROUPS OFF
+
 INSERT INTO Groups (name, image, description, admin_id) VALUES
 ('Calorie Counters', NULL, 'A community for tracking calories and healthy eating habits.', 1),
 ('Tech Geeks', NULL, 'Discuss the latest gadgets, software, and tech trends.', 2),

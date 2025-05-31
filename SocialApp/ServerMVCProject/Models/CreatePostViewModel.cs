@@ -18,5 +18,8 @@
 
         [Required]
         public PostTag Tag { get; set; }
+
+        [Required]
+        public long GroupId { get; set; }
     }
 }

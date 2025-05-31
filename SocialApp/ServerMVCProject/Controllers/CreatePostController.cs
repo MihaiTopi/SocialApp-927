@@ -2,6 +2,8 @@
 namespace ServerMVCProject.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using ServerLibraryProject.Enums;
     using ServerLibraryProject.Interfaces;
     using ServerLibraryProject.Models;
     using ServerMVCProject.Models;
@@ -10,16 +12,30 @@ namespace ServerMVCProject.Controllers
     public class CreatePostController : Controller
     {
         private readonly IPostService postService;
+        private readonly IGroupService groupService;
 
-        public CreatePostController(IPostService postService)
+        public CreatePostController(IPostService postService, IGroupService groupService)
         {
             this.postService = postService;
+            this.groupService = groupService;
         }
 
         [Route("create")]
         [HttpGet]
         public IActionResult Create()
         {
+            string userIdStr = HttpContext.Session.GetString("UserId");
+
+            long userId = long.Parse(userIdStr);
+
+            var userGroups = this.groupService.GetUserGroups(userId);
+
+            ViewBag.UserGroups = userGroups.Select(g => new SelectListItem
+            {
+                Text = g.Name,
+                Value = g.Id.ToString()
+            }).ToList();
+
             return View();
         }
 
@@ -29,14 +45,33 @@ namespace ServerMVCProject.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
+            string userIdStr = this.HttpContext.Session.GetString("UserId");
+
+            if (model.Visibility != PostVisibility.Groups)
+            {
+                model.GroupId = 0;
+            }
+
+
+
+            long userId = long.Parse(userIdStr);
+
+            var userGroups = this.groupService.GetUserGroups(userId);
+            ViewBag.UserGroups = userGroups.Select(g => new SelectListItem
+            {
+                Text = g.Name,
+                Value = g.Id.ToString()
+            }).ToList();
+
             Post newPost = new Post
             {
                 Title = model.Title,
                 Content = model.Content,
                 Visibility = model.Visibility,
                 Tag = model.Tag,
-                UserId = 46,      // hardcoded
-                GroupId = 18,    // hardcoded
+                UserId = userId,
+                GroupId = model.GroupId,
+
                 CreatedDate = DateTime.UtcNow
             };
             try
@@ -50,6 +85,7 @@ namespace ServerMVCProject.Controllers
                 ViewBag.Message = $"Error creating post: {ex.Message}";
                 return View(model);
             }
+
         }
 
         public IActionResult Success()

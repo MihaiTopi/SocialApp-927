@@ -150,11 +150,11 @@ namespace Server.Controllers
 
 
         [HttpDelete("{postId}/user/{userId}/reaction")]
-        public IActionResult DeleteReaction(long postId, long userId)
+        public IActionResult DeleteReaction(long userId, long postId)
         {
             try
             {
-                this.reactionService.DeleteReaction(postId, userId);
+                this.reactionService.DeleteReaction(userId, postId);
                 return Ok();
             }
             catch (Exception ex)

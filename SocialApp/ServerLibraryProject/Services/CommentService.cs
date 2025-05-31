@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ServerLibraryProject.Interfaces;
 using ServerLibraryProject.Models;
-using ServerLibraryProject.Interfaces;
 
 
 namespace ServerLibraryProject.Services
@@ -81,7 +76,7 @@ namespace ServerLibraryProject.Services
         //        throw new InvalidOperationException($"Comment with ID {commentId} does not exist.");
         //    }
 
-        //    commentRepository.DeleteCommentById(commentId);
+        //    this.commentRepository.DeleteCommentById(commentId);
         //}
 
         /// <summary>
@@ -94,17 +89,16 @@ namespace ServerLibraryProject.Services
         //public void UpdateComment(long commentId, string content)
         //{
         //    if (this.commentRepository.GetCommentById(commentId) == null)
-
         //    {
         //        throw new Exception("Comment does not exist");
         //    }
+
         //    if (content == null || content.Length == 0)
         //    {
         //        throw new Exception("Comment content cannot be empty");
         //    }
 
         //    this.commentRepository.UpdateCommentContentById(commentId, content);
-
         //}
 
         /// <summary>
@@ -114,7 +108,6 @@ namespace ServerLibraryProject.Services
         public List<Comment> GetAllComments()
         {
             return this.commentRepository.GetAllComments();
-
         }
 
         /// <summary>
@@ -125,7 +118,6 @@ namespace ServerLibraryProject.Services
         //public Comment GetCommentById(int commentId)
         //{
         //    return this.commentRepository.GetCommentById(commentId);
-
         //}
 
         /// <summary>

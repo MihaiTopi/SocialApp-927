@@ -1,16 +1,16 @@
-﻿using ServerLibraryProject.Data;
-using ServerLibraryProject.Interfaces;
-using ServerLibraryProject.Models;
-
-namespace ServerLibraryProject.Repositories
+﻿namespace ServerLibraryProject.Repositories
 {
+    using ServerLibraryProject.Data;
+    using ServerLibraryProject.Interfaces;
+    using ServerLibraryProject.Models;
+
     public class CommentRepository : ICommentRepository
     {
         private readonly SocialAppDbContext dbContext;
 
         public CommentRepository(SocialAppDbContext context)
         {
-            dbContext = context;
+            this.dbContext = context;
         }
 
         /// <summary>
@@ -19,7 +19,7 @@ namespace ServerLibraryProject.Repositories
         /// <returns>A list of all Comment entities in the system.</returns>
         public List<Comment> GetAllComments()
         {
-            return dbContext.Comments.ToList();
+            return this.dbContext.Comments.ToList();
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace ServerLibraryProject.Repositories
         /// <returns>A list of Comment entities for the specified post.</returns>
         public List<Comment> GetCommentsByPostId(long postId)
         {
-            return dbContext.Comments.Where(c => c.PostId == postId).ToList();
+            return this.dbContext.Comments.Where(c => c.PostId == postId).ToList();
         }
 
         /// <summary>
@@ -40,19 +40,18 @@ namespace ServerLibraryProject.Repositories
         //{
         //    try
         //    {
-        //        var comment = dbContext.Comments.Find(id);
+        //        var comment = this.dbContext.Comments.Find(id);
         //        if (comment != null)
         //        {
-        //            dbContext.Comments.Remove(comment);
-        //            dbContext.SaveChanges();
+        //            this.dbContext.Comments.Remove(comment);
+        //            this.dbContext.SaveChanges();
         //        }
         //    }
         //    catch
         //    {
         //        throw new Exception("Comment not found or could not be deleted.");
         //    }
-
-        // }
+        //}
 
         /// <summary>
         /// Retrieves a single comment by its ID.
@@ -61,10 +60,8 @@ namespace ServerLibraryProject.Repositories
         /// <returns>The Comment entity with the specified ID, or null if not found.</returns>
         //public Comment GetCommentById(long id)
         //{
-        //    var comment = dbContext.Comments.Find(id);
-        //    if(comment == null)
-        //        throw new Exception("Comment not found.");
-        //    return comment;
+        //    var comment = this.dbContext.Comments.Find(id);
+        //    return comment ?? throw new Exception("Comment not found.");
         //}
 
         /// <summary>
@@ -75,14 +72,14 @@ namespace ServerLibraryProject.Repositories
         {
             try
             {
-                dbContext.Comments.Add(entity);
-                dbContext.SaveChanges();
+                this.dbContext.Comments.Add(entity);
+                this.dbContext.SaveChanges();
             }
             catch
             {
                 throw new Exception("Error saving comment. Please try again later.");
             }
-            
+
         }
 
         /// <summary>
@@ -94,17 +91,16 @@ namespace ServerLibraryProject.Repositories
         //{
         //    try
         //    {
-        //        var comment = dbContext.Comments.Find(id);
+        //        var comment = this.dbContext.Comments.Find(id);
         //        if (comment != null)
         //        {
         //            comment.Content = content;
-        //            dbContext.SaveChanges();
+        //            this.dbContext.SaveChanges();
         //        }
         //    }
         //    catch
         //    {
         //        throw new Exception("Comment not found or could not be updated.");
-
         //    }
         //}
     }

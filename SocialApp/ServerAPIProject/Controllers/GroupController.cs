@@ -1,6 +1,6 @@
-using ServerLibraryProject.Models;
 using Microsoft.AspNetCore.Mvc;
 using ServerLibraryProject.Interfaces;
+using ServerLibraryProject.Models;
 
 namespace ServerAPIProject.Controllers
 {
@@ -47,7 +47,7 @@ namespace ServerAPIProject.Controllers
         {
             try
             {
-                var newGroup = groupService.AddGroup(group.Name, group.Description, group.Image, group.AdminId);
+                var newGroup = groupService.AddGroup(group.Name, group.Description, group.Image);
                 return Ok(newGroup);
             }
             catch (Exception ex)

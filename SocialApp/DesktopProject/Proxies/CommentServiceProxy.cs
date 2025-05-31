@@ -1,21 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Json;
-using AppCommonClasses.Interfaces;
-using AppCommonClasses.Models;
 
-namespace SocialApp.Proxies
+﻿namespace DesktopProject.Proxies
 {
-    internal class CommentServiceProxy : ICommentService
+    using System;
+    using System.Collections.Generic;
+    using System.Net.Http;
+    using System.Net.Http.Json;
+    using ServerLibraryProject.Interfaces;
+    using ServerLibraryProject.Models;
+
+    public class CommentServiceProxy : ICommentService
     {
         private readonly HttpClient _httpClient;
 
         public CommentServiceProxy()
         {
-            _httpClient = new HttpClient
+
+            this._httpClient = new HttpClient
             {
-                BaseAddress = new Uri("https://localhost:7106/comments/")
+                BaseAddress = new Uri("https://localhost:7106/comments/"),
             };
         }
 
@@ -29,60 +31,78 @@ namespace SocialApp.Proxies
                 Content = content,
                 UserId = userId,
                 PostId = postId,
-                CreatedDate = DateTime.UtcNow
+
+                CreatedDate = DateTime.UtcNow,
             };
 
-            var response = _httpClient.PostAsJsonAsync("", comment).Result;
             response.EnsureSuccessStatusCode();
-
-            return response.Content.ReadFromJsonAsync<Comment>().Result!;
+            var response = this.httpClient.PostAsync(string.Empty, comment).Result;
+            if (response.IsSuccessStatusCode)
+            {
+                return response.Content.ReadFromJsonAsync<Comment>().Result;
+            }
+            throw new Exception($"Failed to add comment: {response.StatusCode}");
         }
 
         /// <summary>
         /// Deletes a comment by its ID.
         /// </summary>
-        public void DeleteComment(long commentId)
-        {
-            var response = _httpClient.DeleteAsync($"{commentId}").Result;
-            response.EnsureSuccessStatusCode();
-        }
+        //public void DeleteComment(long commentId)
+        //{
+
+        //    var response = this._httpClient.DeleteAsync($"{commentId}").Result;
+        //    response.EnsureSuccessStatusCode();
+        //}
 
         /// <summary>
         /// Retrieves all comments.
         /// </summary>
         public List<Comment> GetAllComments()
         {
-            return _httpClient.GetFromJsonAsync<List<Comment>>("").Result!;
+            var response = this.httpClient.GetAsync("").Result;
+            if (response.IsSuccessStatusCode)
+            {
+                return response.Content.ReadFromJsonAsync<List<Comment>>().Result;
+            }
+            throw new Exception($"Failed to get comments: {response.StatusCode}");
         }
 
         /// <summary>
         /// Retrieves a comment by its ID.
         /// </summary>
-        public Comment GetCommentById(int commentId)
-        {
-            return _httpClient.GetFromJsonAsync<Comment>($"{commentId}").Result!;
-        }
+        //public Comment GetCommentById(int commentId)
+        //{
+
+        //    return this._httpClient.GetFromJsonAsync<Comment>($"{commentId}").Result!;
+        //}
 
         /// <summary>
         /// Retrieves all comments for a specific post.
         /// </summary>
         public List<Comment> GetCommentsByPostId(long postId)
         {
-            return _httpClient.GetFromJsonAsync<List<Comment>>($"post/{postId}").Result!;
+            var response = this.httpClient.GetAsync($"/{postId}").Result;
+            if (response.IsSuccessStatusCode)
+            {
+                return response.Content.ReadFromJsonAsync<List<Comment>>().Result;
+            }
+            throw new Exception($"Failed to get comments: {response.StatusCode}");
+
         }
 
         /// <summary>
         /// Updates the content of an existing comment.
         /// </summary>
-        public void UpdateComment(long commentId, string content)
-        {
-            var commentDto = new
-            {
-                Content = content
-            };
+        //public void UpdateComment(long commentId, string content)
+        //{
+        //    var commentDto = new
+        //    {
 
-            var response = _httpClient.PutAsJsonAsync($"{commentId}", commentDto).Result;
-            response.EnsureSuccessStatusCode();
-        }
+        //        Content = content,
+        //    };
+
+        //    var response = this._httpClient.PutAsJsonAsync($"{commentId}", commentDto).Result;
+        //    response.EnsureSuccessStatusCode();
+        //}
     }
 }

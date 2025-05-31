@@ -33,7 +33,7 @@
         {
             if (ModelState.IsValid)
             {
-                _groupService.AddGroup(group.Name, group.Description, group.Image, group.AdminId);
+                _groupService.AddGroup(group.Name, group.Description, group.Image);
                 return RedirectToAction(nameof(Index));
             }
             return View(group);

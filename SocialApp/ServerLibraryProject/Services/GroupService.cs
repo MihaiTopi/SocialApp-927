@@ -29,24 +29,18 @@ namespace ServerLibraryProject.Services
             return groupRepository.GetUsersFromGroup(groupId);
         }
 
-        public Group AddGroup(string name, string desc, string image, long adminId)
+        public Group AddGroup(string name, string desc, string image)
         {
             if (string.IsNullOrEmpty(name))
             {
                 throw new ArgumentException("Group name cannot be empty");
             }
 
-            if (userRepository.GetById(adminId) == null)
-            {
-                throw new ArgumentException("User does not exist");
-            }
-
             var group = new Group
             {
                 Name = name,
                 Description = desc,
-                Image = image,
-                AdminId = adminId
+                Image = image
             };
 
             groupRepository.SaveGroup(group);

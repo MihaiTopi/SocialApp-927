@@ -31,17 +31,13 @@
         /// <param name="password">The password.</param>
         /// <param name="image">The image.</param>
         /// <exception cref="Exception">Thrown when validation fails.</exception>
-        public long AddUser(string username, string email, string password, string image)
+        public long AddUser(string username, string password, string image)
         {
             if (username == null || username.Length == 0)
             {
                 throw new Exception("Username cannot be empty");
             }
 
-            if (email == null || email.Length == 0)
-            {
-                throw new Exception("Email cannot be empty");
-            }
 
             if (password == null || password.Length == 0)
             {
@@ -153,20 +149,6 @@
             return followingUsers.Where(u => u.Username.Contains(query, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
-        public User Save(User entity)
-        {
-            var savedUser = this.userRepository.Save(entity);
-            return savedUser;
-        }
-
-        public long Login(string username, string password)
-        {
-            User? user = this.userRepository.GetByUsername(username);
-            if (user == null)
-                return -2;
-
-            return user.Password.Equals(password) ? user.Id : -1;
-        }
 
     }
 }

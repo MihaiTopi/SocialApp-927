@@ -1,5 +1,4 @@
 ﻿using ServerLibraryProject.Models;
-using System.Collections.Generic;
 
 namespace ServerLibraryProject.Interfaces
 {
@@ -9,8 +8,6 @@ namespace ServerLibraryProject.Interfaces
 
         List<Comment> GetAllComments();
 
-
-        // nu stiu daca avem nevoie
         //Comment GetCommentById(long id);
 
         List<Comment> GetCommentsByPostId(long postId);

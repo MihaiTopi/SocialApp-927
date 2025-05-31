@@ -109,13 +109,6 @@
                     .OnDelete(DeleteBehavior.NoAction);
             });
 
-            modelBuilder.Entity<Group>(entity =>
-            {
-                entity.HasOne<User>()
-                .WithMany()
-                .HasForeignKey(group => group.AdminId)
-                .OnDelete(DeleteBehavior.NoAction);
-            });
 
             modelBuilder.Entity<Comment>(entity =>
             {

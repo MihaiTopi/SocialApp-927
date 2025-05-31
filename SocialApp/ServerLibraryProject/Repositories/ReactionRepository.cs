@@ -49,10 +49,10 @@ namespace ServerLibraryProject.Repositories
         /// Retrieves all reactions.
         /// </summary>
         /// <returns>A list of all reactions.</returns>
-        public List<Reaction> GetAllReactions()
-        {
-            return this.dbContext.Reactions.ToList();
-        }
+        //public List<Reaction> GetAllReactions()
+        //{
+        //    return this.dbContext.Reactions.ToList();
+        //}
 
         /// <summary>
         /// Retrieves all reactions for a specific post.

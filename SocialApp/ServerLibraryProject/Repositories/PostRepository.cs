@@ -14,7 +14,7 @@ namespace ServerLibraryProject.Repositories
 
         public PostRepository(SocialAppDbContext context)
         {
-            dbContext = context;
+            this.dbContext = context;
         }
 
         public Post GetPostById(long postId)
@@ -38,39 +38,41 @@ namespace ServerLibraryProject.Repositories
         {
             try
             {
-                dbContext.Posts.Add(entity);
-                dbContext.SaveChanges();
-            }catch
+                this.dbContext.Posts.Add(entity);
+                this.dbContext.SaveChanges();
+            }
+            catch
             {
                 throw new Exception("Error saving the post");
             }
-
         }
 
         //public bool UpdatePostById(long postId, string title, string content, PostVisibility visibility, PostTag tag)
         //{
-        //    var post = dbContext.Posts.Find(postId);
+        //    var post = this.dbContext.Posts.Find(postId);
         //    if (post != null)
         //    {
         //        post.Title = title;
         //        post.Content = content;
         //        post.Visibility = visibility;
         //        post.Tag = tag;
-        //        dbContext.SaveChanges();
+        //        this.dbContext.SaveChanges();
         //        return true;
         //    }
+
         //    return false;
         //}
 
         //public bool DeletePostById(long postId)
         //{
-        //    var post = dbContext.Posts.Find(postId);
+        //    var post = this.dbContext.Posts.Find(postId);
         //    if (post != null)
         //    {
-        //        dbContext.Posts.Remove(post);
-        //        dbContext.SaveChanges();
+        //        this.dbContext.Posts.Remove(post);
+        //        this.dbContext.SaveChanges();
         //        return true;
         //    }
+
         //    return false;
         //}
 

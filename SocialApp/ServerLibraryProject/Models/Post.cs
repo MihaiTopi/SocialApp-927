@@ -2,6 +2,7 @@
 {
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Text.Json.Serialization;
     using ServerLibraryProject.Enums;
 
     [Table("Posts")]
@@ -10,6 +11,7 @@
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("id")]
+        [JsonIgnore]
         public long Id { get; set; }
 
         [Column("title")]
@@ -26,7 +28,7 @@
         required public long UserId { get; set; }
 
         [Column("group_id")]
-        public long GroupId { get; set; }
+        public long? GroupId { get; set; }
 
         [Column("visibility")]
         required public PostVisibility Visibility { get; set; }

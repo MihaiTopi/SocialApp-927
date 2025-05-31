@@ -14,16 +14,13 @@ namespace ServerLibraryProject.Interfaces
 
         List<User> GetUserFollowing(long id);
 
-        User? GetUserByUsername(string username);
-
-        User Save(User entity);
+        User GetUserByUsername(string username);
 
         List<User> SearchUsersByUsername(long userId, string query);
 
         void UnfollowUserById(long userId, long whoToUnfollowId);
 
-        long AddUser(string username, string email, string password, string image);
+        long AddUser(string username, string password, string image);
 
-        long Login(string username, string password);
     }
 }

@@ -77,59 +77,59 @@ namespace TestingProject.Tests
         /// <summary>
         /// Validates that DeleteReaction_byUserAndPost throws an exception if the reaction does not exist.
         /// </summary>
-        [Test]
-        public void DeleteReaction_byUserAndPost_ReactionDoesNotExist_ThrowsException()
-        {
-            // Arrange
-            long userId = 1;
-            long postId = 10;
+        //[Test]
+        //public void DeleteReaction_byUserAndPost_ReactionDoesNotExist_ThrowsException()
+        //{
+        //    // Arrange
+        //    long userId = 1;
+        //    long postId = 10;
 
-            this.reactionRepository.GetReaction(userId, postId).Returns(null as Reaction);
+        //    this.reactionRepository.GetReaction(userId, postId).Returns(null as Reaction);
 
-            // Act & Assert
-            var ex = Assert.Throws<Exception>(() => this.reactionService.DeleteReaction(userId, postId));
-            Assert.That(ex.Message, Is.EqualTo("Reaction does not exist"));
-        }
+        //    // Act & Assert
+        //    var ex = Assert.Throws<Exception>(() => this.reactionService.DeleteReaction(userId, postId));
+        //    Assert.That(ex.Message, Is.EqualTo("Reaction does not exist"));
+        //}
 
         /// <summary>
         /// Validates that DeleteReaction_byUserAndPost deletes the reaction if it exists.
         /// </summary>
-        [Test]
-        public void DeleteReaction_byUserAndPost_ReactionExists_DeletesReaction()
-        {
-            // Arrange
-            long userId = 1;
-            long postId = 10;
+        //[Test]
+        //public void DeleteReaction_byUserAndPost_ReactionExists_DeletesReaction()
+        //{
+        //    // Arrange
+        //    long userId = 1;
+        //    long postId = 10;
 
-            this.reactionRepository.GetReaction(userId, postId).Returns(new Reaction { UserId = userId, PostId = postId });
+        //    this.reactionRepository.GetReaction(userId, postId).Returns(new Reaction { UserId = userId, PostId = postId });
 
-            // Act
-            this.reactionService.DeleteReaction(userId, postId);
+        //    // Act
+        //    this.reactionService.DeleteReaction(userId, postId);
 
-            // Assert
-            this.reactionRepository.Received(1).Delete(userId, postId);
-        }
+        //    // Assert
+        //    this.reactionRepository.Received(1).Delete(userId, postId);
+        //}
 
         /// <summary>
         /// Validates that GetAllReactions returns all reactions.
         /// </summary>
-        [Test]
-        public void GetAllReactions_ReturnsAllReactions()
-        {
-            // Arrange
-            var reactions = new List<Reaction>
-            {
-                new Reaction { UserId = 1, PostId = 1, Type = ReactionType.Like },
-                new Reaction { UserId = 2, PostId = 2, Type = ReactionType.Anger },
-            };
-            this.reactionRepository.GetAllReactions().Returns(reactions);
+        //[Test]
+        //public void GetAllReactions_ReturnsAllReactions()
+        //{
+        //    // Arrange
+        //    var reactions = new List<Reaction>
+        //    {
+        //        new Reaction { UserId = 1, PostId = 1, Type = ReactionType.Like },
+        //        new Reaction { UserId = 2, PostId = 2, Type = ReactionType.Anger },
+        //    };
+        //    this.reactionRepository.GetAllReactions().Returns(reactions);
 
-            // Act
-            var result = this.reactionService.GetAllReactions();
+        //    // Act
+        //    var result = this.reactionService.GetAllReactions();
 
-            // Assert
-            Assert.That(result, Is.EqualTo(reactions));
-        }
+        //    // Assert
+        //    Assert.That(result, Is.EqualTo(reactions));
+        //}
 
         /// <summary>
         /// Validates that GetReactionsForPost returns the correct reactions.
@@ -170,23 +170,23 @@ namespace TestingProject.Tests
             Assert.AreEqual(expectedReaction, result);
             this.reactionRepository.Received(1).GetReaction(userId, postId);
         }
-        [Test]
-        public void UpdateReaction_CallsRepositoryWithCorrectValues()
-        {
-            // Arrange
-            var reaction = new Reaction
-            {
-                UserId = 1,
-                PostId = 10,
-                Type = ReactionType.Love
-            };
+        //[Test]
+        //public void UpdateReaction_CallsRepositoryWithCorrectValues()
+        //{
+        //    // Arrange
+        //    var reaction = new Reaction
+        //    {
+        //        UserId = 1,
+        //        PostId = 10,
+        //        Type = ReactionType.Love
+        //    };
 
-            // Act
-            this.reactionService.UpdateReaction(reaction);
+        //    // Act
+        //    this.reactionService.UpdateReaction(reaction);
 
-            // Assert
-            this.reactionRepository.Received(1).Update(reaction.UserId, reaction.PostId, reaction.Type);
-        }
+        //    // Assert
+        //    this.reactionRepository.Received(1).Update(reaction.UserId, reaction.PostId, reaction.Type);
+        //}
         [Test]
         public void GetReaction_WhenNoReactionExists_ReturnsNull()
         {

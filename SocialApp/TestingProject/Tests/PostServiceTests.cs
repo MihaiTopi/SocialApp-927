@@ -34,7 +34,7 @@ namespace TestingProject.Tests
             PostTag postTag = PostTag.Food;
 
             User user = new User { Id = userId, Username = "username", Password = "passwordHash", Image = "image" };
-            Group group = new Group { Id = groupId, Name = "groupName", Image = "groupImage", Description = "description", AdminId = 1 };
+            Group group = new Group { Id = groupId, Name = "groupName", Image = "groupImage", Description = "description" };
             Post post = new Post { Title = title, Content = content, UserId = userId, GroupId = groupId, Visibility = postVisibility, Tag = postTag, CreatedDate = DateTime.Now };
 
             userRepository.GetById(userId).Returns(user);

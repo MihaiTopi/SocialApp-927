@@ -1,9 +1,10 @@
 ﻿namespace ServerMVCProject.Controllers
 {
-    using System.Diagnostics;
     using Microsoft.AspNetCore.Mvc;
     using ServerLibraryProject.Interfaces;
+    using ServerLibraryProject.Models;
     using ServerMVCProject.Models;
+    using System.Diagnostics;
 
     [ApiController]
     [Route("User")]
@@ -35,7 +36,7 @@
             {
                 if (user.Username != null && user.Password != null)
                 {
-                    long result = this._userService.AddUser(user.Username, " ", user.Password, "");
+                    long result = this._userService.AddUser(user.Username, user.Password, "");
 
                     this.HttpContext.Session.SetString("UserId", result.ToString());
 
@@ -66,17 +67,29 @@
             {
                 if (user.Username != null && user.Password != null)
                 {
-                    long result = this._userService.Login(user.Username, user.Password);
-                    if (result == -2)
+                    try
+                    {
+
+                        User findUser = this._userService.GetUserByUsername(user.Username);
+                        if (findUser.Password.Equals(user.Password))
+                        {
+                            this.HttpContext.Session.SetString("UserId", findUser.Id.ToString());
+
+                        }
+                        else
+                        {
+                            throw new Exception("Password is incorrect");
+
+                        }
+                    }
+                    catch(Exception e)
                     {
                         throw new Exception("User doesn't exist");
-                    }
-                    else if (result == -1)
-                    {
-                        throw new Exception("Password is incorrect");
+
                     }
 
-                    this.HttpContext.Session.SetString("UserId", result.ToString());
+
+
 
                     // at this point, the register is successful
                     // here you redirect to Main page (Dashboard)

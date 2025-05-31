@@ -19,8 +19,5 @@
 
         [Column("description")]
         public string Description { get; set; }
-
-        [Column("admin_id")]
-        public long AdminId { get; set; }
     }
 }

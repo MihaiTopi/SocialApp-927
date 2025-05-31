@@ -20,7 +20,7 @@
         /// Retrieves all reactions.
         /// </summary>
         /// <returns>A list of all reactions.</returns>
-        List<Reaction> GetAllReactions();
+        //List<Reaction> GetAllReactions();
 
         /// <summary>
         /// Retrieves all reactions for a specific post.

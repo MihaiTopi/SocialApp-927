@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Json;
-using AppCommonClasses.Enums;
-using AppCommonClasses.Interfaces;
-using AppCommonClasses.Models;
-using Server.DTOs;
-
-namespace SocialApp.Proxies
+namespace DesktopProject.Proxies
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Net.Http;
+    using System.Net.Http.Json;
+    using ServerAPIProject.DTO;
+    using ServerLibraryProject.Enums;
+    using ServerLibraryProject.Interfaces;
+    using ServerLibraryProject.Models;
+
     /// <summary>
     /// Proxy implementation of <see cref="IPostRepository"/> that communicates with a remote Post API.
     /// </summary>
@@ -23,7 +23,7 @@ namespace SocialApp.Proxies
         {
             this.httpClient = new HttpClient
             {
-                BaseAddress = new Uri("https://localhost:7106/posts/")
+                BaseAddress = new Uri("https://localhost:7106/api/posts/"),
             };
         }
 
@@ -32,28 +32,32 @@ namespace SocialApp.Proxies
             Post newPost = new Post
             {
                 Title = title,
-                Content = content,
+                Content = content ?? string.Empty,
                 UserId = userId,
                 GroupId = groupId,
                 Visibility = postVisibility,
                 Tag = postTag,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = DateTime.UtcNow,
             };
-            var response = httpClient.PostAsJsonAsync("", newPost).Result;
+            var response = this.httpClient.PostAsJsonAsync(string.Empty, newPost).Result;
             if (!response.IsSuccessStatusCode)
+            {
                 throw new Exception($"Failed to add post: {response.StatusCode}");
+            }
         }
 
         /// <summary>
         /// Deletes a post by its unique identifier.
         /// </summary>
         /// <param name="postId">The ID of the post to delete.</param>
-        public void DeletePost(long postId)
-        {
-            var response = httpClient.DeleteAsync($"{postId}").Result;
-            if (!response.IsSuccessStatusCode)
-                throw new Exception($"Failed to delete post {postId}: {response.StatusCode}");
-        }
+        //public void DeletePost(long postId)
+        //{
+        //    var response = this.httpClient.DeleteAsync($"{postId}").Result;
+        //    if (!response.IsSuccessStatusCode)
+        //    {
+        //        throw new Exception($"Failed to delete post {postId}: {response.StatusCode}");
+        //    }
+        //}
 
         /// <summary>
         /// Retrieves all posts.
@@ -61,7 +65,7 @@ namespace SocialApp.Proxies
         /// <returns>A list of all posts, or an empty list if none are found.</returns>
         public List<Post> GetAllPosts()
         {
-            var response = httpClient.GetAsync("").Result;
+            var response = this.httpClient.GetAsync(string.Empty).Result;
 
             if (response.IsSuccessStatusCode)
             {
@@ -79,17 +83,17 @@ namespace SocialApp.Proxies
         /// <returns>The post if found, or a default post object if not found (404).</returns>
         public Post GetPostById(long postId)
         {
-            var response = httpClient.GetAsync($"{postId}").Result;
+            var response = this.httpClient.GetAsync($"{postId}").Result;
 
             if (response.IsSuccessStatusCode)
             {
                 var post = response.Content.ReadFromJsonAsync<Post>().Result;
-                return post ?? GetDefaultPost();
+                return post ?? this.GetDefaultPost();
             }
 
             if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                return GetDefaultPost();
+                return this.GetDefaultPost();
             }
 
             throw new Exception($"Failed to get post {postId}: {response.StatusCode}");
@@ -102,7 +106,7 @@ namespace SocialApp.Proxies
         /// <returns>A list of posts, or an empty list if none are found.</returns>
         public List<Post> GetPostsByGroupId(long groupId)
         {
-            var response = httpClient.GetAsync($"group/{groupId}").Result;
+            var response = this.httpClient.GetAsync($"group/{groupId}").Result;
 
             if (response.IsSuccessStatusCode)
             {
@@ -120,7 +124,7 @@ namespace SocialApp.Proxies
         /// <returns>A list of posts, or an empty list if none are found.</returns>
         public List<Post> GetPostsByUserId(long userId)
         {
-            var response = httpClient.GetAsync($"user/{userId}").Result;
+            var response = this.httpClient.GetAsync($"user/{userId}").Result;
 
             if (response.IsSuccessStatusCode)
             {
@@ -138,7 +142,7 @@ namespace SocialApp.Proxies
         /// <returns>A list of group feed posts, or an empty list if none are found.</returns>
         public List<Post> GetPostsGroupsFeed(long userId)
         {
-            var response = httpClient.GetAsync($"groupfeed/{userId}").Result;
+            var response = this.httpClient.GetAsync($"groupfeed/{userId}").Result;
 
             if (response.IsSuccessStatusCode)
             {
@@ -156,7 +160,7 @@ namespace SocialApp.Proxies
         /// <returns>A list of home feed posts, or an empty list if none are found.</returns>
         public List<Post> GetPostsHomeFeed(long userId)
         {
-            var response = httpClient.GetAsync($"homefeed/{userId}").Result;
+            var response = this.httpClient.GetAsync($"user/{userId}/homefeed").Result;
 
             if (response.IsSuccessStatusCode)
             {
@@ -171,12 +175,24 @@ namespace SocialApp.Proxies
         /// Saves a new post.
         /// </summary>
         /// <param name="post">The post to save.</param>
-        public void SavePost(Post post)
-        {
-            var response = httpClient.PostAsJsonAsync("", post).Result;
-            if (!response.IsSuccessStatusCode)
-                throw new Exception($"Failed to save post: {response.StatusCode}");
-        }
+        //public void SavePost(Post post)
+        //{
+        //    var request = new
+        //    {
+        //        title = post.Title,
+        //        content = post.Content,
+        //        createdDate = post.CreatedDate,
+        //        userId = post.UserId,
+        //        groupId = post.GroupId,
+        //        visibility = post.Visibility,
+        //        tag = post.Tag,
+        //    };
+        //    var response = this.httpClient.PostAsJsonAsync(string.Empty, request).Result;
+        //    if (!response.IsSuccessStatusCode)
+        //    {
+        //        throw new Exception($"Failed to save post: {response.StatusCode}");
+        //    }
+        //}
 
         /// <summary>
         /// Updates an existing post by ID with new values.
@@ -186,40 +202,41 @@ namespace SocialApp.Proxies
         /// <param name="content">The new content.</param>
         /// <param name="visibility">The new visibility setting.</param>
         /// <param name="tag">The new tag.</param>
-        public void UpdatePost(long postId, string title, string content, PostVisibility visibility, PostTag tag)
-        {
-            var post = new PostDTO
-            {
-                Title = title,
-                Content = content,
-                Visibility = visibility,
-                Tag = tag
-            };
+        //public void UpdatePost(long postId, string title, string content, PostVisibility visibility, PostTag tag)
+        //{
+        //    var post = new PostDTO
+        //    {
+        //        Title = title,
+        //        Content = content,
+        //        Visibility = visibility,
 
-            var response = httpClient.PutAsJsonAsync($"{postId}", post).Result;
-            if (!response.IsSuccessStatusCode)
-                throw new Exception($"Failed to update post {postId}: {response.StatusCode}");
-        }
+        //        Tag = tag,
+        //    };
+
+        //    var response = this.httpClient.PutAsJsonAsync($"{postId}", post).Result;
+        //    if (!response.IsSuccessStatusCode)
+        //    {
+        //        throw new Exception($"Failed to update post {postId}: {response.StatusCode}");
+        //    }
+        //}
 
         /// <summary>
         /// Generates a default post with placeholder values.
         /// </summary>
         /// <returns>A default <see cref="Post"/> instance.</returns>
-        private Post GetDefaultPost()
-        {
-            return new Post
-            {
-                Id = -1,
-                Title = "Default Title",
-                Content = "Default Content",
-                CreatedDate = DateTime.MinValue,
-                UserId = -1,
-                GroupId = -1,
-                Visibility = PostVisibility.Public,
-                Tag = PostTag.Misc
-            };
-        }
-
-
+        //private Post GetDefaultPost()
+        //{
+        //    return new Post
+        //    {
+        //        Id = -1,
+        //        Title = "Default Title",
+        //        Content = "Default Content",
+        //        CreatedDate = DateTime.MinValue,
+        //        UserId = -1,
+        //        GroupId = -1,
+        //        Visibility = PostVisibility.Public,
+        //        Tag = PostTag.Misc,
+        //    };
+        //}
     }
 }

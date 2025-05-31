@@ -17,9 +17,10 @@
 
         public void AddReaction(Reaction reaction)
         {
-            if (reactionRepository.GetReaction(reaction.UserId, reaction.PostId) != null)
+            try
             {
-                if (reactionRepository.GetReaction(reaction.UserId, reaction.PostId).Type == reaction.Type)
+                Reaction oldReaction = reactionRepository.GetReaction(reaction.UserId, reaction.PostId);
+                if (oldReaction.Type == reaction.Type)
                 {
                     reactionRepository.Delete(reaction.UserId, reaction.PostId);
                 }
@@ -27,29 +28,27 @@
                 {
                     reactionRepository.Update(reaction.UserId, reaction.PostId, reaction.Type);
                 }
+
             }
-            else
-            {
-                reactionRepository.Add(reaction);
+            catch (Exception ex) {
+                this.reactionRepository.Add(reaction);
             }
+            
         }
 
 
-        public void DeleteReaction(long userId, long postId)
-        {
-            Reaction reaction = reactionRepository.GetReaction(userId, postId);
-            if (reaction == null)
-            {
-                throw new Exception("Reaction does not exist");
-            }
 
-            reactionRepository.Delete(userId, postId);
-        }
+        //public void DeleteReaction(long userId, long postId)
+        //{
+        //    Reaction reaction = reactionRepository.GetReaction(userId, postId);
+            
+        //    reactionRepository.Delete(userId, postId);
+        //}
 
-        public List<Reaction> GetAllReactions()
-        {
-            return reactionRepository.GetAllReactions();
-        }
+        //public List<Reaction> GetAllReactions()
+        //{
+        //    return reactionRepository.GetAllReactions();
+        //}
 
         public List<Reaction> GetReactionsByPostId(long postId)
         {
@@ -61,9 +60,11 @@
             return this.reactionRepository.GetReaction(userId, postId);
         }
 
-        public void UpdateReaction(Reaction reaction)
-        {
-            this.reactionRepository.Update(reaction.UserId, reaction.PostId, reaction.Type);
-        }
+        //public void UpdateReaction(Reaction reaction)
+        //{
+        //    reactionRepository.GetReaction(reaction.UserId, reaction.PostId);
+
+        //    this.reactionRepository.Update(reaction.UserId, reaction.PostId, reaction.Type);
+        //}
     }
 }

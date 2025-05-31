@@ -3,9 +3,9 @@
 
     using System;
     using System.Collections.Generic;
-    using ServerLibraryProject.Models;
     using ServerLibraryProject.Enums;
     using ServerLibraryProject.Interfaces;
+    using ServerLibraryProject.Models;
 
     /// <summary>
     /// Service for managing posts.
@@ -39,7 +39,7 @@
         /// <param name="postVisibility">The visibility of the post.</param>
         /// <param name="postTag">The tag of the post.</param>
         /// <returns>The created post.</returns>
-        public void AddPost(string title, string? content, long userId, long groupId, PostVisibility postVisibility, PostTag postTag)
+        public void AddPost(string title, string content, long userId, long? groupId, PostVisibility postVisibility, PostTag postTag)
         {
             if (title == null || title.Length == 0)
             {
@@ -51,7 +51,7 @@
             }
             if (groupId != 0)
             {
-                if (this.groupRepository.GetGroupById(groupId) == null)
+                if (groupId != null && this.groupRepository.GetGroupById((long)groupId) == null)
                 {
                     throw new Exception("Group does not exist");
                 }
@@ -70,6 +70,7 @@
         //    {
         //        throw new Exception("Post does not exist");
         //    }
+
         //    this.postRepository.DeletePostById(id);
         //}
 
@@ -87,6 +88,7 @@
         //    {
         //        throw new Exception("Post does not exist");
         //    }
+
         //    this.postRepository.UpdatePostById(id, title, description, visibility, tag);
         //}
 
@@ -149,9 +151,9 @@
             return this.postRepository.GetPostsGroupsFeed(userId);
         }
 
-        public void SavePost(Post entity)
-        {
-            this.postRepository.SavePost(entity);
-        }
+        //public void SavePost(Post entity)
+        //{
+        //    this.postRepository.SavePost(entity);
+        //}
     }
 }

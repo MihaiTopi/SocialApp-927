@@ -1,36 +1,28 @@
-﻿namespace SocialApp.ViewModels
+﻿namespace DesktopProject.ViewModels
 {
-    using AppCommonClasses.Enums;
-    using AppCommonClasses.Models;
-    using AppCommonClasses.Interfaces;
-    using SocialApp.Components;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using SocialApp.Interfaces;
-    using global::SocialApp.Components;
-    using global::SocialApp.Interfaces;
-    using global::SocialApp.Services;
-    using Microsoft.Extensions.DependencyInjection;
-    using System;
+    using DesktopProject.Components;
+    using ServerLibraryProject.Enums;
+    using ServerLibraryProject.Interfaces;
+    using ServerLibraryProject.Models;
 
     public class PostViewModel
     {
         ObservableCollection<PostComponent> posts;
         private IPostService postService;
-        
         public PostViewModel(IPostService postService)
         {
             this.postService = postService;
             this.posts = new ObservableCollection<PostComponent>();
         }
 
-
         public ObservableCollection<PostComponent> GetCurrentPosts()
         {
             return this.posts;
         }
 
-        public void clearPosts()
+        public void ClearPosts()
         {
             this.posts = new ObservableCollection<PostComponent>();
         }
@@ -96,7 +88,6 @@
         /// Gets posts by user ID.
         /// </summary>
         /// <param name="userId">The ID of the user whose posts to retrieve.</param>
-        /// <returns>A list of posts by the specified user.</returns>
         public void PopulatePostsByUserId(long userId)
         {
             var posts = this.postService.GetPostsByUserId(userId);
@@ -108,27 +99,15 @@
             this.PopulatePosts(posts);
         }
 
-
-        /// <summary>
-        /// Gets the group feed posts for a user.
-        /// </summary>
-        /// <param name="userId">The ID of the user whose group feed to retrieve.</param>
-        /// <returns>A list of posts for the user's group feed.</returns>
         public void PopulatePostsGroupsFeed(long userId)
         {
             var posts = this.postService.GetPostsGroupsFeed(userId);
         }
 
-        /// <summary>
-        /// Gets the home feed posts for a user.
-        /// </summary>
-        /// <param name="userId">The ID of the user whose home feed to retrieve.</param>
-        /// <returns>A list of posts for the user's home feed.</returns>
         public void PopulatePostsHomeFeed(long userId)
         {
             var posts = this.postService.GetPostsHomeFeed(userId);
             this.PopulatePosts(posts);
         }
     }
-
 }

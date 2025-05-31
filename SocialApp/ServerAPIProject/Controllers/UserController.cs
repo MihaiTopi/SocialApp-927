@@ -1,9 +1,9 @@
-namespace Server.Controllers
+namespace ServerAPIProject.Controllers
 {
     using System.Collections.Generic;
+    using Microsoft.AspNetCore.Mvc;
     using ServerLibraryProject.Interfaces;
     using ServerLibraryProject.Models;
-    using Microsoft.AspNetCore.Mvc;
 
     [ApiController]
     [Route("api/users")]
@@ -16,7 +16,6 @@ namespace Server.Controllers
             this.userService = userService;
         }
 
-
         [HttpPost("{userId}/followers")]
         public IActionResult FollowUser(long userId, [FromBody] long followerId)
         {
@@ -25,11 +24,10 @@ namespace Server.Controllers
                 this.userService.FollowUserById(userId, followerId);
                 return this.Ok();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                return BadRequest(e.Message);
+                return this.BadRequest(e.Message);
             }
-
         }
 
         [HttpGet]
@@ -45,7 +43,7 @@ namespace Server.Controllers
             {
                 return this.userService.GetById(id);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return this.BadRequest(e.Message);
             }
@@ -58,7 +56,7 @@ namespace Server.Controllers
             {
                 return this.userService.GetUserByUsername(username);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return this.BadRequest(e.Message);
             }
@@ -81,13 +79,12 @@ namespace Server.Controllers
         {
             try
             {
-                var savedUser = this.userService.Save(user);
+                var savedUser = this.userService.AddUser(user.Username, user.Password, user.Image);
                 return this.Ok(savedUser);
             }
             catch (Exception e)
             {
                 return this.BadRequest(e.Message);
-
             }
         }
 
@@ -102,7 +99,6 @@ namespace Server.Controllers
             catch (Exception e)
             {
                 return this.BadRequest(e.Message);
-
             }
         }
     }

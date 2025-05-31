@@ -121,7 +121,7 @@ namespace TestingProject.Tests
         public void GetAll_ReturnsAllGroups()
         {
             // Arrange
-            var groups = new List<Group> { new Group { Name = "Group1", Image = "Image1", Description = "Description1", AdminId = 1 }, new Group { Name = "Group2", Image = "Image2", Description = "Description2", AdminId = 2 } };
+            var groups = new List<Group> { new Group { Name = "Group1", Image = "Image1", Description = "Description1" }, new Group { Name = "Group2", Image = "Image2", Description = "Description2" } };
             this.groupRepository.GetAllGroups().Returns(groups);
 
             // Act
@@ -139,7 +139,7 @@ namespace TestingProject.Tests
         {
             // Arrange
             long groupId = 1;
-            var group = new Group { Id = groupId, Name = "GroupName", Image = "Image", Description = "Description", AdminId = 1 };
+            var group = new Group { Id = groupId, Name = "GroupName", Image = "Image", Description = "Description" };
             this.groupRepository.GetGroupById(groupId).Returns(group);
 
             // Act
@@ -182,8 +182,8 @@ namespace TestingProject.Tests
             long userId = 1;
             var groups = new List<Group>
             {
-                new Group { Name = "Group1", Image = "Image1", Description = "Description1", AdminId = 1 },
-                new Group { Name = "Group2", Image = "Image2", Description = "Description2", AdminId = 2 }
+                new Group { Name = "Group1", Image = "Image1", Description = "Description1"},
+                new Group { Name = "Group2", Image = "Image2", Description = "Description2"}
             };
             this.userRepository.GetById(userId).Returns(new User { Id = userId });
             this.groupRepository.GetGroupsForUser(userId).Returns(groups);
@@ -210,14 +210,13 @@ namespace TestingProject.Tests
             this.userRepository.GetById(adminId).Returns(adminUser);
 
             // Act
-            var result = this.groupService.AddGroup(name, desc, image, adminId);
+            var result = this.groupService.AddGroup(name, desc, image);
 
             // Assert
             Assert.That(result.Name, Is.EqualTo(name));
             Assert.That(result.Description, Is.EqualTo(desc));
             Assert.That(result.Image, Is.EqualTo(image));
-            Assert.That(result.AdminId, Is.EqualTo(adminId));
-            this.groupRepository.Received(1).SaveGroup(Arg.Is<Group>(g => g.Name == name && g.Description == desc && g.Image == image && g.AdminId == adminId));
+            this.groupRepository.Received(1).SaveGroup(Arg.Is<Group>(g => g.Name == name && g.Description == desc && g.Image == image));
         }
 
         /// <summary>
@@ -233,7 +232,7 @@ namespace TestingProject.Tests
             long adminId = 1;
 
             // Act & Assert
-            var ex = Assert.Throws<ArgumentException>(() => this.groupService.AddGroup(name, desc, image, adminId));
+            var ex = Assert.Throws<ArgumentException>(() => this.groupService.AddGroup(name, desc, image));
             Assert.That(ex.Message, Is.EqualTo("Group name cannot be empty"));
         }
 
@@ -251,7 +250,7 @@ namespace TestingProject.Tests
             this.userRepository.GetById(adminId).Returns((User)null);
 
             // Act & Assert
-            var ex = Assert.Throws<ArgumentException>(() => this.groupService.AddGroup(name, desc, image, adminId));
+            var ex = Assert.Throws<ArgumentException>(() => this.groupService.AddGroup(name, desc, image));
             Assert.That(ex.Message, Is.EqualTo("User does not exist"));
         }
     }

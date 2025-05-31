@@ -1,9 +1,9 @@
-﻿using ServerLibraryProject.Interfaces;
-using ServerLibraryProject.Models;
-using Microsoft.AspNetCore.Mvc;
-
-namespace Server.Controllers
+﻿namespace ServerAPIProject.Controllers
 {
+    using Microsoft.AspNetCore.Mvc;
+    using ServerLibraryProject.Interfaces;
+    using ServerLibraryProject.Models;
+
     [ApiController]
     [Route("api/comments")]
     public class CommentController : ControllerBase
@@ -15,39 +15,34 @@ namespace Server.Controllers
             this.commentService = commentService;
         }
 
-     
         [HttpGet]
         public ActionResult<List<Comment>> GetAllComments()
         {
-
-            var comments = commentService.GetAllComments();
-            return Ok(comments);
+            var comments = this.commentService.GetAllComments();
+            return this.Ok(comments);
         }
 
-   
         //[HttpGet("{id}")]
         //public ActionResult<Comment> GetCommentById(long id)
         //{
-        //    var comment = commentService.GetCommentById((int)id);
+        //    var comment = this.commentService.GetCommentById((int)id);
         //    if (comment == null)
         //    {
-        //        return NotFound($"Comment with ID {id} not found.");
+        //        return this.NotFound($"Comment with ID {id} not found.");
         //    }
-        //    return Ok(comment);
+
+        //    return this.Ok(comment);
         //}
-
-
 
         [HttpPost]
         public IActionResult SaveComment([FromBody] Comment comment)
         {
             if (comment == null)
             {
-                return BadRequest("Comment cannot be null.");
+                return this.BadRequest("Comment cannot be null.");
             }
-            return Ok(commentService.AddComment(comment.Content, comment.UserId, comment.PostId));
+
+            return this.Ok(this.commentService.AddComment(comment.Content, comment.UserId, comment.PostId));
         }
-
-
     }
 }

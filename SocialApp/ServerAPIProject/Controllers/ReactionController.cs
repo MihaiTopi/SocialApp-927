@@ -1,8 +1,8 @@
-namespace Server.Controllers
+namespace ServerAPIProject.Controllers
 {
+    using Microsoft.AspNetCore.Mvc;
     using ServerLibraryProject.Interfaces;
     using ServerLibraryProject.Models;
-    using Microsoft.AspNetCore.Mvc;
 
     /// <summary>
     /// The controller that manages the reactions.
@@ -13,17 +13,16 @@ namespace Server.Controllers
     {
         private readonly IReactionService reactionService;
 
-
         public ReactionController(IReactionService reactionService)
         {
             this.reactionService = reactionService;
         }
 
-        [HttpGet]
-        public ActionResult<List<Reaction>> GetAllReactions()
-        {
-            return this.reactionService.GetAllReactions();
-        }
+        //[HttpGet]
+        //public ActionResult<List<Reaction>> GetAllReactions()
+        //{
+        //    return this.reactionService.GetAllReactions();
+        //}
 
         [HttpPost("reactions")]
         public IActionResult SaveReaction([FromBody] Reaction entity)
@@ -31,27 +30,26 @@ namespace Server.Controllers
             try
             {
                 this.reactionService.AddReaction(entity);
-                return Ok();
+                return this.Ok();
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return this.BadRequest(ex.Message);
             }
-
         }
 
-        [HttpPut("reactions")]
-        public IActionResult UpdateReaction([FromBody] Reaction entity)
-        {
-            try
-            {
-                this.reactionService.UpdateReaction(entity);
-                return Ok();
-            }catch(Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-
-        }
+        //[HttpPut("reactions")]
+        //public IActionResult UpdateReaction([FromBody] Reaction entity)
+        //{
+        //    try
+        //    {
+        //        this.reactionService.UpdateReaction(entity);
+        //        return this.Ok();
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return this.BadRequest(e.Message);
+        //    }
+        //}
     }
 }

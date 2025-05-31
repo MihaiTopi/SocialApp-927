@@ -35,7 +35,7 @@
         }
 
 
-        public void DeleteReaction(long postId, long userId)
+        public void DeleteReaction(long userId, long postId)
         {
             Reaction reaction = reactionRepository.GetReaction(userId, postId);
             if (reaction == null)

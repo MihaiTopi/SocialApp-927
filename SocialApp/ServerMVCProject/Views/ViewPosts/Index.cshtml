@@ -1,4 +1,9 @@
-﻿@model List<ServerLibraryProject.Models.Post>
+﻿﻿@model List<ServerLibraryProject.Models.Post>
+@using ServerLibraryProject.Models
+@using ServerLibraryProject.Enums
+@inject ServerLibraryProject.Interfaces.IReactionRepository ReactionRepository
+@inject IHttpContextAccessor HttpContextAccessor
+
 @{
     ViewData["Title"] = "All Posts";
 
@@ -10,6 +15,10 @@
         .Take(pageSize)
         .ToList();
     int totalPages = (int)Math.Ceiling(Model.Count / (double)pageSize);
+
+    string? userIdString = HttpContextAccessor.HttpContext?.Session.GetString("UserId");
+    long userId = 0;
+    long.TryParse(userIdString, out userId);
 }
 
 <!-- Top Navigation -->
@@ -38,6 +47,14 @@
                 _ => "#393e46" // Default dark gray
             };
 
+            var reactions = ReactionRepository.GetReactionsByPostId(post.Id);
+            int likeCount = reactions.Count(r => r.Type == ReactionType.Like);
+            int loveCount = reactions.Count(r => r.Type == ReactionType.Love);
+            int laughCount = reactions.Count(r => r.Type == ReactionType.Laugh);
+            int angerCount = reactions.Count(r => r.Type == ReactionType.Anger);
+
+            var userReaction = ReactionRepository.GetReaction(userId, post.Id);
+
             <div style="background-color: @tagColor; padding: 15px 20px; border-radius: 10px; margin-bottom: 20px; color: black; position: relative;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <h4 style="margin: 0;">Post #@post.Id</h4>
@@ -48,17 +65,17 @@
 
                 <!-- Reactions (Buttons) -->
                 <div style="display: flex; gap: 15px; font-size: 1.2em; align-items: center; margin-top: 10px;">
-                    <button type="button" title="Like" style="background: none; border: none; cursor: pointer;">
-                        👍 <span>0</span>
+                    <button class="react-btn" data-post="@post.Id" data-type="Like" style="background: none; border: none; cursor: pointer;@(userReaction?.Type == ReactionType.Like ? " font-weight:bold;" : "")">
+                        👍 <span id="like-@post.Id">@likeCount</span>
                     </button>
-                    <button type="button" title="Love" style="background: none; border: none; cursor: pointer;">
-                        ❤️ <span>0</span>
+                    <button class="react-btn" data-post="@post.Id" data-type="Love" style="background: none; border: none; cursor: pointer;@(userReaction?.Type == ReactionType.Love ? " font-weight:bold;" : "")">
+                        ❤️ <span id="love-@post.Id">@loveCount</span>
                     </button>
-                    <button type="button" title="Laugh" style="background: none; border: none; cursor: pointer;">
-                        😂 <span>0</span>
+                    <button class="react-btn" data-post="@post.Id" data-type="Laugh" style="background: none; border: none; cursor: pointer;@(userReaction?.Type == ReactionType.Laugh ? " font-weight:bold;" : "")">
+                        😂 <span id="laugh-@post.Id">@laughCount</span>
                     </button>
-                    <button type="button" title="Angry" style="background: none; border: none; cursor: pointer;">
-                        😡 <span>0</span>
+                    <button class="react-btn" data-post="@post.Id" data-type="Anger" style="background: none; border: none; cursor: pointer;@(userReaction?.Type == ReactionType.Anger ? " font-weight:bold;" : "")">
+                        😡 <span id="anger-@post.Id">@angerCount</span>
                     </button>
                 </div>
 
@@ -96,3 +113,45 @@
         </div>
     </div>
 </div>
+
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('.react-btn').forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                const postId = this.getAttribute('data-post');
+                const type = this.getAttribute('data-type');
+                fetch('/posts/react', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value
+                    },
+                    body: `postId=${postId}&type=${type}`
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById(`like-${postId}`).textContent = data.like;
+                        document.getElementById(`love-${postId}`).textContent = data.love;
+                        document.getElementById(`laugh-${postId}`).textContent = data.laugh;
+                        document.getElementById(`anger-${postId}`).textContent = data.anger;
+
+                        // Update button styles
+                        document.querySelectorAll(`.react-btn[data-post="${postId}"]`).forEach(btn => {
+                            btn.style.fontWeight = 'normal';
+                        });
+                        if (data[type.toLowerCase()] > 0) {
+                            this.style.fontWeight = 'bold';
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        });
+    </script>
+}

@@ -30,7 +30,9 @@ public class IndexModel : PageModel
     {
         try
         {
-            long userId = 1; // Hardcoded user ID for testing
+            string userIdStr = HttpContext.Session.GetString("UserId");
+
+            long userId = long.Parse(userIdStr);
 
             if (!Enum.TryParse<ReactionType>(type, out var reactionType))
                 return new JsonResult(new { success = false, error = "Invalid reaction type" });

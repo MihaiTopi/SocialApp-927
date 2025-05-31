@@ -1,4 +1,4 @@
-﻿﻿@model List<ServerLibraryProject.Models.Post>
+﻿@model List<ServerLibraryProject.Models.Post>
 @using ServerLibraryProject.Models
 @using ServerLibraryProject.Enums
 @inject ServerLibraryProject.Interfaces.IReactionRepository ReactionRepository
@@ -21,17 +21,14 @@
     long.TryParse(userIdString, out userId);
 }
 
+@Html.AntiForgeryToken()
+
 <!-- Top Navigation -->
 <div style="display: flex; justify-content: space-between; align-items: center; background-color: #2f333a; padding: 15px 30px; color: white; font-family: sans-serif;">
-    <!-- Home Button -->
     <a href="/posts" style="text-decoration: none; color: #00ADB5; font-size: 1.2em;">Home</a>
-
-    <!-- Create Post Button -->
     <a href="/posts/create" class="btn btn-primary" style="background-color: #00ADB5; border: none; border-radius: 6px; padding: 8px 20px; font-weight: bold; color: white; text-decoration: none;">
         + Create Post
     </a>
-
-    <!-- Groups Button -->
     <a href="/groups" style="text-decoration: none; color: #00ADB5; font-size: 1.2em;">Groups</a>
 </div>
 
@@ -42,9 +39,9 @@
         {
             var tagColor = post.Tag switch
             {
-                ServerLibraryProject.Enums.PostTag.Food => "#FFA500",     // Orange
-                ServerLibraryProject.Enums.PostTag.Workout => "#90EE90", // LightGreen
-                _ => "#393e46" // Default dark gray
+                PostTag.Food => "#FFA500",
+                PostTag.Workout => "#90EE90",
+                _ => "#393e46"
             };
 
             var reactions = ReactionRepository.GetReactionsByPostId(post.Id);
@@ -54,7 +51,6 @@
             int angerCount = reactions.Count(r => r.Type == ReactionType.Anger);
 
             var userReaction = ReactionRepository.GetReaction(userId, post.Id);
-
             <div style="background-color: @tagColor; padding: 15px 20px; border-radius: 10px; margin-bottom: 20px; color: black; position: relative;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <h4 style="margin: 0;">Post #@post.Id</h4>
@@ -63,7 +59,7 @@
 
                 <p style="margin: 10px 0; background-color: #f5f5f5; padding: 10px; border-radius: 6px;">@post.Content</p>
 
-                <!-- Reactions (Buttons) -->
+                <!-- Reactions (AJAX Buttons) -->
                 <div style="display: flex; gap: 15px; font-size: 1.2em; align-items: center; margin-top: 10px;">
                     <button class="react-btn" data-post="@post.Id" data-type="Like" style="background: none; border: none; cursor: pointer;@(userReaction?.Type == ReactionType.Like ? " font-weight:bold;" : "")">
                         👍 <span id="like-@post.Id">@likeCount</span>
@@ -84,11 +80,7 @@
                     <span style="color: #333;">
                         @($"{(DateTime.UtcNow - post.CreatedDate).Days} days ago")
                     </span>
-
-                    <!-- Comments Button -->
-
                     <a href="/comments/create" class="btn btn-outline-secondary mx-2">Leave a Comment</a>
-
                 </div>
 
                 <!-- Profile Icon -->
@@ -113,7 +105,6 @@
         </div>
     </div>
 </div>
-
 
 @section Scripts {
     <script>

@@ -1,5 +1,6 @@
 ﻿namespace ServerMVCProject.Models
 {
+    using Microsoft.AspNetCore.Mvc;
     using System.ComponentModel.DataAnnotations;
 
     public class CreateCommentViewModel
@@ -9,10 +10,8 @@
         public string Content { get; set; }
 
         [Required]
+        // Add HiddenInput to hide this field in form
+        [HiddenInput(DisplayValue = false)]
         public long PostId { get; set; }
-
-        // Optionally, include UserId if you want to set it from the UI
-        // [Required]
-        // public long UserId { get; set; }
     }
 }

@@ -71,6 +71,7 @@ namespace ServerMVCProject.Controllers
                 Tag = model.Tag,
                 UserId = userId,
                 GroupId = model.GroupId,
+
                 CreatedDate = DateTime.UtcNow
             };
             try

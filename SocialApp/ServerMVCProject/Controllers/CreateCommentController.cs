@@ -3,60 +3,92 @@
     using Microsoft.AspNetCore.Mvc;
     using ServerLibraryProject.Models;
     using ServerMVCProject.Models;
+    using ServerLibraryProject.Interfaces;
 
     [Route("comments")]
     public class CreateCommentController : Controller
     {
-        private readonly HttpClient httpClient;
+        private readonly ICommentService _commentService;
+        private readonly ILogger<CreateCommentController> _logger;
+        private readonly IPostService _postService; // Add this for validation
 
-        public CreateCommentController()
+        public CreateCommentController(
+            ICommentService commentService,
+            ILogger<CreateCommentController> logger,
+            IPostService postService) // Add post service
         {
-            httpClient = new HttpClient
-            {
-                BaseAddress = new Uri("https://localhost:7106/comments/")
-            };
+            _commentService = commentService;
+            _logger = logger;
+            _postService = postService;
         }
 
         [Route("create")]
         [HttpGet]
-        public IActionResult Create()
+        public IActionResult Create(long postId)
         {
-            return View();
-        }
+            _logger.LogInformation($"Opening create comment form for post ID: {postId}");
 
-        [HttpPost]
-        public async Task<IActionResult> Create(CreateCommentViewModel model)
-        {
-            var userIdString = HttpContext.Session.GetString("UserId");
-            long userId = long.Parse(userIdString);
-            if (!ModelState.IsValid)
-                return View(model);
-
-            Comment newComment = new Comment
+            // Validate that the post exists
+            if (postId <= 0 || _postService.GetPostById(postId) == null)
             {
-                Content = model.Content,
-                UserId = userId,
-                PostId = model.PostId,
-                CreatedDate = DateTime.UtcNow
-            };
-
-            var response = await httpClient.PostAsJsonAsync("", newComment);
-
-            if (response.IsSuccessStatusCode)
-            {
-                ViewBag.Message = "Comment created successfully!";
-                ModelState.Clear();
-                return View(new CreateCommentViewModel());
+                return BadRequest($"Invalid or non-existent post ID: {postId}");
             }
 
-            var error = await response.Content.ReadAsStringAsync();
-            ModelState.AddModelError(string.Empty, $"❌ Server error: {error}");
+            var model = new CreateCommentViewModel
+            {
+                PostId = postId
+            };
             return View(model);
         }
 
-        public IActionResult Success()
+        [Route("create")]
+        [HttpPost]
+        public IActionResult Create(CreateCommentViewModel model)
         {
-            return View();
+            try
+            {
+                _logger.LogInformation($"Attempting to create comment for post ID: {model.PostId}");
+
+                // Ensure the PostId is valid
+                if (model.PostId <= 0 || _postService.GetPostById(model.PostId) == null)
+                {
+                    ModelState.AddModelError(string.Empty, $"Invalid or non-existent post ID: {model.PostId}");
+                    return View(model);
+                }
+
+                var userIdString = HttpContext.Session.GetString("UserId");
+                long userId;
+
+                if (string.IsNullOrEmpty(userIdString))
+                {
+                    _logger.LogWarning("User ID not found in session, using default value 1");
+                    userId = 1; // Default user for testing
+                }
+                else
+                {
+                    userId = long.Parse(userIdString);
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    _logger.LogWarning("Invalid model state");
+                    return View(model);
+                }
+
+                // Use the service directly
+                var comment = _commentService.AddComment(model.Content, userId, model.PostId);
+
+                _logger.LogInformation($"Comment created successfully with ID: {comment.Id}");
+
+                TempData["SuccessMessage"] = "Comment created successfully!";
+                return RedirectToAction("Index", "ViewPosts");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating comment");
+                ModelState.AddModelError(string.Empty, $"Error: {ex.Message}");
+                return View(model);
+            }
         }
     }
 }

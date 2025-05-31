@@ -22,7 +22,11 @@ namespace ServerMVCProject.Controllers
         [HttpGet("")]
         public IActionResult Index()
         {
-            List<Post> posts = this.postService.GetAllPosts(); // You should have this in your IPostService
+            string userIdStr = this.HttpContext.Session.GetString("UserId");
+
+            long userId = long.Parse(userIdStr);
+
+            List<Post> posts = this.postService.GetPostsHomeFeed(userId);
             return this.View(posts);
         }
 

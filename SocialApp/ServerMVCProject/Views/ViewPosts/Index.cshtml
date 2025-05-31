@@ -1,7 +1,10 @@
-﻿@model List<ServerLibraryProject.Models.Post>
+@model List<ServerLibraryProject.Models.Post>
 @using ServerLibraryProject.Models
 @using ServerLibraryProject.Enums
-@inject ServerLibraryProject.Interfaces.IReactionRepository ReactionRepository
+@using ServerLibraryProject.Interfaces
+@inject IReactionRepository ReactionRepository
+@inject ICommentService CommentService
+@inject IUserRepository UserRepository
 @inject IHttpContextAccessor HttpContextAccessor
 
 @{
@@ -9,32 +12,24 @@
 
     int page = Context.Request.Query["page"].Count > 0 ? int.Parse(Context.Request.Query["page"]) : 1;
     int pageSize = 6;
-    var pagedPosts = Model
-        .OrderByDescending(p => p.Id)
-        .Skip((page - 1) * pageSize)
-        .Take(pageSize)
-        .ToList();
+    var pagedPosts = Model.OrderByDescending(p => p.Id).Skip((page - 1) * pageSize).Take(pageSize).ToList();
     int totalPages = (int)Math.Ceiling(Model.Count / (double)pageSize);
 
     string? userIdString = HttpContextAccessor.HttpContext?.Session.GetString("UserId");
-    long userId = 0;
-    long.TryParse(userIdString, out userId);
+    long.TryParse(userIdString, out long userId);
 }
 
 @Html.AntiForgeryToken()
 
 <!-- Top Navigation -->
-<div style="display: flex; justify-content: space-between; align-items: center; background-color: #2f333a; padding: 15px 30px; color: white; font-family: sans-serif;">
-    <a href="/posts" style="text-decoration: none; color: #00ADB5; font-size: 1.2em;">Home</a>
-    <a href="/posts/create" class="btn btn-primary" style="background-color: #00ADB5; border: none; border-radius: 6px; padding: 8px 20px; font-weight: bold; color: white; text-decoration: none;">
-        + Create Post
-    </a>
-    <a href="/groups" style="text-decoration: none; color: #00ADB5; font-size: 1.2em;">Groups</a>
+<div style="display: flex; justify-content: space-between; align-items: center; background-color: #2f333a; padding: 15px 30px; color: white;">
+    <a href="/posts" style="text-decoration: none; color: #00ADB5;">Home</a>
+    <a href="/posts/create" class="btn btn-primary" style="background-color: #00ADB5;">+ Create Post</a>
+    <a href="/groups" style="text-decoration: none; color: #00ADB5;">Groups</a>
 </div>
 
-<div style="display: flex; justify-content: center; margin-top: 30px; font-family: sans-serif;">
+<div style="display: flex; justify-content: center; margin-top: 30px;">
     <div style="width: 600px;">
-
         @foreach (var post in pagedPosts)
         {
             var tagColor = post.Tag switch
@@ -49,51 +44,93 @@
             int loveCount = reactions.Count(r => r.Type == ReactionType.Love);
             int laughCount = reactions.Count(r => r.Type == ReactionType.Laugh);
             int angerCount = reactions.Count(r => r.Type == ReactionType.Anger);
-
             var userReaction = ReactionRepository.GetReaction(userId, post.Id);
-            <div style="background-color: @tagColor; padding: 15px 20px; border-radius: 10px; margin-bottom: 20px; color: black; position: relative;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h4 style="margin: 0;">Post #@post.Id</h4>
-                    <span style="background-color: white; padding: 2px 10px; border-radius: 12px; margin-right: 25px; font-size: 0.8em;">@post.Visibility</span>
-                </div>
 
-                <p style="margin: 10px 0; background-color: #f5f5f5; padding: 10px; border-radius: 6px;">@post.Content</p>
+            var comments = CommentService.GetCommentsByPostId(post.Id);
+            var postAuthor = UserRepository.GetById(post.UserId);
+        <div style="background-color: @tagColor; padding: 15px 20px; border-radius: 10px; margin-bottom: 20px; color: black; position: relative;">
+            <div style="display: flex; justify-content: space-between;">
+                <h4>@postAuthor.Username</h4>
+                <span style="background-color: white; padding: 2px 10px; border-radius: 12px;">@post.Visibility</span>
+            </div>
 
-                <!-- Reactions (AJAX Buttons) -->
-                <div style="display: flex; gap: 15px; font-size: 1.2em; align-items: center; margin-top: 10px;">
-                    <button class="react-btn" data-post="@post.Id" data-type="Like" style="background: none; border: none; cursor: pointer;@(userReaction?.Type == ReactionType.Like ? " font-weight:bold;" : "")">
-                        👍 <span id="like-@post.Id">@likeCount</span>
-                    </button>
-                    <button class="react-btn" data-post="@post.Id" data-type="Love" style="background: none; border: none; cursor: pointer;@(userReaction?.Type == ReactionType.Love ? " font-weight:bold;" : "")">
-                        ❤️ <span id="love-@post.Id">@loveCount</span>
-                    </button>
-                    <button class="react-btn" data-post="@post.Id" data-type="Laugh" style="background: none; border: none; cursor: pointer;@(userReaction?.Type == ReactionType.Laugh ? " font-weight:bold;" : "")">
-                        😂 <span id="laugh-@post.Id">@laughCount</span>
-                    </button>
-                    <button class="react-btn" data-post="@post.Id" data-type="Anger" style="background: none; border: none; cursor: pointer;@(userReaction?.Type == ReactionType.Anger ? " font-weight:bold;" : "")">
-                        😡 <span id="anger-@post.Id">@angerCount</span>
-                    </button>
-                </div>
+            <p style="margin: 10px 0; background-color: #f5f5f5; padding: 10px; border-radius: 6px;">@post.Content</p>
 
-                <!-- Created Date + Comments Button -->
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 0.8em;">
-                    <span style="color: #333;">
-                        @($"{(DateTime.UtcNow - post.CreatedDate).Days} days ago")
-                    </span>
-                    <a href="/comments/create" class="btn btn-outline-secondary mx-2">Leave a Comment</a>
-                </div>
+            <!-- Reactions -->
+            <div style="display: flex; gap: 15px; align-items: center;">
+                @foreach (var type in Enum.GetValues(typeof(ReactionType)).Cast<ReactionType>())
+                {
+                    var count = type switch
+                    {
+                        ReactionType.Like => likeCount,
+                        ReactionType.Love => loveCount,
+                        ReactionType.Laugh => laughCount,
+                        ReactionType.Anger => angerCount,
+                        _ => 0
+                    };
+                    var emoji = type switch
+                    {
+                        ReactionType.Like => "👍",
+                        ReactionType.Love => "❤️",
+                        ReactionType.Laugh => "😂",
+                        ReactionType.Anger => "😡",
+                        _ => ""
+                    };
+                    <button class="react-btn"
+                            data-post="@post.Id"
+                            data-type="@type"
+                            style="background: none; border: none; cursor: pointer;@(userReaction?.Type == type ? " font-weight: bold;" : "")">
+                        @emoji <span id="@type.ToString().ToLower()-@post.Id">@count</span>
+                    </button>
+                }
 
-                <!-- Profile Icon -->
-                <div style="position: absolute; top: 10px; right: 10px;">
-                    <span style="background-color: white; border-radius: 50%; width: 28px; height: 28px; display: inline-block; text-align: center; line-height: 28px;">
-                        <i class="fa fa-user"></i>
-                    </span>
+                <!-- Toggle Comments -->
+                <button type="button"
+                        onclick="toggleComments('comments-@post.Id')"
+                        style="background: none; border: none; cursor: pointer; margin-left: auto;">
+                    💬 <span>@comments.Count</span>
+                </button>
+            </div>
+
+            <div style="margin-top: 10px; font-size: 0.8em;">
+                <span>@($"{(DateTime.UtcNow - post.CreatedDate).Days} days ago")</span>
+            </div>
+
+            <!-- Comments Section -->
+            <div id="comments-@post.Id" class="comments-dropdown" style="display: none; margin-top: 15px;">
+                <div style="background-color: white; border-radius: 8px; padding: 10px;">
+                    <div style="max-height: 200px; overflow-y: auto;">
+                        @if (comments.Any())
+                        {
+                            foreach (var comment in comments)
+                            {
+                                var commentAuthor = UserRepository.GetById(comment.UserId);
+                                <div style="padding: 8px; border-bottom: 1px solid #eee;">
+                                    <strong>@commentAuthor.Username</strong><br />
+                                    <span>@comment.Content</span><br />
+                                    <small style="color: #777;">@comment.CreatedDate.ToString("MMM dd, yyyy hh:mm tt")</small>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div style="text-align: center; color: #777;">No comments yet</div>
+                        }
+                    </div>
+
+                    <!-- Add Comment Form -->
+                    <form action="/comments/create" method="post" class="comment-form">
+                        <input type="hidden" name="PostId" value="@post.Id" />
+                        <input type="text" name="Content" placeholder="Add a comment..." required style="width: 80%; margin-right: 5px;" />
+                        <button type="submit" style="background-color: #00ADB5; color: white;">Post</button>
+                    </form>
                 </div>
             </div>
+        </div>
         }
 
-        <!-- Pagination Controls -->
-        <div style="display: flex; justify-content: center; gap: 15px; margin-top: 20px;">
+        <!-- Pagination -->
+        <div style="text-align: center; margin-top: 20px;">
             @if (page > 1)
             {
                 <a class="btn btn-secondary" href="?page=@(page - 1)">Previous</a>
@@ -108,6 +145,11 @@
 
 @section Scripts {
     <script>
+        function toggleComments(id) {
+            const section = document.getElementById(id);
+            section.style.display = section.style.display === "none" ? "block" : "none";
+        }
+
         document.querySelectorAll('.react-btn').forEach(btn => {
             btn.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -118,31 +160,26 @@
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
                         'X-Requested-With': 'XMLHttpRequest',
-                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
                     },
                     body: `postId=${postId}&type=${type}`
                 })
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
-                        document.getElementById(`like-${postId}`).textContent = data.like;
-                        document.getElementById(`love-${postId}`).textContent = data.love;
-                        document.getElementById(`laugh-${postId}`).textContent = data.laugh;
-                        document.getElementById(`anger-${postId}`).textContent = data.anger;
+                        ['like', 'love', 'laugh', 'anger'].forEach(rt => {
+                            document.getElementById(`${rt}-${postId}`).textContent = data[rt];
+                        });
 
-                        // Update button styles
                         document.querySelectorAll(`.react-btn[data-post="${postId}"]`).forEach(btn => {
                             btn.style.fontWeight = 'normal';
                         });
-                        if (data[type.toLowerCase()] > 0) {
-                            this.style.fontWeight = 'bold';
-                        }
+                        this.style.fontWeight = 'bold';
                     }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
                 });
             });
         });
+
+        // Comment form AJAX submission could be added here if needed
     </script>
 }

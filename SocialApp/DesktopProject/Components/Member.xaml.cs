@@ -17,7 +17,7 @@ namespace DesktopProject.Components
         private readonly long groupId;
         private readonly bool isAdmin;
 
-        public Member(User member, Frame frame, long groupId, bool isAdmin)
+        public Member(User member, Frame frame, long groupId)
         {
             this.InitializeComponent();
             this.member = member;

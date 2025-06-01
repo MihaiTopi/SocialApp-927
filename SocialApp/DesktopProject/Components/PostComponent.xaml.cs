@@ -63,8 +63,6 @@ namespace DesktopProject.Components
         {
             this.InitializeComponent();
             this.DataContext = this;
-            this.reactionService = new ReactionService(new ReactionRepositoryProxy());
-            this.commentService = App.Services.GetService<ICommentService>();
 
             this.AppController = App.Services.GetService<AppController>();
         }
@@ -81,9 +79,6 @@ namespace DesktopProject.Components
             this.postId = postId;
             this.PostCreationTime = createdDate;
             this.tag = tag;
-
-            this.reactionService = new ReactionService(new ReactionRepositoryProxy());
-            this.commentService = App.Services.GetService<ICommentService>();
 
             this.AppController = App.Services.GetService<AppController>();
 
@@ -113,7 +108,6 @@ namespace DesktopProject.Components
             if (this.content.StartsWith(imagePrefix))
             {
                 string base64Image = this.content.Substring(imagePrefix.Length);
-                //this.PostImage.Source = await AppController.DecodeBase64ToImageAsync(base64Image);
                 this.PostImage.Visibility = Visibility.Visible;
                 this.Content.Visibility = Visibility.Collapsed;
             }

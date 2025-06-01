@@ -119,6 +119,32 @@ namespace DesktopProject.Proxies
             }
         }
 
-        
+        public long AddUser(string username, string password, string image)
+        {
+            if (string.IsNullOrEmpty(username))
+            {
+                throw new ArgumentException("Username cannot be empty", nameof(username));
+            }
+
+            if (string.IsNullOrEmpty(password))
+            {
+                throw new ArgumentException("Password cannot be empty", nameof(password));
+            }
+
+            var user = new User
+            {
+                Username = username,
+                Password = password,
+                Image = image,
+            };
+
+            var response = this.httpClient.PostAsJsonAsync(string.Empty, user).Result;
+            if (!response.IsSuccessStatusCode)
+            {
+                Debug.WriteLine($"Failed to add user. Status: {response.StatusCode}");
+            }
+
+            return -1;
+        }
     }
 }

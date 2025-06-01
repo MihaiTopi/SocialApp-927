@@ -4,23 +4,20 @@
     using System.Collections.Generic;
     using System.Net.Http;
     using System.Net.Http.Json;
-    using ServerAPIProject.DTO;
     using ServerLibraryProject.Enums;
     using ServerLibraryProject.Interfaces;
     using ServerLibraryProject.Models;
+    using ServerLibraryProject.Interfaces;
 
-    public class ReactionServiceProxy : IServiceRepository
+    public class ReactionServiceProxy : IReactionService
     {
         private readonly HttpClient httpClient;
 
-        public ReactionRepositoryProxy()
+        public ReactionServiceProxy()
         {
             this.httpClient = new HttpClient();
             this.httpClient.BaseAddress = new Uri("https://localhost:7106/reactions/");
         }
-
-
-
 
         public List<Reaction> GetReactionsByPostId(long postId)
         {
@@ -51,7 +48,7 @@
             return null;
         }
 
-        public void Add(Reaction reaction)
+        public void AddReaction(Reaction reaction)
         {
             this.httpClient.PostAsJsonAsync(string.Empty, reaction).Wait();
         }

@@ -105,11 +105,10 @@ namespace DesktopProject.Pages
                 {
                     Name = GroupNameInput.Text.Trim(),
                     Description = string.IsNullOrWhiteSpace(GroupDescriptionInput.Text) ? null : GroupDescriptionInput.Text.Trim(),
-                    AdminId = this.controller.CurrentUser.Id,
                     Image = image
                 };
 
-                groupService.AddGroup(newGroup.Name, newGroup.Description ?? "", newGroup.Image ?? "", newGroup.AdminId);
+                groupService.AddGroup(newGroup.Name, newGroup.Description ?? "", newGroup.Image ?? "");
                 Frame.Navigate(typeof(UserPage), controller);
             }
             catch (Exception ex)

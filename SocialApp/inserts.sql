@@ -1,12 +1,8 @@
--- used to fill the database with initial mock data
+-- used to fill the database with initial mock dat
 
 -- Users
-SET IDENTITY_INSERT Users ON
-INSERT INTO Users (id,username,password, image) VALUES
-(0,'default','default',NULL)
-SET IDENTITY_INSERT Users OFF
 
-INSERT INTO Users (username, password, image) VALUES
+INSERT INTO Users (username, password, photo_url) VALUES
 ('fit_alice', 'alice1234', NULL),
 ('diet_bob', 'bob_password', NULL),
 ('carol_runs', 'qwerty!', NULL),
@@ -19,71 +15,67 @@ INSERT INTO Users (username, password, image) VALUES
 ('lbj_fan_23', 'lakersin5', NULL);
 
 -- Groups
-SET IDENTITY_INSERT GROUPS ON
-INSERT INTO Groups (id,name, image, description, admin_id) VALUES
-(0,'default',NULL,'default',0)
-SET IDENTITY_INSERT GROUPS OFF
 
-INSERT INTO Groups (name, image, description, admin_id) VALUES
-('Calorie Counters', NULL, 'A community for tracking calories and healthy eating habits.', 1),
-('Tech Geeks', NULL, 'Discuss the latest gadgets, software, and tech trends.', 2),
-('Book Lovers Club', NULL, 'Join us for book discussions and recommendations.', 3),
-('Fitness Freaks', NULL, 'Motivation and advice for your fitness journey.', 4),
-('Culinary Adventures', NULL, 'Explore recipes, cooking tips, and foodie stories.', 5);
+INSERT INTO Groups (name, description) VALUES
+('Calorie Counters', NULL, 'A community for tracking calories and healthy eating habits.'),
+('Tech Geeks', NULL, 'Discuss the latest gadgets, software, and tech trends.'),
+('Book Lovers Club', NULL, 'Join us for book discussions and recommendations.'),
+('Fitness Freaks', NULL, 'Motivation and advice for your fitness journey.'),
+('Culinary Adventures', NULL, 'Explore recipes, cooking tips, and foodie stories.');
 
 -- Posts
 INSERT INTO Posts (title, content, user_id, group_id, visibility, tag) VALUES
-('Morning Yoga Routines', 'Start your day with these energizing yoga poses.', 4, 4, 0, 3),
-('HIIT for Beginners', 'A simple high-intensity interval training guide for all levels.', 9, 4, 0, 3),
-('Home Workout Essentials', 'Must-have gear for effective home workouts.', 4, 4, 0, 3),
-('Nutrition Basics', 'Understanding macros and micros for a balanced diet.', 9, 4, 0, 3),
-('Running for Beginners', 'Tips to start running injury-free.', 4, 4, 0, 3),
-('Yoga and Meditation', 'How mindfulness and movement boost your health.', 9, 4, 0, 3),
-('Healthy Smoothies', 'Delicious recipes for nutritious drinks.', 10, 5, 0, 4),
-('Bodyweight Exercises', 'Stay fit anywhere with these no-equipment moves.', 4, 4, 0, 3),
-('Stretching Routines', 'Improve flexibility and prevent injuries.', 9, 4, 0, 3),
-('Cardio Workouts', 'Boost your heart health with these routines.', 4, 4, 0, 3),
+('Morning Yoga Routines', 'Start your day with these energizing yoga poses.', 4, 4, null, 3),
+('HIIT for Beginners', 'A simple high-intensity interval training guide for all levels.', 9, 4, null, 3),
+('Home Workout Essentials', 'Must-have gear for effective home workouts.', 4, 4, null, 3),
+('Nutrition Basics', 'Understanding macros and micros for a balanced diet.', 9, 4, null, 3),
+('Running for Beginners', 'Tips to start running injury-free.', 4, 4, null, 3),
+('Yoga and Meditation', 'How mindfulness and movement boost your health.', 9, 4, null, 3),
+('Healthy Smoothies', 'Delicious recipes for nutritious drinks.', 10, 5, null, 4),
+('Bodyweight Exercises', 'Stay fit anywhere with these no-equipment moves.', 4, 4, null, 3),
+('Stretching Routines', 'Improve flexibility and prevent injuries.', 9, 4, null, 3),
+('Cardio Workouts', 'Boost your heart health with these routines.', 4, 4, null, 3),
 ('Meal Prep for Fitness', 'Easy meal prep ideas to support your goals.', 5, 5, 0, 4),
-('Best Plant-Based Proteins', 'Top sources of protein for vegetarians and vegans.', 5, 5, 0, 4),
-('Fitness Transformation Stories', 'Real journeys, real results.', 6, 4, 0, 3),
-('Motivational Fitness Quotes', 'Stay inspired on your fitness journey.', 6, 4, 0, 3),
-('Quick Workouts for Busy Days', 'Stay active even on your tightest schedule.', 7, 4, 0, 3),
-('Healthy Snack Ideas', 'Nutritious snacks to fuel your workouts.', 5, 5, 0, 4),
-('Weekly Workout Challenge', 'Join the 7-day fitness challenge!', 8, 4, 0, 3),
-('Hydration Tips', 'Why staying hydrated is key for performance.', 9, 4, 0, 3),
-('Meal Planning 101', 'How to plan your week for healthy eating.', 5, 5, 0, 4),
-('Strength Training Basics', 'Beginner’s guide to lifting weights.', 4, 4, 0, 3),
-('Post-Workout Recovery', 'Best practices for muscle recovery.', 6, 4, 0, 3),
-('Low-Carb Recipes', 'Tasty dishes for a low-carb lifestyle.', 5, 5, 0, 4),
-('Fitness Myths Busted', 'Debunking common fitness misconceptions.', 7, 4, 0, 3),
-('Outdoor Workouts', 'Take your fitness routine outside.', 8, 4, 0, 3),
-('Importance of Rest Days', 'Why rest is crucial for progress.', 6, 4, 0, 3),
-('Gym Motivation Playlist', 'Top tracks to power your workouts.', 7, 4, 0, 3),
-('Healthy Breakfast Ideas', 'Start your day with these nutritious options.', 5, 5, 0, 4),
-('Pre-Workout Meals', 'What to eat before you exercise.', 5, 5, 0, 4),
-('Fitness Apps Review', 'Best apps to track your progress.', 7, 4, 0, 3),
-('Staying Consistent', 'How to build lasting fitness habits.', 6, 4, 0, 3),
-('Vegan Meal Prep', 'Easy plant-based meals for fitness.', 5, 5, 0, 4),
-('Beginner’s Guide to Pilates', 'Why Pilates is great for core strength.', 8, 4, 0, 3),
-('Supplements 101', 'What you need to know about fitness supplements.', 9, 4, 0, 3),
-('Group Fitness Benefits', 'Why working out together works.', 8, 4, 0, 3),
-('Healthy Eating on a Budget', 'Affordable ways to eat well.', 5, 5, 0, 4),
-('Fitness Progress Tracking', 'Simple ways to measure your results.', 6, 4, 0, 3),
-('Sunset over the Mountains', 'Captured this stunning view during my hike last weekend.', 1, 1, 0, 0),
-('Best Budget Laptops in 2025', 'My top picks for affordable laptops.', 2, 2, 0, 1),
-('Top 5 Mystery Novels to Read', 'Suspenseful books to keep you hooked!', 3, 3, 0, 2),
-('Night Sky Photography Tips', 'How to capture stars like a pro.', 6, 1, 0, 0),
-('Upcoming Smartphone Features', 'What to expect from next-gen phones.', 7, 2, 0, 1),
-('Historical Fiction Gems', 'Books that transport you to another era.', 8, 3, 0, 2),
-('Macro Photography Techniques', 'Get the details in your close-ups.', 1, 1, 0, 0),
-('AI in Everyday Life', 'How AI is shaping our future.', 2, 2, 0, 1),
-('Poetry Recommendations', 'Beautiful poems to soothe the soul.', 3, 3, 0, 2),
-('Long Exposure Photography', 'Create magical light trails.', 6, 1, 0, 0),
-('Latest Software Updates', 'What’s new this month.', 7, 2, 0, 1),
-('Classic Novels Everyone Should Read', 'Timeless stories.', 8, 3, 0, 2),
-('Black and White Photography', 'Mastering contrast and shadows.', 6, 1, 0, 0),
-('Gadget Reviews', 'Honest opinions on the latest tech.', 7, 2, 0, 1),
-('Writing Tips', 'Improve your writing style easily.', 8, 3, 0, 2);
+('Best Plant-Based Proteins', 'Top sources of protein for vegetarians and vegans.', 5, 5, null, 4),
+('Fitness Transformation Stories', 'Real journeys, real results.', 6, 4, null, 3),
+('Motivational Fitness Quotes', 'Stay inspired on your fitness journey.', 6, 4, null, 3),
+('Quick Workouts for Busy Days', 'Stay active even on your tightest schedule.', 7, 4, null, 3),
+('Healthy Snack Ideas', 'Nutritious snacks to fuel your workouts.', 5, 5, null, 4),
+('Weekly Workout Challenge', 'Join the 7-day fitness challenge!', 8, 4, null, 3),
+('Hydration Tips', 'Why staying hydrated is key for performance.', 9, 4, null, 3),
+('Meal Planning 101', 'How to plan your week for healthy eating.', 5, 5, null, 4),
+('Strength Training Basics', 'Beginner’s guide to lifting weights.', 4, 4, null, 3),
+('Post-Workout Recovery', 'Best practices for muscle recovery.', 6, 4, null, 3),
+('Low-Carb Recipes', 'Tasty dishes for a low-carb lifestyle.', 5, 5, null, 4),
+('Fitness Myths Busted', 'Debunking common fitness misconceptions.', 7, 4, null, 3),
+('Outdoor Workouts', 'Take your fitness routine outside.', 8, 4, null, 3),
+('Importance of Rest Days', 'Why rest is crucial for progress.', 6, 4, null, 3),
+('Gym Motivation Playlist', 'Top tracks to power your workouts.', 7, 4, null, 3),
+('Healthy Breakfast Ideas', 'Start your day with these nutritious options.', 5, 5, null, 4),
+('Pre-Workout Meals', 'What to eat before you exercise.', 5, 5, null, 4),
+('Fitness Apps Review', 'Best apps to track your progress.', 7, 4, null, 3),
+('Staying Consistent', 'How to build lasting fitness habits.', 6, 4, null, 3),
+('Vegan Meal Prep', 'Easy plant-based meals for fitness.', 5, 5, null, 4),
+('Beginner’s Guide to Pilates', 'Why Pilates is great for core strength.', 8, 4, null, 3),
+('Supplements 101', 'What you need to know about fitness supplements.', 9, 4, null, 3),
+('Group Fitness Benefits', 'Why working out together works.', 8, 4, null, 3),
+('Healthy Eating on a Budget', 'Affordable ways to eat well.', 5, 5, null, 4),
+('Fitness Progress Tracking', 'Simple ways to measure your results.', 6, 4, null, 3),
+('Sunset over the Mountains', 'Captured this stunning view during my hike last weekend.', 1, 1, null, 0),
+('Best Budget Laptops in 2025', 'My top picks for affordable laptops.', 2, 2, null, 1),
+('Top 5 Mystery Novels to Read', 'Suspenseful books to keep you hooked!', 3, 3, null, 2),
+('Night Sky Photography Tips', 'How to capture stars like a pro.', 6, 1, null, 0),
+('Upcoming Smartphone Features', 'What to expect from next-gen phones.', 7, 2, null, 1),
+('Historical Fiction Gems', 'Books that transport you to another era.', 8, 3, null, 2),
+('Macro Photography Techniques', 'Get the details in your close-ups.', 1, 1, null, 0),
+('AI in Everyday Life', 'How AI is shaping our future.', 2, 2, null, 1),
+('Poetry Recommendations', 'Beautiful poems to soothe the soul.', 3, 3, null, 2),
+('Long Exposure Photography', 'Create magical light trails.', 6, 1, null, 0),
+('Latest Software Updates', 'What’s new this month.', 7, 2, null, 1),
+('Classic Novels Everyone Should Read', 'Timeless stories.', 8, 3, null, 2),
+('Black and White Photography', 'Mastering contrast and shadows.', 6, 1, null, 0),
+('Gadget Reviews', 'Honest opinions on the latest tech.', 7, 2, null, 1),
+('Writing Tips', 'Improve your writing style easily.', 8, 3, null, 2);
 
 -- Comments
 INSERT INTO Comments (user_id, post_id, content) VALUES

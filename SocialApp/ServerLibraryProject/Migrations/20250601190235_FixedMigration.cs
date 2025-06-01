@@ -6,22 +6,24 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ServerLibraryProject.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class FixedMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Reactions",
+                name: "Groups",
                 columns: table => new
                 {
-                    user_id = table.Column<long>(type: "bigint", nullable: false),
-                    post_id = table.Column<long>(type: "bigint", nullable: false),
-                    reaction_type = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    image = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    description = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reactions", x => new { x.user_id, x.post_id });
+                    table.PrimaryKey("PK_Groups", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -32,54 +34,11 @@ namespace ServerLibraryProject.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     username = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    image = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    photo_url = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Groups",
-                columns: table => new
-                {
-                    id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    image = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    admin_id = table.Column<long>(type: "bigint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Groups", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_Groups_Users_admin_id",
-                        column: x => x.admin_id,
-                        principalTable: "Users",
-                        principalColumn: "id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserFollowers",
-                columns: table => new
-                {
-                    user_id = table.Column<long>(type: "bigint", nullable: false),
-                    follower_id = table.Column<long>(type: "bigint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserFollowers", x => new { x.user_id, x.follower_id });
-                    table.ForeignKey(
-                        name: "FK_UserFollowers_Users_follower_id",
-                        column: x => x.follower_id,
-                        principalTable: "Users",
-                        principalColumn: "id");
-                    table.ForeignKey(
-                        name: "FK_UserFollowers_Users_user_id",
-                        column: x => x.user_id,
-                        principalTable: "Users",
-                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateTable(
@@ -114,7 +73,7 @@ namespace ServerLibraryProject.Migrations
                     content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     created_date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
                     user_id = table.Column<long>(type: "bigint", nullable: false),
-                    group_id = table.Column<long>(type: "bigint", nullable: false),
+                    group_id = table.Column<long>(type: "bigint", nullable: true),
                     visibility = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     tag = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -128,6 +87,28 @@ namespace ServerLibraryProject.Migrations
                         principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_Posts_Users_user_id",
+                        column: x => x.user_id,
+                        principalTable: "Users",
+                        principalColumn: "id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserFollowers",
+                columns: table => new
+                {
+                    user_id = table.Column<long>(type: "bigint", nullable: false),
+                    follower_id = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserFollowers", x => new { x.user_id, x.follower_id });
+                    table.ForeignKey(
+                        name: "FK_UserFollowers_Users_follower_id",
+                        column: x => x.follower_id,
+                        principalTable: "Users",
+                        principalColumn: "id");
+                    table.ForeignKey(
+                        name: "FK_UserFollowers_Users_user_id",
                         column: x => x.user_id,
                         principalTable: "Users",
                         principalColumn: "id");
@@ -159,6 +140,29 @@ namespace ServerLibraryProject.Migrations
                         principalColumn: "id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Reactions",
+                columns: table => new
+                {
+                    user_id = table.Column<long>(type: "bigint", nullable: false),
+                    post_id = table.Column<long>(type: "bigint", nullable: false),
+                    reaction_type = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reactions", x => new { x.user_id, x.post_id });
+                    table.ForeignKey(
+                        name: "FK_Reactions_Posts_post_id",
+                        column: x => x.post_id,
+                        principalTable: "Posts",
+                        principalColumn: "id");
+                    table.ForeignKey(
+                        name: "FK_Reactions_Users_user_id",
+                        column: x => x.user_id,
+                        principalTable: "Users",
+                        principalColumn: "id");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_post_id",
                 table: "Comments",
@@ -168,11 +172,6 @@ namespace ServerLibraryProject.Migrations
                 name: "IX_Comments_user_id",
                 table: "Comments",
                 column: "user_id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Groups_admin_id",
-                table: "Groups",
-                column: "admin_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_GroupUsers_group_id",
@@ -188,6 +187,11 @@ namespace ServerLibraryProject.Migrations
                 name: "IX_Posts_user_id",
                 table: "Posts",
                 column: "user_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reactions_post_id",
+                table: "Reactions",
+                column: "post_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserFollowers_follower_id",

@@ -79,7 +79,7 @@ namespace ServerAPIProject.Controllers
         {
             try
             {
-                var savedUser = this.userService.AddUser(user.Username, user.Password, user.Image);
+                var savedUser = this.userService.AddUser(user.Username, user.Password, user.PhotoURL);
                 return this.Ok(savedUser);
             }
             catch (Exception e)

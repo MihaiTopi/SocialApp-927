@@ -96,6 +96,9 @@
             modelBuilder.Entity<Post>()
                 .Property(post => post.CreatedDate)
                 .HasDefaultValueSql("GETDATE()");
+            modelBuilder.Entity<Post>()
+                .Property(post => post.GroupId)
+                .IsRequired(false); // GroupId is optional, so it can be null
             modelBuilder.Entity<Post>(entity =>
             {
                 entity.HasOne<User>()

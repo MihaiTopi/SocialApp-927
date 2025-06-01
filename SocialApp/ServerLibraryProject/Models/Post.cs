@@ -11,7 +11,6 @@
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("id")]
-        [JsonIgnore]
         public long Id { get; set; }
 
         [Column("title")]

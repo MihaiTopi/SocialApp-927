@@ -21,7 +21,7 @@ public class IndexModel : PageModel
     public void OnGet()
     {
         // Hardcode user ID in session for testing
-        _httpContextAccessor.HttpContext.Session.SetString("UserId", "1");
+        // _httpContextAccessor.HttpContext.Session.SetString("UserId", "1");
         // Load posts if needed
     }
 

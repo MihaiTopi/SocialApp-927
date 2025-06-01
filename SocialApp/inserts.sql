@@ -23,6 +23,9 @@ INSERT INTO Groups (name, description) VALUES
 ('Fitness Freaks', 'Motivation and advice for your fitness journey.'),
 ('Culinary Adventures', 'Explore recipes, cooking tips, and foodie stories.');
 
+select *
+from Reactions
+
 -- Posts
 INSERT INTO Posts (title, content, user_id, group_id, visibility, tag) VALUES
 ('Morning Yoga Routines', 'Start your day with these energizing yoga poses.', 4, null, 3, 3),
@@ -61,19 +64,19 @@ INSERT INTO Posts (title, content, user_id, group_id, visibility, tag) VALUES
 ('Group Fitness Benefits', 'Why working out together works.', 8, 4, 4, 3),
 ('Healthy Eating on a Budget', 'Affordable ways to eat well.', 5, 5, 4, 4),
 ('Fitness Progress Tracking', 'Simple ways to measure your results.', 6, null, 2, 3),
-('Sunset over the Mountains', 'Captured this stunning view during my hike last weekend.', 1, null, 2, 0),
+('Sunset over the Mountains', 'Captured this stunning view during my hike last weekend.', 1, null, 2, 1),
 ('Best Budget Laptops in 2025', 'My top picks for affordable laptops.', 2, null, 2, 1),
 ('Top 5 Mystery Novels to Read', 'Suspenseful books to keep you hooked!', 3, null, 2, 2),
 ('Night Sky Photography Tips', 'How to capture stars like a pro.', 6, null, 2, 0),
 ('Upcoming Smartphone Features', 'What to expect from next-gen phones.', 7, null, 2, 1),
 ('Historical Fiction Gems', 'Books that transport you to another era.', 8, null, 2, 2),
-('Macro Photography Techniques', 'Get the details in your close-ups.', 1, null, 2, 0),
+('Macro Photography Techniques', 'Get the details in your close-ups.', 1, null, 2, 1),
 ('AI in Everyday Life', 'How AI is shaping our future.', 2, null, 2, 1),
 ('Poetry Recommendations', 'Beautiful poems to soothe the soul.', 3, null, 2, 2),
-('Long Exposure Photography', 'Create magical light trails.', 6, null, 2, 0),
+('Long Exposure Photography', 'Create magical light trails.', 6, null, 2, 1),
 ('Latest Software Updates', 'What’s new this month.', 7, 2, 4, 1),
 ('Classic Novels Everyone Should Read', 'Timeless stories.', 8, 3, 4, 2),
-('Black and White Photography', 'Mastering contrast and shadows.', 6, 1, 4, 0),
+('Black and White Photography', 'Mastering contrast and shadows.', 6, 1, 4, 1),
 ('Gadget Reviews', 'Honest opinions on the latest tech.', 7, 2, 4, 1),
 ('Writing Tips', 'Improve your writing style easily.', 8, 3, 4, 2);
 

@@ -16,12 +16,13 @@
         public ReactionServiceProxy()
         {
             this.httpClient = new HttpClient();
-            this.httpClient.BaseAddress = new Uri("https://localhost:7106/reactions/");
+            this.httpClient.BaseAddress = new Uri("https://localhost:7106/api/reactions/");
         }
 
         public List<Reaction> GetReactionsByPostId(long postId)
         {
-            var response = this.httpClient.GetAsync($"post/{postId}").Result!;
+            var client = new HttpClient();
+            var response = client.GetAsync($"https://localhost:7106/api/posts/{postId}/reactions").Result!;
 
             if (response.IsSuccessStatusCode)
             {
@@ -50,7 +51,13 @@
 
         public void AddReaction(Reaction reaction)
         {
-            this.httpClient.PostAsJsonAsync(string.Empty, reaction).Wait();
+            var response = this.httpClient.PostAsJsonAsync(string.Empty, reaction).Result;
+            if (response.IsSuccessStatusCode)
+            {
+                return;
+            }
+
+            throw new Exception($"Failed to add reaction: {response.StatusCode}");
         }
 
     }

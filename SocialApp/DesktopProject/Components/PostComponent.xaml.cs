@@ -81,6 +81,8 @@ namespace DesktopProject.Components
             this.tag = tag;
 
             this.AppController = App.Services.GetService<AppController>();
+            this.reactionService = App.Services.GetService<IReactionService>();
+            this.commentService = App.Services.GetService<ICommentService>();
 
             this.Title.Text = title;
             this.TimeSince.Text = this.TimeSincePost; // Use the property for time display

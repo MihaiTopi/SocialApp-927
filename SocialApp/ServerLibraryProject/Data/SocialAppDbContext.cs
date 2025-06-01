@@ -74,7 +74,7 @@
                 .HasKey(reaction => new { reaction.UserId, reaction.PostId });
             modelBuilder.Entity<Reaction>()
                 .Property(reaction => reaction.Type)
-                .HasConversion<string>();
+                .HasConversion<int>();
             modelBuilder.Entity<Reaction>(entity =>
             {
                 entity.HasOne<User>()
@@ -89,10 +89,10 @@
 
             modelBuilder.Entity<Post>()
                 .Property(post => post.Visibility)
-                .HasConversion<string>();
+                .HasConversion<int>();
             modelBuilder.Entity<Post>()
                 .Property(post => post.Tag)
-                .HasConversion<string>();
+                .HasConversion<int>();
             modelBuilder.Entity<Post>()
                 .Property(post => post.CreatedDate)
                 .HasDefaultValueSql("GETDATE()");

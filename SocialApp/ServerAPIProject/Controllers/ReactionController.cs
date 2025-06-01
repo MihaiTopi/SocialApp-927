@@ -24,7 +24,7 @@ namespace ServerAPIProject.Controllers
         //    return this.reactionService.GetAllReactions();
         //}
 
-        [HttpPost("reactions")]
+        [HttpPost]
         public IActionResult SaveReaction([FromBody] Reaction entity)
         {
             try

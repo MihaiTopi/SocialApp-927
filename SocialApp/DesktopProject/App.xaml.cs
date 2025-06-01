@@ -33,6 +33,8 @@
             services.AddSingleton<ICommentService, CommentServiceProxy>();
             services.AddSingleton<ICommentService, CommentServiceProxy>();
             services.AddSingleton<IGroupService, GroupServiceProxy>();
+            services.AddSingleton<IReactionService, ReactionServiceProxy>();
+
             Services = services.BuildServiceProvider();
         }
 

@@ -78,15 +78,21 @@ namespace ServerLibraryProject.Repositories
 
         public List<Post> GetPostsHomeFeed(long userId)
         {
+            //var postsQuery = from post in dbContext.Posts
+            //                 where post.UserId == userId
+            //                    || post.Visibility == PostVisibility.Public
+            //                    || dbContext.UserFollowers.Any(userFollower =>
+            //                           (userFollower.FollowerId == userId
+            //                        || userFollower.UserId == post.UserId)
+            //                        && (post.Visibility == PostVisibility.Friends))
+            //                 orderby post.CreatedDate descending
+            //                 select post;
             var postsQuery = from post in dbContext.Posts
                              where post.UserId == userId
                                 || post.Visibility == PostVisibility.Public
-                                || dbContext.UserFollowers.Any(userFollower =>
-                                       (userFollower.FollowerId == userId
-                                    || userFollower.UserId == post.UserId)
-                                    && (post.Visibility == PostVisibility.Friends || post.Visibility == PostVisibility.Groups))
                              orderby post.CreatedDate descending
                              select post;
+
 
             return postsQuery.ToList();
         }

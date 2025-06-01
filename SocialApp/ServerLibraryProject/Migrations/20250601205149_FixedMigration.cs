@@ -73,8 +73,8 @@ namespace ServerLibraryProject.Migrations
                     created_date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
                     user_id = table.Column<long>(type: "bigint", nullable: false),
                     group_id = table.Column<long>(type: "bigint", nullable: true),
-                    visibility = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    tag = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    visibility = table.Column<int>(type: "int", nullable: false),
+                    tag = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -145,7 +145,7 @@ namespace ServerLibraryProject.Migrations
                 {
                     user_id = table.Column<long>(type: "bigint", nullable: false),
                     post_id = table.Column<long>(type: "bigint", nullable: false),
-                    reaction_type = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    reaction_type = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

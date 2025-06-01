@@ -141,9 +141,8 @@ namespace ServerLibraryProject.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("group_id");
 
-                    b.Property<string>("Tag")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                    b.Property<int>("Tag")
+                        .HasColumnType("int")
                         .HasColumnName("tag");
 
                     b.Property<string>("Title")
@@ -155,9 +154,8 @@ namespace ServerLibraryProject.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("user_id");
 
-                    b.Property<string>("Visibility")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                    b.Property<int>("Visibility")
+                        .HasColumnType("int")
                         .HasColumnName("visibility");
 
                     b.HasKey("Id");
@@ -179,9 +177,8 @@ namespace ServerLibraryProject.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("post_id");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                    b.Property<int>("Type")
+                        .HasColumnType("int")
                         .HasColumnName("reaction_type");
 
                     b.HasKey("UserId", "PostId");

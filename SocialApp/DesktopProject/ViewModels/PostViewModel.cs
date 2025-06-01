@@ -37,7 +37,7 @@
         }
 
 
-        public void AddPost(string title, string? content, long userId, long groupId, PostVisibility postVisibility, PostTag postTag)
+        public void AddPost(string title, string? content, long userId, long? groupId, PostVisibility postVisibility, PostTag postTag)
         {
             this.postService.AddPost(title, content, userId, groupId, postVisibility, postTag);
         }
@@ -46,10 +46,11 @@
         /// Deletes a post by ID.
         /// </summary>
         /// <param name="id">The ID of the post to delete.</param>
+        /*
         public void DeletePost(long id)
         {
             this.postService.DeletePost(id);
-        }
+        }*/
 
         /// <summary>
         /// Updates a post by ID.
@@ -59,10 +60,11 @@
         /// <param name="description">The new description of the post.</param>
         /// <param name="visibility">The new visibility of the post.</param>
         /// <param name="tag">The new tag of the post.</param>
+        /*
         public void UpdatePost(long id, string title, string description, PostVisibility visibility, PostTag tag)
         {
             this.postService.UpdatePost(id, title, description, visibility, tag);
-        }
+        }*/
 
         /// <summary>
         /// Gets all posts.

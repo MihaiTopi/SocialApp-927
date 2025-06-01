@@ -28,9 +28,9 @@
                 Password = password,
             };
 
-            var createdUser = this.userServiceProxy.Save(user);
+            var createdUser = this.userServiceProxy.AddUser(user.Username, user.Password, user.Image);
 
-            return createdUser == null ? -1 : createdUser.Id;
+            return createdUser == null ? -1 : createdUser;
         }
     }
 }

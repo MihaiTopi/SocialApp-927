@@ -44,21 +44,8 @@ namespace DesktopProject.Pages
 
             group = groupService.GetGroupById(GroupId);
 
-            SetVisibilities();
             SetContent();
             PopulateMembers();
-        }
-
-        private void SetVisibilities()
-        {
-            bool isAdmin = UserIsAdmin();
-        }
-
-        private bool UserIsAdmin()
-        {
-            var controller = App.Services.GetService<AppController>();
-            if (controller.CurrentUser == null) return false;
-            return groupService.GetGroupById(GroupId).AdminId == controller.CurrentUser.Id;
         }
 
         private async void SetContent()
@@ -81,11 +68,10 @@ namespace DesktopProject.Pages
         private void PopulateMembers()
         {
             this.MembersList.Children.Clear();
-            bool isAdmin = UserIsAdmin();
             List<User> members = groupService.GetUsersFromGroup(GroupId);
             foreach (User member in members)
             {
-                this.MembersList.Children.Add(new Member(member, this.Frame, GroupId, isAdmin));
+                this.MembersList.Children.Add(new Member(member, this.Frame, GroupId));
             }
         }
 

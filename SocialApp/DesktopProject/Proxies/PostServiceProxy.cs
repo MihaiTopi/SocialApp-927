@@ -4,7 +4,6 @@ namespace DesktopProject.Proxies
     using System.Collections.Generic;
     using System.Net.Http;
     using System.Net.Http.Json;
-    using ServerAPIProject.DTO;
     using ServerLibraryProject.Enums;
     using ServerLibraryProject.Interfaces;
     using ServerLibraryProject.Models;
@@ -27,7 +26,7 @@ namespace DesktopProject.Proxies
             };
         }
 
-        public void AddPost(string title, string? content, long userId, long groupId, PostVisibility postVisibility, PostTag postTag)
+        public void AddPost(string title, string content, long userId, long? groupId, PostVisibility postVisibility, PostTag postTag)
         {
             Post newPost = new Post
             {
@@ -88,13 +87,8 @@ namespace DesktopProject.Proxies
             if (response.IsSuccessStatusCode)
             {
                 var post = response.Content.ReadFromJsonAsync<Post>().Result;
-                return post ?? this.GetDefaultPost();
             }
 
-            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
-            {
-                return this.GetDefaultPost();
-            }
 
             throw new Exception($"Failed to get post {postId}: {response.StatusCode}");
         }

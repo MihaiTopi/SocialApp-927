@@ -53,15 +53,13 @@ namespace DesktopProject.Proxies
             throw new Exception($"Failed to get users from group: {response.StatusCode}");
         }
 
-        public Group AddGroup(string name, string desc, string image, long adminId)
+        public Group AddGroup(string name, string desc, string image)
         {
             var group = new Group
             {
                 Name = name,
                 Description = desc,
-                Image = image,
-
-                AdminId = adminId,
+                Image = image
             };
 
             var response = this.httpClient.PostAsJsonAsync(string.Empty, group).Result;

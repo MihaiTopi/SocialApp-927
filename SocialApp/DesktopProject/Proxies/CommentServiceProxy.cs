@@ -10,14 +10,14 @@
 
     public class CommentServiceProxy : ICommentService
     {
-        private readonly HttpClient _httpClient;
+        private readonly HttpClient httpClient;
 
         public CommentServiceProxy()
         {
 
-            this._httpClient = new HttpClient
+            this.httpClient = new HttpClient
             {
-                BaseAddress = new Uri("https://localhost:7106/comments/"),
+                BaseAddress = new Uri("https://localhost:7106/api/comments/"),
             };
         }
 
@@ -35,8 +35,7 @@
                 CreatedDate = DateTime.UtcNow,
             };
 
-            response.EnsureSuccessStatusCode();
-            var response = this.httpClient.PostAsync(string.Empty, comment).Result;
+            var response = this.httpClient.PostAsJsonAsync(string.Empty, comment).Result;
             if (response.IsSuccessStatusCode)
             {
                 return response.Content.ReadFromJsonAsync<Comment>().Result;

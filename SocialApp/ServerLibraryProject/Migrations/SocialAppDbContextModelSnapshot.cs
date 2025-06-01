@@ -102,10 +102,6 @@ namespace ServerLibraryProject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("AdminId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("admin_id");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
@@ -121,8 +117,6 @@ namespace ServerLibraryProject.Migrations
                         .HasColumnName("name");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AdminId");
 
                     b.ToTable("Groups");
                 });
@@ -147,7 +141,7 @@ namespace ServerLibraryProject.Migrations
                         .HasColumnName("created_date")
                         .HasDefaultValueSql("GETDATE()");
 
-                    b.Property<long>("GroupId")
+                    b.Property<long?>("GroupId")
                         .HasColumnType("bigint")
                         .HasColumnName("group_id");
 
@@ -196,6 +190,8 @@ namespace ServerLibraryProject.Migrations
 
                     b.HasKey("UserId", "PostId");
 
+                    b.HasIndex("PostId");
+
                     b.ToTable("Reactions");
                 });
 
@@ -208,14 +204,14 @@ namespace ServerLibraryProject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<string>("Image")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("image");
-
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("password");
+
+                    b.Property<string>("PhotoURL")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("photo_url");
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -275,20 +271,25 @@ namespace ServerLibraryProject.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ServerLibraryProject.Models.Group", b =>
-                {
-                    b.HasOne("ServerLibraryProject.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("AdminId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ServerLibraryProject.Models.Post", b =>
                 {
                     b.HasOne("ServerLibraryProject.Models.Group", null)
                         .WithMany()
                         .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("ServerLibraryProject.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ServerLibraryProject.Models.Reaction", b =>
+                {
+                    b.HasOne("ServerLibraryProject.Models.Post", null)
+                        .WithMany()
+                        .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 

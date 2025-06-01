@@ -19,8 +19,8 @@
         [Column("password")]
         public string Password { get; set; }
 
-        [Column("image")]
-        public string? Image { get; set; }
+        [Column("photo_url")]
+        public string? PhotoURL { get; set; }
 
     }
 }

@@ -105,10 +105,9 @@ namespace DesktopProject.Pages
                 {
                     Name = GroupNameInput.Text.Trim(),
                     Description = string.IsNullOrWhiteSpace(GroupDescriptionInput.Text) ? null : GroupDescriptionInput.Text.Trim(),
-                    Image = image
                 };
 
-                groupService.AddGroup(newGroup.Name, newGroup.Description ?? "", newGroup.Image ?? "");
+                groupService.AddGroup(newGroup.Name, newGroup.Description ?? "");
                 Frame.Navigate(typeof(UserPage), controller);
             }
             catch (Exception ex)

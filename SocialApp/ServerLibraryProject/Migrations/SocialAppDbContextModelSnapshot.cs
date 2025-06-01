@@ -107,10 +107,6 @@ namespace ServerLibraryProject.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("description");
 
-                    b.Property<string>("Image")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("image");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")

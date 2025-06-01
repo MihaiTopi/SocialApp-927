@@ -28,7 +28,7 @@
                 Password = password,
             };
 
-            var createdUser = this.userServiceProxy.AddUser(user.Username, user.Password, user.Image);
+            var createdUser = this.userServiceProxy.AddUser(user.Username, user.Password, user.PhotoURL);
 
             return createdUser == null ? -1 : createdUser;
         }

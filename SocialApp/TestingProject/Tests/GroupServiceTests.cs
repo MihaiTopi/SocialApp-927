@@ -121,7 +121,7 @@ namespace TestingProject.Tests
         public void GetAll_ReturnsAllGroups()
         {
             // Arrange
-            var groups = new List<Group> { new Group { Name = "Group1", Image = "Image1", Description = "Description1" }, new Group { Name = "Group2", Image = "Image2", Description = "Description2" } };
+            var groups = new List<Group> { new Group { Name = "Group1", Description = "Description1" }, new Group { Name = "Group2", Description = "Description2" } };
             this.groupRepository.GetAllGroups().Returns(groups);
 
             // Act
@@ -139,7 +139,7 @@ namespace TestingProject.Tests
         {
             // Arrange
             long groupId = 1;
-            var group = new Group { Id = groupId, Name = "GroupName", Image = "Image", Description = "Description" };
+            var group = new Group { Id = groupId, Name = "GroupName", Description = "Description" };
             this.groupRepository.GetGroupById(groupId).Returns(group);
 
             // Act
@@ -159,8 +159,8 @@ namespace TestingProject.Tests
             long groupId = 1;
             var users = new List<User>
             {
-                new User { Username = "User1", Password = "PasswordHash1", Image = "Image1" },
-                new User { Username = "User2", Password = "PasswordHash2", Image = "Image2" }
+                new User { Username = "User1", Password = "PasswordHash1", PhotoURL = "Image1" },
+                new User { Username = "User2", Password = "PasswordHash2", PhotoURL = "Image2" }
             };
             this.groupRepository.GetGroupById(groupId).Returns(new Group { Id = groupId });
             this.groupRepository.GetUsersFromGroup(groupId).Returns(users);
@@ -182,8 +182,8 @@ namespace TestingProject.Tests
             long userId = 1;
             var groups = new List<Group>
             {
-                new Group { Name = "Group1", Image = "Image1", Description = "Description1"},
-                new Group { Name = "Group2", Image = "Image2", Description = "Description2"}
+                new Group { Name = "Group1", Description = "Description1"},
+                new Group { Name = "Group2", Description = "Description2"}
             };
             this.userRepository.GetById(userId).Returns(new User { Id = userId });
             this.groupRepository.GetGroupsForUser(userId).Returns(groups);
@@ -206,17 +206,16 @@ namespace TestingProject.Tests
             string desc = "NewDescription";
             string image = "NewImage";
             long adminId = 1;
-            var adminUser = new User { Id = adminId, Username = "Admin", Password = "PasswordHash", Image = "AdminImage" };
+            var adminUser = new User { Id = adminId, Username = "Admin", Password = "PasswordHash", PhotoURL = "AdminImage" };
             this.userRepository.GetById(adminId).Returns(adminUser);
 
             // Act
-            var result = this.groupService.AddGroup(name, desc, image);
+            var result = this.groupService.AddGroup(name, desc);
 
             // Assert
             Assert.That(result.Name, Is.EqualTo(name));
             Assert.That(result.Description, Is.EqualTo(desc));
-            Assert.That(result.Image, Is.EqualTo(image));
-            this.groupRepository.Received(1).SaveGroup(Arg.Is<Group>(g => g.Name == name && g.Description == desc && g.Image == image));
+            this.groupRepository.Received(1).SaveGroup(Arg.Is<Group>(g => g.Name == name && g.Description == desc));
         }
 
         /// <summary>
@@ -232,7 +231,7 @@ namespace TestingProject.Tests
             long adminId = 1;
 
             // Act & Assert
-            var ex = Assert.Throws<ArgumentException>(() => this.groupService.AddGroup(name, desc, image));
+            var ex = Assert.Throws<ArgumentException>(() => this.groupService.AddGroup(name, desc));
             Assert.That(ex.Message, Is.EqualTo("Group name cannot be empty"));
         }
 
@@ -250,7 +249,7 @@ namespace TestingProject.Tests
             this.userRepository.GetById(adminId).Returns((User)null);
 
             // Act & Assert
-            var ex = Assert.Throws<ArgumentException>(() => this.groupService.AddGroup(name, desc, image));
+            var ex = Assert.Throws<ArgumentException>(() => this.groupService.AddGroup(name, desc));
             Assert.That(ex.Message, Is.EqualTo("User does not exist"));
         }
     }

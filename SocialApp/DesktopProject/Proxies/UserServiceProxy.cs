@@ -135,7 +135,7 @@ namespace DesktopProject.Proxies
             {
                 Username = username,
                 Password = password,
-                Image = image,
+                PhotoURL = image,
             };
 
             var response = this.httpClient.PostAsJsonAsync(string.Empty, user).Result;

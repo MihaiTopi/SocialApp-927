@@ -29,7 +29,7 @@ namespace ServerLibraryProject.Services
             return groupRepository.GetUsersFromGroup(groupId);
         }
 
-        public Group AddGroup(string name, string desc, string image)
+        public Group AddGroup(string name, string desc)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -40,7 +40,6 @@ namespace ServerLibraryProject.Services
             {
                 Name = name,
                 Description = desc,
-                Image = image
             };
 
             groupRepository.SaveGroup(group);

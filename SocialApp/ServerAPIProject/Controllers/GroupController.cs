@@ -47,7 +47,7 @@ namespace ServerAPIProject.Controllers
         {
             try
             {
-                var newGroup = groupService.AddGroup(group.Name, group.Description, group.Image);
+                var newGroup = groupService.AddGroup(group.Name, group.Description);
                 return Ok(newGroup);
             }
             catch (Exception ex)

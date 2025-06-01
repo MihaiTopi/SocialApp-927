@@ -26,7 +26,7 @@ namespace DesktopProject.Components
         private async void SetPhoto()
         {
             var controller = App.Services.GetService<AppController>();
-            if (controller?.CurrentUser != null && !string.IsNullOrEmpty(controller.CurrentUser.Image))
+            if (controller?.CurrentUser != null && !string.IsNullOrEmpty(controller.CurrentUser.PhotoURL))
             {
                 //UserImage.Source = await AppController.DecodeBase64ToImageAsync(controller.CurrentUser.Image);
             }

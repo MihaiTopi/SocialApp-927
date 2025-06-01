@@ -12,7 +12,7 @@ using ServerLibraryProject.Data;
 namespace ServerLibraryProject.Migrations
 {
     [DbContext(typeof(SocialAppDbContext))]
-    [Migration("20250601190235_FixedMigration")]
+    [Migration("20250601192217_FixedMigration")]
     partial class FixedMigration
     {
         /// <inheritdoc />
@@ -109,10 +109,6 @@ namespace ServerLibraryProject.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("description");
-
-                    b.Property<string>("Image")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("image");
 
                     b.Property<string>("Name")
                         .IsRequired()

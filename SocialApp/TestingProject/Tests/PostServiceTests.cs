@@ -33,8 +33,8 @@ namespace TestingProject.Tests
             PostVisibility postVisibility = PostVisibility.Public;
             PostTag postTag = PostTag.Food;
 
-            User user = new User { Id = userId, Username = "username", Password = "passwordHash", Image = "image" };
-            Group group = new Group { Id = groupId, Name = "groupName", Image = "groupImage", Description = "description" };
+            User user = new User { Id = userId, Username = "username", Password = "passwordHash", PhotoURL = "image" };
+            Group group = new Group { Id = groupId, Name = "groupName", Description = "description" };
             Post post = new Post { Title = title, Content = content, UserId = userId, GroupId = groupId, Visibility = postVisibility, Tag = postTag, CreatedDate = DateTime.Now };
 
             userRepository.GetById(userId).Returns(user);
@@ -120,7 +120,7 @@ namespace TestingProject.Tests
             PostVisibility postVisibility = PostVisibility.Public;
             PostTag postTag = PostTag.Food;
 
-            User user = new User { Id = userId, Username = "username", Password = "passwordHash", Image = "image" };
+            User user = new User { Id = userId, Username = "username", Password = "passwordHash", PhotoURL = "image" };
 
             userRepository.GetById(userId).Returns(user); // Simulate user found
             groupRepository.GetGroupById(userId).Returns((Group)null); // Simulate group not found

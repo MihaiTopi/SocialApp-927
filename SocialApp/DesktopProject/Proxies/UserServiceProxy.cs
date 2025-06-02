@@ -22,16 +22,6 @@ namespace DesktopProject.Proxies
             this.httpClient.BaseAddress = new Uri("https://localhost:7106/api/users/");
         }
 
-
-        public void FollowUserById(long userId, long whoToFollowId)
-        {
-            var response = this.httpClient.PostAsJsonAsync($"users/{userId}/follow/{whoToFollowId}", "").Result;
-            if (!response.IsSuccessStatusCode)
-            {
-                Debug.WriteLine($"Failed to follow. Status: {response.StatusCode}");
-            }
-        }
-
         public List<User> GetAllUsers()
         {
             var response = this.httpClient.GetAsync(string.Empty).Result;
@@ -78,21 +68,21 @@ namespace DesktopProject.Proxies
             return [];
         }
 
-        public List<User> GetUserFollowers(long id)
-        {
-            var response = this.httpClient.GetAsync($"users/{id}/followers").Result;
-            if (response.IsSuccessStatusCode)
-            {
-                return response.Content.ReadFromJsonAsync<List<User>>().Result ?? new List<User>();
-            }
+        //public List<User> GetUserFollowers(long id)
+        //{
+        //    var response = this.httpClient.GetAsync($"users/{id}/followers").Result;
+        //    if (response.IsSuccessStatusCode)
+        //    {
+        //        return response.Content.ReadFromJsonAsync<List<User>>().Result ?? new List<User>();
+        //    }
 
-            Debug.WriteLine($"Failed to get followers for user {id}. Status: {response.StatusCode}");
-            return new List<User>();
-        }
+        //    Debug.WriteLine($"Failed to get followers for user {id}. Status: {response.StatusCode}");
+        //    return new List<User>();
+        //}
 
         public List<User> GetUserFollowing(long id)
         {
-            var response = this.httpClient.GetAsync($"users/{id}/following").Result;
+            var response = this.httpClient.GetAsync($"{id}/following").Result;
             if (response.IsSuccessStatusCode)
             {
                 return response.Content.ReadFromJsonAsync<List<User>>().Result ?? new List<User>();
@@ -109,10 +99,18 @@ namespace DesktopProject.Proxies
             // this endpoint doesn't even exist
             throw new Exception();
         }
+        public void FollowUserById(long userId, long whoToFollowId)
+        {
+            var response = this.httpClient.PostAsJsonAsync($"{userId}/followers", whoToFollowId).Result;
+            if (!response.IsSuccessStatusCode)
+            {
+                Debug.WriteLine($"Failed to follow. Status: {response.StatusCode}");
+            }
+        }
 
         public void UnfollowUserById(long userId, long whoToUnfollowId)
         {
-            var response = this.httpClient.DeleteAsync($"users/{userId}/unfollow/{whoToUnfollowId}").Result;
+            var response = this.httpClient.DeleteAsync($"{userId}/followers/{whoToUnfollowId}").Result;
             if (!response.IsSuccessStatusCode)
             {
                 Debug.WriteLine($"Failed to unfollow. Status: {response.StatusCode}");

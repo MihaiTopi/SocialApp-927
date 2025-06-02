@@ -111,5 +111,55 @@
                 return this.View("Error", errorModel);
             }
         }
+
+        [HttpGet("Follow")]
+        public IActionResult Follow(string search = "")
+        {
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdStr)) return Unauthorized();
+
+            long userId = long.Parse(userIdStr);
+            var allUsers = _userService.GetAllUsers()
+                .Where(u => u.Id != userId &&
+                            u.Username.Contains(search ?? "", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            var following = _userService.GetUserFollowing(userId).Select(u => u.Id).ToHashSet();
+
+            ViewData["Following"] = following;
+            ViewData["CurrentUserId"] = userId;
+            ViewData["Search"] = search;
+
+            return View(allUsers);
+        }
+
+        [HttpPost("FollowToggle/{targetId}")]
+        public IActionResult FollowToggle(long targetId)
+        {
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdStr)) return Unauthorized();
+
+            long userId = long.Parse(userIdStr);
+            var following = _userService.GetUserFollowing(userId);
+
+            bool isFollowing = following.Any(u => u.Id == targetId);
+            try
+            { 
+                if (isFollowing)
+                    _userService.UnfollowUserById(userId, targetId);
+                else
+                    _userService.FollowUserById(userId, targetId);
+            }
+            catch (Exception ex)
+            {
+                return View("Error", new ErrorViewModel
+                {
+                    RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+                    ErrorMessage = ex.Message
+                });
+            }
+            return RedirectToAction("Follow", new { search = Request.Query["search"].ToString() });
+        }
+
     }
 }

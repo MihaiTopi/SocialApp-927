@@ -10,8 +10,6 @@ namespace ServerLibraryProject.Interfaces
 
         User GetById(long id);
 
-        List<User> GetUserFollowers(long id);
-
         List<User> GetUserFollowing(long id);
 
         User GetUserByUsername(string username);

@@ -80,7 +80,8 @@
         /// </summary>
         public List<Comment> GetCommentsByPostId(long postId)
         {
-            var response = this.httpClient.GetAsync($"/{postId}").Result;
+            var client = new HttpClient();
+            var response = client.GetAsync($"https://localhost:7106/api/posts/{postId}/comments").Result;
             if (response.IsSuccessStatusCode)
             {
                 return response.Content.ReadFromJsonAsync<List<Comment>>().Result;

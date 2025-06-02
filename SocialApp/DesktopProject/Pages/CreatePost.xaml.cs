@@ -130,19 +130,15 @@ namespace DesktopProject.Pages
             {
                 this.ValidateInputs();
                 var selectedVisibility = (PostVisibility)this.VisibilityComboBox.SelectedItem;
-                var posts = this.CreatePosts(selectedVisibility);
-                for (int i = 0; i < posts.Count; i++)
-                {
-                    // Use null-coalescing operator to provide a default value for GroupId
-                    this.postViewModel.AddPost(
-                        posts[i].Title,
-                        posts[i].Content,
-                        posts[i].UserId,
-                        posts[i].GroupId, // Fix: Convert nullable long to long
-                        posts[i].Visibility,
-                        posts[i].Tag
-                    );
-                }
+                var post = this.CreateNewPost(selectedVisibility);
+
+                this.postViewModel.AddPost(
+                    post.Title,
+                    post.Content,
+                    post.UserId,
+                    post.GroupId, // Fix: Convert nullable long to long
+                    post.Visibility,
+                    post.Tag);               
 
                 this.Frame.Navigate(typeof(HomeScreen));
             }
@@ -172,20 +168,18 @@ namespace DesktopProject.Pages
             }
         }
 
-        private List<Post> CreatePosts(PostVisibility visibility)
+        private Post CreateNewPost(PostVisibility visibility)
         {
             if (this.controller?.CurrentUser == null)
             {
                 throw new InvalidOperationException("CurrentUser is not set in the AppController.");
             }
 
-            var posts = new List<Post>();
-            var basePost = new Post
+            var post = new Post
             {
                 Title = this.TitleInput.Text.Trim(),
                 Content = this.DescriptionInput.Text.Trim(),
                 UserId = this.controller.CurrentUser.Id,
-                GroupId = 0,
                 CreatedDate = DateTime.Now,
                 Visibility = visibility,
                 Tag = this.GetSelectedTag(),
@@ -193,34 +187,23 @@ namespace DesktopProject.Pages
 
             if (visibility == PostVisibility.Groups)
             {
-                Debug.WriteLine(this.GroupsListBox.Items);
+                var selectedGroup = this.GroupsListBox.SelectedItem as Group;
 
-                if (this.GroupsListBox.SelectedItems.Count == 0)
+                if (selectedGroup == null)
                 {
-                    throw new Exception("Please select at least one group!");
+                    throw new Exception("Please select a group!");
                 }
 
-                foreach (Group group in this.GroupsListBox.SelectedItems)
-                {
-                    posts.Add(new Post
-                    {
-                        Title = basePost.Title,
-                        Content = basePost.Content,
-                        UserId = basePost.UserId,
-                        GroupId = group.Id,
-                        CreatedDate = basePost.CreatedDate,
-                        Visibility = PostVisibility.Groups,
-                        Tag = basePost.Tag,
-                    });
-                }
+                post.GroupId = selectedGroup.Id;
             }
             else
             {
-                posts.Add(basePost);
+                post.GroupId = null; 
             }
 
-            return posts;
+            return post;
         }
+
 
         private PostTag GetSelectedTag()
         {

@@ -11,5 +11,10 @@
 
         [Column("follower_id")]
         public long FollowerId { get; set; }
+        public UserFollower() { }
+        public UserFollower(long userId, long whoToFollow) { 
+            UserId = userId;
+            FollowerId = whoToFollow;
+        }
     }
 }

@@ -83,17 +83,25 @@ namespace ServerLibraryProject.Repositories
         {
             try
             {
-                dbContext.UserFollowers.Add(new UserFollower
-                {
-                    UserId = userId,
-                    FollowerId = whoToFollowId,
-                });
+                dbContext.UserFollowers.Add(new UserFollower(userId, whoToFollowId));
                 dbContext.SaveChanges();
             }
             catch { throw new Exception("Error following user"); }
 
         }
+        public void Unfollow(long userId, long whoToUnfollowId)
+        {
+            try
+            {       
+                    dbContext.UserFollowers.Remove(new UserFollower(userId, whoToUnfollowId));
+                    dbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error unfollowing user: " + ex.Message);
 
+            }
+        }
         public List<User> GetAll()
         {
             return dbContext.Users.ToList();
@@ -143,20 +151,13 @@ namespace ServerLibraryProject.Repositories
 
         public List<User> GetUserFollowing(long id)
         {
-            List<User> userFollowing = new List<User>();
-            List<UserFollower> following = dbContext.UserFollowers
-                .Where(uf => uf.FollowerId == id)
+            var userFollowers = dbContext.UserFollowers
+               .Where(uf => uf.UserId == id);
+            return dbContext.Users
+                .Where(u => userFollowers.Any(uf => uf.FollowerId == u.Id))
                 .ToList();
-            foreach (UserFollower userFollower in following)
-            {
-                User? user = dbContext.Users.FirstOrDefault(u => u.Id == userFollower.UserId);
-                if (user != null)
-                {
-                    userFollowing.Add(user);
-                }
-            }
-            return userFollowing;
         }
+
 
         public User Save(User entity)
         {
@@ -178,23 +179,7 @@ namespace ServerLibraryProject.Repositories
 
         }
 
-        public void Unfollow(long userId, long whoToUnfollowId)
-        {
-            try
-            {
-                UserFollower? userFollower = dbContext.UserFollowers.FirstOrDefault(uf => uf.UserId == userId && uf.FollowerId == whoToUnfollowId);
-                if (userFollower != null)
-                {
-                    dbContext.UserFollowers.Remove(userFollower);
-                    dbContext.SaveChanges();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error unfollowing user: " + ex.Message);
-
-            }
-        }
+        
 
         //public void UpdateById(long id, string username, string email, string hashPassword, string image)
         //{

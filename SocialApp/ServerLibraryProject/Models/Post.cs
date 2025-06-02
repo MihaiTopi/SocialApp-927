@@ -35,6 +35,8 @@
         [Column("tag")]
         required public PostTag Tag { get; set; }
 
+        public Post() { }
+
     }
 
 

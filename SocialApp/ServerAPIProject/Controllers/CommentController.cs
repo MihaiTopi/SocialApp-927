@@ -23,9 +23,9 @@
         }
 
         //[HttpGet("{id}")]
-        //public ActionResult<Comment> GetCommentById(long id)
+        //public ActionResult<List<Comment>> GetCommentById(long id)
         //{
-        //    var comment = this.commentService.GetCommentById((int)id);
+        //    var comment = this.commentService.GetCommentsByPostId((int)id);
         //    if (comment == null)
         //    {
         //        return this.NotFound($"Comment with ID {id} not found.");

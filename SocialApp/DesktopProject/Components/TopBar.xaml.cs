@@ -38,6 +38,7 @@ namespace DesktopProject.Components
             UserButton.Click += UserClick;
             GroupsButton.Click += GroupsClick;
             CreatePostButton.Click += CreatePostButton_Click;
+            SeeUsersButton.Click += SeeUsersClick;
         }
 
         private void HomeClick(object sender, RoutedEventArgs e)
@@ -61,6 +62,11 @@ namespace DesktopProject.Components
         private void UserClick(object sender, RoutedEventArgs e)
         {
             frame.Navigate(typeof(UserPage));
+
+        }
+        private void SeeUsersClick(object sender, RoutedEventArgs e)
+        {
+            frame.Navigate(typeof(UserFollow));
 
         }
 

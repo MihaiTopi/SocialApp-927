@@ -16,19 +16,6 @@ namespace ServerAPIProject.Controllers
             this.userService = userService;
         }
 
-        [HttpPost("{userId}/followers")]
-        public IActionResult FollowUser(long userId, [FromBody] long followerId)
-        {
-            try
-            {
-                this.userService.FollowUserById(userId, followerId);
-                return this.Ok();
-            }
-            catch (Exception e)
-            {
-                return this.BadRequest(e.Message);
-            }
-        }
 
         [HttpGet]
         public ActionResult<List<User>> GetAllUsers()
@@ -62,11 +49,11 @@ namespace ServerAPIProject.Controllers
             }
         }
 
-        [HttpGet("{userId}/followers")]
-        public ActionResult<List<User>> GetUserFollowers(long userId)
-        {
-            return this.userService.GetUserFollowers(userId);
-        }
+        //[HttpGet("{userId}/followers")]
+        //public ActionResult<List<User>> GetUserFollowers(long userId)
+        //{
+        //    return this.userService.GetUserFollowers(userId);
+        //}
 
         [HttpGet("{userId}/following")]
         public ActionResult<List<User>> GetUserFollowing(long userId)
@@ -81,6 +68,19 @@ namespace ServerAPIProject.Controllers
             {
                 var savedUser = this.userService.AddUser(user.Username, user.Password, user.PhotoURL);
                 return this.Ok(savedUser);
+            }
+            catch (Exception e)
+            {
+                return this.BadRequest(e.Message);
+            }
+        }
+        [HttpPost("{userId}/followers")]
+        public IActionResult FollowUser(long userId, [FromBody] long followerId)
+        {
+            try
+            {
+                this.userService.FollowUserById(userId, followerId);
+                return this.Ok();
             }
             catch (Exception e)
             {

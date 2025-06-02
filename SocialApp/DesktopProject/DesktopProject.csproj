@@ -12,6 +12,9 @@
     <EnableMsixTooling>true</EnableMsixTooling>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Pages\UserFollow.xaml" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -46,6 +49,11 @@
   <ItemGroup>
     <ProjectReference Include="..\ServerAPIProject\ServerAPIProject.csproj" />
     <ProjectReference Include="..\ServerLibraryProject\ServerLibraryProject.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\UserFollow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <!--

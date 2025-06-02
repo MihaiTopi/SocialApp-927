@@ -79,15 +79,6 @@
                                     HorizontalAlignment="Right"/>
                         </StackPanel>
 
-                        <!-- Add Image Button -->
-                        <Button Content="Add Image"
-                             Background="#D9D9D9"
-                             Foreground="Black"
-                             CornerRadius="5"
-                             HorizontalAlignment="Left"
-                             Click="AddImageButton_Click">
-                        </Button>
-
                         <TextBlock x:Name="Confirmation"/>
 
                         <!-- Visibility Selection -->
@@ -111,9 +102,9 @@
                                 Visibility="Collapsed">
                             <TextBlock Text="Select Groups" Foreground="#00ADB5" FontSize="16"/>
                             <ListBox x:Name="GroupsListBox"
-                                  Background="#D9D9D9"
+                                  Background="Black"
                                   Foreground="Black"
-                                  SelectionMode="Multiple"
+                                  SelectionMode="Single"
                                   MaxHeight="200">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>

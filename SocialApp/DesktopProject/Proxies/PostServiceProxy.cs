@@ -129,23 +129,24 @@ namespace DesktopProject.Proxies
             throw new Exception($"Failed to get posts by userId {userId}: {response.StatusCode}");
         }
 
+
         /// <summary>
         /// Retrieves a group feed for a user.
         /// </summary>
         /// <param name="userId">The user's ID.</param>
         /// <returns>A list of group feed posts, or an empty list if none are found.</returns>
-        public List<Post> GetPostsGroupsFeed(long userId)
-        {
-            var response = this.httpClient.GetAsync($"groupfeed/{userId}").Result;
+        //public List<Post> GetPostsGroupsFeed(long userId)
+        //{
+        //    var response = this.httpClient.GetAsync($"groupfeed/{userId}").Result;
 
-            if (response.IsSuccessStatusCode)
-            {
-                var posts = response.Content.ReadFromJsonAsync<List<Post>>().Result;
-                return posts ?? new List<Post>();
-            }
+        //    if (response.IsSuccessStatusCode)
+        //    {
+        //        var posts = response.Content.ReadFromJsonAsync<List<Post>>().Result;
+        //        return posts ?? new List<Post>();
+        //    }
 
-            throw new Exception($"Failed to get group feed for user {userId}: {response.StatusCode}");
-        }
+        //    throw new Exception($"Failed to get group feed for user {userId}: {response.StatusCode}");
+        //}
 
         /// <summary>
         /// Retrieves the home feed for a user.

@@ -46,13 +46,7 @@ namespace ServerMVCProject.Controllers
                 return View(model);
 
             string userIdStr = this.HttpContext.Session.GetString("UserId");
-
-            if (model.Visibility != PostVisibility.Groups)
-            {
-                model.GroupId = 0;
-            }
-
-
+          
 
             long userId = long.Parse(userIdStr);
 
@@ -70,7 +64,7 @@ namespace ServerMVCProject.Controllers
                 Visibility = model.Visibility,
                 Tag = model.Tag,
                 UserId = userId,
-                GroupId = model.GroupId,
+                GroupId = model.GroupId != 0 ? model.GroupId:null,
 
                 CreatedDate = DateTime.UtcNow
             };

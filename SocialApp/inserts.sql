@@ -25,7 +25,9 @@ INSERT INTO Groups (name, description) VALUES
 
 select *
 from Reactions
-
+select * from GroupUsers
+where user_id = 1
+select * from Groups
 -- Posts
 INSERT INTO Posts (title, content, user_id, group_id, visibility, tag) VALUES
 ('Morning Yoga Routines', 'Start your day with these energizing yoga poses.', 4, null, 3, 3),

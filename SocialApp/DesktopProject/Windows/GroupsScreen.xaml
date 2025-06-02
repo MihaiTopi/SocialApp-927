@@ -31,8 +31,6 @@
             <!-- Groups Drawer -->
             <components:GroupsDrawer x:Name="GroupsDrawer" Grid.Column="0" Margin="10"/>
 
-            <!-- Groups Feed -->
-            <components:GroupsFeed Grid.Column="1" Margin="10"/>
         </Grid>
     </Grid>
 </Page>

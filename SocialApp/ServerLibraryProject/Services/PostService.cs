@@ -146,10 +146,10 @@
         /// </summary>
         /// <param name="userId">The ID of the user whose group feed to retrieve.</param>
         /// <returns>A list of posts for the user's group feed.</returns>
-        public List<Post> GetPostsGroupsFeed(long userId)
-        {
-            return this.postRepository.GetPostsGroupsFeed(userId);
-        }
+        //public List<Post> GetPostsGroupsFeed(long userId)
+        //{
+        //    return this.postRepository.GetPostsGroupsFeed(userId);
+        //}
 
         //public void SavePost(Post entity)
         //{

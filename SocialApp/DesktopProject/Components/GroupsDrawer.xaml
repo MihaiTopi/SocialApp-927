@@ -10,25 +10,9 @@
     d:DesignWidth="300">
 
     <StackPanel Background="#222831" Padding="10">
-        <!-- Title -->
         <TextBlock Text="Groups" FontSize="24" FontWeight="Bold" Foreground="White" Margin="0,0,0,10"/>
-
-        <!-- Horizontal Line -->
         <Border BorderBrush="White" BorderThickness="0,0,0,1" Margin="0,0,0,10"/>
-
-        <!-- Groups List -->
-        <StackPanel x:Name="GroupsList">
-            <!-- Example Group Item -->
-            <StackPanel Orientation="Vertical" Margin="0,0,0,10">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="?" Foreground="Gold" FontSize="18" VerticalAlignment="Center"/>
-                    <TextBlock Text="Group Name" FontSize="18" Foreground="White" Margin="5,0,0,0"/>
-                </StackPanel>
-                <TextBlock Text="Group description goes here." FontSize="14" Foreground="#AAAAAA" Margin="23,0,0,0"/>
-            </StackPanel>
-        </StackPanel>
-        <Button x:Name="CreateGroupButton">
-            Create Group
-        </Button>
+        <Button x:Name="CreateGroupButton" Content="Create Group" Margin="0,0,0,10"/>
+        <StackPanel x:Name="GroupsList"/>
     </StackPanel>
 </UserControl>

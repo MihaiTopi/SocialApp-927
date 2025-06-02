@@ -17,7 +17,7 @@
 
         Post GetPostById(long id);
 
-        List<Post> GetPostsGroupsFeed(long userId);
+        //List<Post> GetPostsGroupsFeed(long userId);
 
         List<Post> GetPostsHomeFeed(long userId);
 

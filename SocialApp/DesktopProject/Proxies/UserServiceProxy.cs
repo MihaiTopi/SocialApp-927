@@ -165,7 +165,7 @@ namespace DesktopProject.Proxies
         {
             var client = new HttpClient();
 
-            var response = client.DeleteAsync(this.httpClient.BaseAddress + $"users/{userId}/groups/{groupId}").Result;
+            var response = client.DeleteAsync($"https://localhost:7106/api/users/{userId}/groups/{groupId}").Result;
 
             if (response.IsSuccessStatusCode)
             {

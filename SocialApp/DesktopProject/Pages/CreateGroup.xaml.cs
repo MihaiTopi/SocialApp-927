@@ -6,6 +6,7 @@ namespace DesktopProject.Pages
     using System;
     using System.Linq;
     using DesktopProject.Proxies;
+    using DesktopProject.Windows;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.UI.Xaml;
     using Microsoft.UI.Xaml.Controls;
@@ -108,7 +109,7 @@ namespace DesktopProject.Pages
                 };
 
                 groupService.AddGroup(newGroup.Name, newGroup.Description ?? "");
-                Frame.Navigate(typeof(UserPage), controller);
+                Frame.Navigate(typeof(GroupsScreen), controller);
             }
             catch (Exception ex)
             {
@@ -154,28 +155,6 @@ namespace DesktopProject.Pages
         /// </summary>
         /// <param name="sender">The source of the event, typically the UserSearchBox control.</param>
         /// <param name="e">The event data that provides information about the TextChanged event.</param>
-        private void UserSearchBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            var query = UserSearchBox.Text;
-
-            if (string.IsNullOrWhiteSpace(query))
-            {
-                // Hide search results but don't affect layout
-                UserSearchResults.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                // Show filtered results
-                var users = userService.GetUserFollowing(controller.CurrentUser.Id)
-                                        .Where(u => u.Username.Contains(query))
-                                        .ToList();
-                UserSearchResults.ItemsSource = users;
-                UserSearchResults.Visibility = Visibility.Visible;
-            }
-
-            // Manually update layout (if needed)
-            RootGrid.UpdateLayout();
-        }
 
 
 
@@ -185,14 +164,7 @@ namespace DesktopProject.Pages
         /// It adds the selected user to the selected users list for the group creation process.
         /// </summary>
         /// <param name="sender">The source of the event, typically the UserSearchResults control.</param>
-        /// <param name="e">The event data that provides information about the selection change.</param>
-        private void UserSearchResults_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (UserSearchResults.SelectedItem is User selectedUser)
-            {
-                AddUserToSelectedList(selectedUser);
-            }
-        }
+
 
         /// <summary>
         /// Adds a user to the selected users list for group creation.
@@ -200,21 +172,6 @@ namespace DesktopProject.Pages
         /// which can be clicked to remove the user from the selection.
         /// </summary>
         /// <param name="user">The user to be added to the selected users list.</param>
-        private void AddUserToSelectedList(User user)
-        {
-            // Create small version with an "X"
-            var smallUserButton = new Button()
-            {
-                Content = $"{user.Username} X",
-                Tag = user,
-                Background = new SolidColorBrush(Microsoft.UI.Colors.Cyan),
-                Foreground = new SolidColorBrush(Microsoft.UI.Colors.White),
-            };
-            smallUserButton.Click += (s, e) => RemoveUserFromSelectedList(user);
-
-            // Add to the selected users panel
-            SelectedUsersPanel.Children.Add(smallUserButton);
-        }
 
         /// <summary>
         /// Handles the Tapped event for the UserSearchBox control.
@@ -226,11 +183,6 @@ namespace DesktopProject.Pages
         /// <param name="sender">The source of the event, typically the UserSearchBox control.</param>
         /// <param name="e">The event data that provides information about the Tapped event.</param>
         /// Note: This method does not seem to be necessary in the current context,
-        private void UserSearchBox_Tapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
-        {
-            // Show the search results when the user taps inside the search box.
-            UserSearchResults.Visibility = Visibility.Visible;
-        }
 
         /// <summary>
         /// Handles the Tapped event for the UserSearchResults control.
@@ -241,14 +193,6 @@ namespace DesktopProject.Pages
         /// <param name="sender">The source of the event, typically the UserSearchResults control.</param>
         /// <param name="e">The event data that provides information about the Tapped event.</param>
         /// Note: This method does not seem to be necessary in the current context,
-        private void UserSearchResults_Tapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
-        {
-            // Allow users to select a user from the list, without hiding the dropdown immediately.
-            var selectedUser = (User)((ListBox)sender).SelectedItem;
-            AddUserToSelectedList(selectedUser);
-            // Optionally, you can hide the results after selection
-            UserSearchResults.Visibility = Visibility.Collapsed;
-        }
 
         /// <summary>
         /// Removes a user from the selected users list for group creation.
@@ -257,17 +201,7 @@ namespace DesktopProject.Pages
         /// to deselect a user that was previously added to the group.
         /// </summary>
         /// <param name="user">The user to be removed from the selected users list.</param>
-        private void RemoveUserFromSelectedList(User user)
-        {
-            var smallUserButton = SelectedUsersPanel.Children
-                .OfType<Button>()
-                .FirstOrDefault(button => button.Tag == user);
 
-            if (smallUserButton != null)
-            {
-                SelectedUsersPanel.Children.Remove(smallUserButton);
-            }
-        }
 
         /// <summary>
         /// Handles the click event for the Add Image button.
@@ -277,35 +211,6 @@ namespace DesktopProject.Pages
         /// </summary>
         /// <param name="sender">The source of the event, typically the Add Image button control.</param>
         /// <param name="e">The event data that provides information about the click event.</param>
-        private async void AddImageButton_Click(object sender, RoutedEventArgs e)
-        {
-            /*
-            try
-            {
-                var picker = new FileOpenPicker
-                {
-                    ViewMode = PickerViewMode.Thumbnail,
-                    SuggestedStartLocation = PickerLocationId.PicturesLibrary
-                };
-                picker.FileTypeFilter.Add(".jpg");
-                picker.FileTypeFilter.Add(".jpeg");
-                picker.FileTypeFilter.Add(".png");
-
-                var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(App.CurrentWindow);
-                WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
-
-                StorageFile file = await picker.PickSingleFileAsync();
-                if (file != null)
-                {
-                    image = await AppController.EncodeImageToBase64Async(file);
-                }
-            }
-            catch (Exception ex)
-            {
-                ErrorTextBox.Text = $"Error uploading image: {ex.Message}";
-            }
-            */
-        }
 
         /// <summary>
         /// Handles the click event for the Remove Image button.
@@ -314,9 +219,5 @@ namespace DesktopProject.Pages
         /// </summary>
         /// <param name="sender">The source of the event, typically the Remove Image button control.</param>
         /// <param name="e">The event data that provides information about the click event.</param>
-        private void RemoveImageButton_Click(object sender, RoutedEventArgs e)
-        {
-            image = string.Empty;
-        }
     }
 }

@@ -101,5 +101,42 @@ namespace ServerAPIProject.Controllers
                 return this.BadRequest(e.Message);
             }
         }
+        // Add these endpoints inside the UserController class
+
+        /// <summary>
+        /// Adds the user to a group.
+        /// </summary>
+        [HttpPost("{userId}/groups/{groupId}")]
+        public IActionResult JoinGroup(long userId, long groupId)
+        {
+            try
+            {
+                this.userService.JoinGroup(userId, groupId);
+                return this.Ok();
+            }
+            catch (Exception e)
+            {
+                return this.BadRequest(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Removes the user from a group.
+        /// </summary>
+        [HttpDelete("{userId}/groups/{groupId}")]
+        public IActionResult ExitGroup(long userId, long groupId)
+        {
+            try
+            {
+                this.userService.ExitGroup(userId, groupId);
+                return this.Ok();
+            }
+            catch (Exception e)
+            {
+                return this.BadRequest(e.Message);
+            }
+        }
+
+
     }
 }

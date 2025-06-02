@@ -29,7 +29,7 @@ namespace DesktopProject.Components
         private void LoadItems()
         {
             var controller = App.Services.GetService<AppController>();
-            this.postViewModel.PopulatePostsGroupsFeed(controller.CurrentUser.Id);
+            //this.postViewModel.PopulatePostsGroupsFeed(controller.CurrentUser.Id);
         }
 
         private void DisplayCurrentPage()

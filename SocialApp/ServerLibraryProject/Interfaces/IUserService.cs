@@ -22,5 +22,8 @@ namespace ServerLibraryProject.Interfaces
 
         long AddUser(string username, string password, string image);
 
+        void JoinGroup(long userId, long groupId);
+
+        void ExitGroup(long userId, long groupId);
     }
 }

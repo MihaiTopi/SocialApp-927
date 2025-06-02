@@ -12,5 +12,8 @@ namespace ServerLibraryProject.Interfaces
         List<User> GetUserFollowing(long id);
         User Save(User entity);
         void Unfollow(long userId, long whoToUnfollowId);
+        void JoinGroup(long userId, long groupId);
+
+        void ExitGroup(long userId, long groupId);
     }
 }

@@ -101,10 +101,10 @@
             this.PopulatePosts(posts);
         }
 
-        public void PopulatePostsGroupsFeed(long userId)
-        {
-            var posts = this.postService.GetPostsGroupsFeed(userId);
-        }
+        //public void PopulatePostsGroupsFeed(long userId)
+        //{
+        //    var posts = this.postService.GetPostsGroupsFeed(userId);
+        //}
 
         public void PopulatePostsHomeFeed(long userId)
         {

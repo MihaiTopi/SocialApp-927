@@ -146,5 +146,33 @@ namespace DesktopProject.Proxies
 
             return -1;
         }
+
+        public void JoinGroup(long userId, long groupId)
+        {
+            var client = new HttpClient();
+
+            var response = client.PostAsJsonAsync($"https://localhost:7106/api/users/{userId}/groups/{groupId}", "").Result;
+
+            if (response.IsSuccessStatusCode)
+            {
+                return;              
+            }
+
+            throw new Exception($"Failed to join group: {response.StatusCode}");
+        }
+
+        public void ExitGroup(long userId, long groupId)
+        {
+            var client = new HttpClient();
+
+            var response = client.DeleteAsync(this.httpClient.BaseAddress + $"users/{userId}/groups/{groupId}").Result;
+
+            if (response.IsSuccessStatusCode)
+            {
+                return;
+            }
+
+            throw new Exception($"Failed to exit group: {response.StatusCode}");
+        }
     }
 }

@@ -149,6 +149,14 @@
             return followingUsers.Where(u => u.Username.Contains(query, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
+        public void JoinGroup(long userId, long groupId)
+        {
+            this.userRepository.JoinGroup(userId, groupId);
+        }
 
+        public void ExitGroup(long userId, long groupId)
+        {
+            this.userRepository.ExitGroup(userId, groupId);
+        }
     }
 }

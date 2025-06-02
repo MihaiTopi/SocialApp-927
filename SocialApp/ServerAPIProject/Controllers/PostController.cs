@@ -88,18 +88,18 @@
             }
         }
 
-        [HttpGet("user/{userId}/groupfeed")]
-        public ActionResult<List<Post>> GetGroupFeed(long userId)
-        {
-            try
-            {
-                return this.Ok(this.postService.GetPostsGroupsFeed(userId));
-            }
-            catch (Exception ex)
-            {
-                return this.StatusCode(404, $"Error retrieving group feed: {ex.Message}");
-            }
-        }
+        //[HttpGet("user/{userId}/groupfeed")]
+        //public ActionResult<List<Post>> GetGroupFeed(long userId)
+        //{
+        //    try
+        //    {
+        //        return this.Ok(this.postService.GetPostsGroupsFeed(userId));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return this.StatusCode(404, $"Error retrieving group feed: {ex.Message}");
+        //    }
+        //}
 
         [HttpPost]
         public IActionResult SavePost(Post post)

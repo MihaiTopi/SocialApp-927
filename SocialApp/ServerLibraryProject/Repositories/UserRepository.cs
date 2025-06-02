@@ -23,6 +23,48 @@ namespace ServerLibraryProject.Repositories
             dbContext = context;
         }
 
+        public void JoinGroup(long userId, long groupId)
+        {
+            try
+            {
+                GroupUser groupUser = new GroupUser
+                {
+                    UserId = userId,
+                    GroupId = groupId
+                };
+                dbContext.GroupUsers.Add(groupUser);
+                dbContext.SaveChanges();
+            }
+            catch
+            {
+                throw new Exception("Error joining the group");
+            }
+        }
+
+        public void ExitGroup(long userId, long groupId)
+        {
+            try
+            {
+                // Find the GroupUser entry that matches the user and group
+                GroupUser? groupUser = dbContext.GroupUsers
+                    .FirstOrDefault(gu => gu.UserId == userId && gu.GroupId == groupId);
+
+                if (groupUser != null)
+                {
+                    dbContext.GroupUsers.Remove(groupUser);
+                    dbContext.SaveChanges();
+                }
+                else
+                {
+                    throw new Exception("User is not a member of the group");
+                }
+            }
+            catch
+            {
+                throw new Exception("Error exiting the group");
+            }
+        }
+
         /// <summary>
         /// Deletes a user by ID from the database.
         /// </summary>
